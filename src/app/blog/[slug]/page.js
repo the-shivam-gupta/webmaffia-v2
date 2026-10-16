@@ -71,7 +71,7 @@ export default async function StrapiBlogPage({ params }) {
     }
 
     const preparedArticle = prepareStrapiArticleHtml(post.description);
-    const relatedPosts = await getRelatedStrapiPosts(post.slug, 2);
+    const relatedPosts = await getRelatedStrapiPosts(post.slug, 3);
 
     const author = getPostAuthor(post);
     const headline = post.heading?.replace(/\n/g, " ") ?? "";

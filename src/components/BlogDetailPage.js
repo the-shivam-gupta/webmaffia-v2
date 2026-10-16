@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import BlogAudioPlayer from "./BlogAudioPlayer";
 import BlogStickyNav from "./BlogStickyNav";
 
 const BLOG_SERVICES = [
@@ -34,21 +35,26 @@ export default function BlogDetailPage({
     <main className="wrapper">
       <div className="ml-setter blog_detail">
         <section className="blog_main" data-section="blog_main">
-          <h1>{title}</h1>
-          <div className="blog_date">
-            <span>{date}</span>
-            <span>|</span>
-            <span>{readTime}</span>
-          </div>
-          {author ? (
-            <div className="author_byline">
-              By <Link href={`/author/${author.slug}`} className="link">{author.name}</Link>
-            </div>
-          ) : null}
           <div className="blog_section">
             <div className="" id="mob_sticky_article" />
             <div className="blog_set">
               <div className="blog_page">
+                <nav className="blog_breadcrumb" aria-label="Breadcrumb">
+                  <Link href="/">Home</Link>
+                  <span aria-hidden="true">/</span>
+                  <Link href="/blog">Blog</Link>
+                </nav>
+                <h1>{title}</h1>
+                <div className="blog_date">
+                  <span>{date}</span>
+                  <span>|</span>
+                  <span>{readTime}</span>
+                </div>
+                {author ? (
+                  <div className="author_byline">
+                    By <Link href={`/author/${author.slug}`} className="link">{author.name}</Link>
+                  </div>
+                ) : null}
                 {image ? (
                   <Image
                     src={image}
@@ -59,6 +65,7 @@ export default function BlogDetailPage({
                     priority
                   />
                 ) : null}
+                <BlogAudioPlayer />
                 <div className="blog_title" />
                 <div className="blog_content">{children}</div>
                 <div className="blog_info" />
@@ -77,7 +84,7 @@ export default function BlogDetailPage({
                         data-service={service.num}
                         className="service_text"
                       >
-                        {service.label}
+                        <span className="service_label">{service.label}</span>
                       </Link>
                     ))}
                   </div>
@@ -95,7 +102,7 @@ export default function BlogDetailPage({
           data-section="other_detail_blogs"
         >
           <div className="detail_title">
-            You might also like the <br />
+            You might also like the
             following blog articles.
           </div>
           <div className="other_blogs">
@@ -115,6 +122,7 @@ export default function BlogDetailPage({
                 <div>
                   <Link href={post.href}>
                     <div className="h5 blog_item_title">{post.title}</div>
+                    {post.excerpt ? <p>{post.excerpt}</p> : null}
                     <div className="blog_para">
                       <div className="blogs_date">
                         <span>{post.date}</span>

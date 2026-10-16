@@ -22,8 +22,8 @@ export default function BlogListItem({ post }) {
       <div>
         <Link href={href}>
           <div className="h5 blog_item_title">{post.heading}</div>
+          {post.excerpt ? <p>{post.excerpt}</p> : null}
           <div className="blog_para">
-            {/* {post.excerpt ? <p>{post.excerpt}</p> : null} */}
             <div className="blogs_date">
               <span>{formatBlogDate(post.date)}</span>
               <span>{post.readTime}</span>

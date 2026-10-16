@@ -7,7 +7,7 @@ import JsonLd from "@/components/JsonLd";
 import { formatBlogDate, getBlog, getStrapiImageUrl } from "@/lib/strapiPage";
 import { buildBreadcrumbSchema } from "@/lib/schema";
 
-const BLOG_PAGE_SIZE = 8;
+const BLOG_PAGE_SIZE = 9;
 
 const BREADCRUMB_SCHEMA = buildBreadcrumbSchema([
   { name: "Home", path: "/" },
@@ -43,7 +43,8 @@ export default async function BlogPage({ searchParams }) {
 
   const featuredBlog = blogs[0];
   const featuredHref = featuredBlog ? `/blog/${featuredBlog.slug}` : "/blog";
-  const remainingBlogs = blogs.slice(1);
+  const recommendedBlogs = blogs.slice(1, 4);
+  const remainingBlogs = blogs.slice(4);
 
   const totalPages = Math.max(1, Math.ceil(remainingBlogs.length / BLOG_PAGE_SIZE));
   const { page } = await searchParams;
@@ -63,28 +64,58 @@ export default async function BlogPage({ searchParams }) {
 
         <section className="our_blog">
           {featuredBlog && currentPage === 1 ? (
-          <div className="main_blog">
-            <Link href={featuredHref}>
-              <div className="main_blog_image">
-                <Image
-                  src={getStrapiImageUrl(featuredBlog.image)}
-                  alt={featuredBlog.image?.alternativeText || featuredBlog.heading || "Featured blog post"}
-                  fill
-                  sizes="(max-width: 900px) 100vw, 89.6rem"
-                  className="main_blog_img"
-                  priority
-                />
-              </div>
-            </Link>
-            <Link href={featuredHref}>
-              <h2 className="h5">{featuredBlog.heading}</h2>
-              <p>{featuredBlog.excerpt}</p>
-              <div className="blogs_date">
-              <span>{formatBlogDate(featuredBlog.date)}</span>
+          <div className="blog_top">
+            <div className="main_blog">
+              <Link href={featuredHref}>
+                <div className="main_blog_image">
+                  <Image
+                    src={getStrapiImageUrl(featuredBlog.image)}
+                    alt={featuredBlog.image?.alternativeText || featuredBlog.heading || "Featured blog post"}
+                    fill
+                    sizes="(max-width: 900px) 100vw, 67rem"
+                    className="main_blog_img"
+                    priority
+                  />
+                </div>
+              </Link>
+              <Link href={featuredHref} className="main_blog_text">
+                <h2 className="h5">{featuredBlog.heading}</h2>
+                <div className="blogs_date">
+                  <span>{formatBlogDate(featuredBlog.date)}</span>
                   <span>{featuredBlog.readTime}</span>
-              </div>
-              <span className="link blog_link">READ MORE</span>
-            </Link>
+                </div>
+              </Link>
+            </div>
+
+            {recommendedBlogs.length > 0 ? (
+              <aside className="recommended_blogs">
+                <div className="recommended_title">Recommended</div>
+                {recommendedBlogs.map((blog) => (
+                  <Link
+                    key={blog.id}
+                    href={`/blog/${blog.slug}`}
+                    className="recommended_item"
+                  >
+                    <div className="recommended_image">
+                      <Image
+                        src={getStrapiImageUrl(blog.image)}
+                        alt={blog.image?.alternativeText || blog.heading || "Blog post"}
+                        fill
+                        sizes="(max-width: 900px) 40vw, 18rem"
+                        className="recommended_img"
+                      />
+                    </div>
+                    <div className="recommended_info">
+                      <div className="recommended_heading">{blog.heading}</div>
+                      <div className="recommended_meta">
+                        <span>{formatBlogDate(blog.date)}</span>
+                        <span>{blog.readTime}</span>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </aside>
+            ) : null}
           </div>
           ) : null}
 

@@ -1,8 +1,53 @@
 .blog_detail{
+    .blog_breadcrumb{
+        display: flex;
+        align-items: center;
+        gap: 1.2rem;
+        margin: 0 0 2.4rem 0;
+        font-size: 1.6rem;
+        letter-spacing: .1rem;
+        color: $black_60;
+        @include mobile(){
+            gap: 2rem;
+            margin-bottom: 4rem;
+            font-size: 3.2rem;
+        }
+        a{
+            transition: color .2s ease;
+            &:hover{
+                color: $black;
+            }
+        }
+        span{
+            color: $black_30;
+        }
+    }
     h1{
-        margin-bottom: 3rem;
+        position: relative;
+        margin-bottom: 4rem;
+        font-size: 6.2rem;
+        font-weight: 500;
+        line-height: 1.12;
+        letter-spacing: -.02em;
+        margin-left: -.2rem; // optical offset for the large glyph side bearing
+        // accent bar under the title
+        &::after{
+            content: '';
+            display: block;
+            width: 9rem;
+            height: .5rem;
+            margin-top: 3.2rem;
+            border-radius: 1rem;
+            background: $black;
+        }
         @include mobile(){
             margin-bottom: 5rem;
+            font-size: 8.4rem;
+            &::after{
+                width: 16rem;
+                height: .8rem;
+                margin-top: 5rem;
+            }
         }
     }
     @include mobile(){
@@ -13,7 +58,8 @@
 .blog_date{
     display: flex;
     gap: 4rem;
-    margin-left: 1rem;
+    margin-left: 0;
+    margin-bottom: 2rem;
     span{
         font-size: 2.206rem;
         letter-spacing: 0.2rem;
@@ -100,7 +146,7 @@
 }
 
 .blog_section{
-    margin-top: 6rem;
+    margin-top: 2rem;
     display: flex;
     align-items: flex-start;
     // gap: 6.1rem;
@@ -113,7 +159,7 @@
         margin-top: 1rem;
         display: flex;
         justify-content: space-between;
-        align-items: flex-start;
+        align-items: stretch; // aside spans the article height so the nav can stick
         gap: 11.9rem;
         @include mobile(){
             flex-direction: column;
@@ -125,6 +171,7 @@
             }
             .blog_detail_img{
                 width: 100%;
+                margin-top: 3rem;
                 margin-bottom: 4.5rem;
                 @include mobile(){
                     margin-bottom: 6.1rem;
@@ -149,9 +196,9 @@
                 &::before{
                     content: '';
                     position: absolute;
-                    width: 95%;
+                    width: 100%;
                     height: 0.2rem;
-                    background: $black_10;
+                    background: #000;
                     bottom: 0;
                     left: 0;
                     @include mobile(){
@@ -167,11 +214,11 @@
                 }
                 ul{
                     padding-left: 3.5rem;
-                    margin: 1rem 0;
+                    margin: 2rem 0 2rem 1rem;
                     li{
-                        font-size: 2.2rem;
+                        font-size: 2rem;
                         line-height: 1.4;
-                        letter-spacing: .1rem;
+                        // letter-spacing: .1rem;
                         font-weight: 400;
                         margin-bottom: 1rem;
                         @include mobile(){
@@ -196,11 +243,36 @@
                     padding: 1.5rem 2rem;
                 }
                 p{
-                    font-size: 2.2rem;
+                    font-size: 2rem;
                     margin-bottom: 1.5rem;
                     line-height: 1.4;
-                    letter-spacing: .1rem;
+                    // letter-spacing: .1rem;
                     font-weight: 400;
+                    br{
+                        display: none;
+                    }
+                }
+                h2{
+                    font-size: 3.8rem;
+                    font-weight: 400;
+                    margin: 4rem 0 2rem;
+                    line-height: 1.3;
+                    letter-spacing: 0;
+                    color: #000;
+                    br{
+                        display: none;
+                    }
+                }
+                h3{
+                    font-size: 3.2rem;
+                    font-weight: 300;
+                    margin-bottom: 1.5rem;
+                    line-height: 1.3;
+                    letter-spacing: 0;
+                    color: #000;
+                    br{
+                        display: none;
+                    }
                 }
             }
             .blog_title{
@@ -248,61 +320,87 @@
             }
             .blog_services{
                 background: $black_4;
-                padding: 4.2rem 3rem 5rem 4.2rem;
+                border-radius: 2rem;
+                padding: 4.2rem 3rem 3.6rem;
                 margin-bottom: 12rem;
-                h4{
-                    br{
-                        display: none;
+                .aside_title{
+                    &::after{
+                        content: '';
+                        display: block;
+                        width: 6rem;
+                        height: .4rem;
+                        border-radius: 1rem;
+                        margin-top: 2rem;
+                        background: $black;
                     }
                 }
                 .service_types{
-                    margin-top: 5rem;
+                    margin-top: 3.4rem;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 1.2rem;
                     @include mobile(){
-                        margin-top: 10rem;
+                        margin-top: 6rem;
+                        gap: 2rem;
                     }
                 }
                 .service_text{
-                    font-size: 2.814rem;
-                    padding-left: 8.5rem;
-                    padding-bottom: 2.7rem;
-                    margin-bottom: 2.7rem;
-                    position: relative;
-                    display: block;
+                    --accent: #{$black};
+                    --icon: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27%23000%27%20stroke-width%3D%271.6%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27M12%203a9%209%200%201%200%209%209M12%207a5%205%200%201%200%205%205M12%2011.2a.8.8%200%201%200%20.8.8M12%2012l8-8M17%203h4v4%27%2F%3E%3C%2Fsvg%3E");
+                    --tint: #{$black_4};
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 1.8rem;
+                    padding: 2.6rem 2.6rem;
+                    font-size: 2.2rem;
+                    line-height: 1.2;
+                    background: $white;
+                    border: .1rem solid $black_10;
+                    border-radius: 1.2rem;
+                    transition: background .35s ease, color .35s ease, border-color .35s ease, transform .35s ease;
                     @include mobile(){
-                        font-size: 4.814rem;
-                        padding-left: 9.5rem;
+                        font-size: 4rem;
+                        padding: 3.6rem 3.4rem;
+                        gap: 2.6rem;
                     }
-                    &::before, &::after{
-                        position: absolute;
+                    .service_label{
+                        flex: 1;
+                        min-width: 0;
                     }
+                    // service icon (CSS mask, coloured by --accent)
                     &::before{
-                        content: attr(data-service);
-                        width: 5rem;
-                        height: 3.2rem;
-                        line-height: 1;
-                        left: 0;
-                        top: 0;
-                        font-size: 4.149rem;
-                        color: $cfcfcf;
-                        @include mobile(){
-                            width: 6rem;
-                            height: 5.2rem;
-                            top: .8rem;
-                            font-size: 5.149rem;
-                        }
-                    }
-                    &::after{
                         content: '';
-                        width: 74.402%;
-                        height: .2rem;
-                        background: $black_4;
-                        left: .8rem;
-                        bottom: 0;
-                    }
-                    &:nth-last-child(1){
-                        &::after{
-                            display: none;
+                        flex: none;
+                        width: 2.6rem;
+                        height: 2.6rem;
+                        background: var(--accent);
+                        -webkit-mask: var(--icon) center / contain no-repeat;
+                        mask: var(--icon) center / contain no-repeat;
+                        transition: transform .35s ease;
+                        @include mobile(){
+                            width: 4.8rem;
+                            height: 4.8rem;
                         }
+                    }
+                    &[data-service="02"]{ --icon: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27%23000%27%20stroke-width%3D%271.6%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27M8%208l-5%204%205%204M16%208l5%204-5%204M14%205l-4%2014%27%2F%3E%3C%2Fsvg%3E"); }
+                    &[data-service="03"]{ --icon: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27%23000%27%20stroke-width%3D%271.6%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27M10.5%2018a7.5%207.5%200%201%200%200-15%207.5%207.5%200%200%200%200%2015zM16%2016l5%205%27%2F%3E%3C%2Fsvg%3E"); }
+                    &[data-service="04"]{ --icon: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27%23000%27%20stroke-width%3D%271.6%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27M21%2012a8%208%200%200%201-11.6%207.1L4%2020.5l1.4-4.7A8%208%200%201%201%2021%2012z%27%2F%3E%3C%2Fsvg%3E"); }
+                    &[data-service="05"]{ --icon: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27%23000%27%20stroke-width%3D%271.6%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27M4%2020l1-4L16.5%204.5a2%202%200%200%201%203%203L8%2019l-4%201zM14%207l3%203%27%2F%3E%3C%2Fsvg%3E"); }
+                    &[data-service="06"]{ --icon: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27%23000%27%20stroke-width%3D%271.6%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%27M3%2011v3a1%201%200%200%200%201%201h2l5%204V6L6%2010H4a1%201%200%200%200-1%201zM15%209a4%204%200%200%201%200%206M18%206.5a8%208%200%200%201%200%2011%27%2F%3E%3C%2Fsvg%3E"); }
+                    @media (hover: hover){
+                        &:hover{
+                            background: var(--tint);
+                            border-color: var(--accent);
+                            transform: translateX(.6rem);
+                            &::before{
+                                transform: scale(1.15) rotate(-6deg);
+                            }
+                        }
+                    }
+                    &:focus-visible{
+                        outline: .2rem solid $black;
+                        outline-offset: .3rem;
                     }
                 }
             }
@@ -351,49 +449,226 @@
     }
 }
 
+.blog_audio{
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 4.5rem;
+    padding: 1.8rem 2.4rem 1.8rem 1.8rem;
+    background: $black_4;
+    border: .1rem solid $black_10;
+    border-radius: 10rem;
+    transition: border-color .3s ease, background .3s ease;
+    @include mobile(){
+        gap: 3rem;
+        margin-bottom: 6rem;
+        padding: 3rem 4rem 3rem 3rem;
+    }
+    &.is_active{
+        border-color: $black;
+        background: $white;
+    }
+    button{
+        cursor: pointer;
+        color: inherit;
+    }
+    svg{
+        display: block;
+        width: 100%;
+        height: 100%;
+    }
+    .blog_audio_play{
+        flex: none;
+        width: 5.2rem;
+        height: 5.2rem;
+        padding: 1.4rem;
+        border-radius: 50%;
+        color: $white;
+        background: $black;
+        transition: transform .25s ease;
+        @include mobile(){
+            width: 10rem;
+            height: 10rem;
+            padding: 2.8rem;
+        }
+        &:hover{
+            transform: scale(1.08);
+        }
+    }
+    .blog_audio_body{
+        flex: 1;
+        min-width: 0;
+    }
+    .blog_audio_title{
+        font-size: 1.8rem;
+        font-weight: 500;
+        line-height: 1.2;
+        @include mobile(){
+            font-size: 3.6rem;
+        }
+    }
+    .blog_audio_meta{
+        margin-top: .4rem;
+        font-size: 1.3rem;
+        color: $black_60;
+        @include mobile(){
+            font-size: 2.8rem;
+        }
+    }
+    .blog_audio_track{
+        height: .3rem;
+        margin-top: 1.2rem;
+        border-radius: 1rem;
+        background: $black_10;
+        overflow: hidden;
+        span{
+            display: block;
+            height: 100%;
+            background: $black;
+            transform-origin: left center;
+            transition: transform .4s ease;
+        }
+    }
+    .blog_audio_actions{
+        flex: none;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    .blog_audio_speed{
+        min-width: 5.2rem;
+        padding: .8rem 1.2rem;
+        font-size: 1.4rem;
+        border: .1rem solid $black_30;
+        border-radius: 10rem;
+        transition: background .2s ease, color .2s ease;
+        @include mobile(){
+            min-width: 9rem;
+            padding: 1.6rem 2.4rem;
+            font-size: 2.8rem;
+        }
+        &:hover{
+            background: $black;
+            color: $white;
+        }
+    }
+    .blog_audio_stop{
+        width: 3.6rem;
+        height: 3.6rem;
+        padding: .8rem;
+        border-radius: 50%;
+        @include mobile(){
+            width: 7rem;
+            height: 7rem;
+            padding: 1.6rem;
+        }
+        &:hover{
+            background: $black_10;
+        }
+    }
+}
+
 .sticky_top{
     padding: 2rem;
 }
 
 .sticky_article_container{
     width: 100%;
+    // sticks below the header and stops naturally at the end of the article
+    position: sticky;
+    top: 11rem;
+    @include mobile(){
+        position: static;
+    }
 }
 
 .sticky_article{
     display: block;
     position: relative;
-    top: auto;
-    right: auto;
-    padding: 0;
     width: 100%;
+    max-height: calc(100vh - 15rem);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: $black_30 transparent;
+    padding: 0 .4rem 0 0;
+
+    @include mobile(){
+        max-height: none;
+        overflow: visible;
+    }
 
     @media screen and (orientation: landscape) and (max-height: 500px) {
         display: none;
     }
 
-    &.active{
-        position: fixed;
-        top: 0;
-        right: 15.4rem;
-        width: 49rem;
-        padding-top: 12rem;
+    .sticky_head{
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        margin-bottom: 1.2rem;
+        font-size: 1.4rem;
+        letter-spacing: .2rem;
+        text-transform: uppercase;
+        color: $black_60;
+        @include mobile(){
+            font-size: 2.8rem;
+        }
+        .sticky_head_percent{
+            font-variant-numeric: tabular-nums;
+            color: $black;
+        }
+    }
+
+    // reading progress bar
+    .sticky_progress{
+        height: .2rem;
+        margin-bottom: 3rem;
+        background: $black_10;
+        overflow: hidden;
+        span{
+            display: block;
+            height: 100%;
+            background: $black;
+            transform-origin: left center;
+            transition: transform .2s linear;
+        }
     }
 
     a,
     .sticky_link{
         display: flex;
         align-items: flex-start;
-        gap: 0.8rem;
+        gap: 1.6rem;
         position: relative;
-        padding-bottom: 2rem;
-        color: $black;
+        padding: 1.2rem 1.6rem 1.2rem 2rem;
+        margin-bottom: .4rem;
+        color: $black_60;
         text-decoration: none;
         font-weight: 300;
-        transition: color 0.3s ease, font-weight 0.3s ease;
+        border-radius: 0 1rem 1rem 0;
+        transition: color .3s ease, background .3s ease, padding-left .3s ease;
+
+        // active rail
+        &::before{
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: .2rem;
+            background: $black_10;
+            transition: background .3s ease, width .3s ease;
+        }
 
         .sticky_link_num{
             flex: 0 0 auto;
             min-width: 3rem;
+            font-size: .8em;
+            letter-spacing: .1rem;
+            font-variant-numeric: tabular-nums;
+            opacity: .6;
+            padding-top: .2em;
         }
 
         .sticky_link_text{
@@ -401,9 +676,27 @@
             min-width: 0;
         }
 
+        @media (hover: hover){
+            &:hover{
+                color: $black;
+                padding-left: 2.6rem;
+                &::before{
+                    background: $black_40;
+                }
+            }
+        }
+
         &.selected{
             color: $black;
             font-weight: 500;
+            background: $black_4;
+            &::before{
+                width: .4rem;
+                background: $black;
+            }
+            .sticky_link_num{
+                opacity: 1;
+            }
         }
     }
 }
@@ -424,7 +717,7 @@
 }
 
 .other_detail_blogs{
-    margin-top: 2rem;
+    margin-top: 8rem;
     padding-bottom: 15rem;
 
     background: $white;
@@ -438,8 +731,9 @@
     }
 
     .detail_title{
-        font-size: 10rem;
+        font-size: 5rem;
         line-height: 1;
+        font-weight: 500;
         margin-bottom: 9rem;
         margin-left: 8rem;
         color: $black;

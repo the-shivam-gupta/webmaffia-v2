@@ -8,6 +8,7 @@
     z-index: 2;
     padding-top: 15.5rem !important;
     overflow-x: hidden;
+    overflow-x: clip; // clip (not hidden) so position: sticky keeps working inside
     @include mobile(){
         padding-top: 21rem !important;
     }
@@ -1153,9 +1154,9 @@ h5, .h5{
     }
 }
 
-.h5{
-    letter-spacing: .8rem;
-}
+// .h5{
+//     letter-spacing: .8rem;
+// }
 
 h4, .aside_title{
     font-size: 5.4rem;

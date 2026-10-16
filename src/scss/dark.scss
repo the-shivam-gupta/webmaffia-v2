@@ -11,6 +11,81 @@ html{
         }
         .blog_section .blog_set aside .blog_services{
             background: rgba(255,255,255,0.04);
+            .aside_title::after{
+                background: $white;
+            }
+            .service_text{
+                --accent: #{$white};
+                --tint: rgba(255,255,255,0.1);
+                background: rgba(255,255,255,0.06);
+                border-color: rgba(255,255,255,0.1);
+                &:hover{
+                    background: var(--tint);
+                    border-color: var(--accent);
+                }
+            }
+        }
+        .blog_audio{
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.12);
+            &.is_active{
+                background: rgba(255, 255, 255, 0.08);
+                border-color: $white;
+            }
+            .blog_audio_play{
+                color: $black;
+                background: $white;
+            }
+            .blog_audio_title,
+            .blog_audio_speed,
+            .blog_audio_stop{
+                color: $white;
+            }
+            .blog_audio_meta{
+                color: rgba(255, 255, 255, 0.6);
+            }
+            .blog_audio_track{
+                background: rgba(255, 255, 255, 0.15);
+                span{
+                    background: $white;
+                }
+            }
+            .blog_audio_speed{
+                border-color: rgba(255, 255, 255, 0.3);
+                &:hover{
+                    background: $white;
+                    color: $black;
+                }
+            }
+            .blog_audio_stop:hover{
+                background: rgba(255, 255, 255, 0.1);
+            }
+        }
+        .blog_detail .blog_breadcrumb{
+            color: rgba(255, 255, 255, 0.6);
+            a:hover{
+                color: $white;
+            }
+        }
+        .blog_detail h1::after{
+            background: $white;
+        }
+        .recommended_blogs{
+            .recommended_title{
+                color: $white;
+                border-bottom-color: $white;
+            }
+            .recommended_item{
+                .recommended_heading{
+                    color: $white;
+                }
+                .recommended_meta{
+                    color: rgba(255, 255, 255, 0.6);
+                }
+                &:hover .recommended_heading{
+                    color: rgba(255, 255, 255, 0.6);
+                }
+            }
         }
         .blog_date span{
             color: rgba(255, 255, 255, 0.6);
@@ -433,11 +508,38 @@ html{
         .contact_us .contact_address address a{
             color: $white;
         }
-        .sticky_article a,
-        .sticky_article .sticky_link{
-            color: $white;
-            &::before{
-                background: $white;
+        .sticky_article{
+            .sticky_head{
+                color: rgba(255, 255, 255, 0.6);
+                .sticky_head_percent{
+                    color: $white;
+                }
+            }
+            .sticky_progress{
+                background: rgba(255, 255, 255, 0.15);
+                span{
+                    background: $white;
+                }
+            }
+            a,
+            .sticky_link{
+                color: rgba(255, 255, 255, 0.6);
+                &::before{
+                    background: rgba(255, 255, 255, 0.15);
+                }
+                &:hover{
+                    color: $white;
+                    &::before{
+                        background: rgba(255, 255, 255, 0.4);
+                    }
+                }
+                &.selected{
+                    color: $white;
+                    background: rgba(255, 255, 255, 0.06);
+                    &::before{
+                        background: $white;
+                    }
+                }
             }
         }
         .thankyou a,
