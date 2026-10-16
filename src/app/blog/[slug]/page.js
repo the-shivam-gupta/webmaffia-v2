@@ -9,6 +9,7 @@ import {
     getAllBlogCategories,
     getBlog,
     getBlogBySlug,
+    getBlogCategories,
     getPostAuthor,
     getRelatedStrapiPosts,
     getSeoFields,
@@ -137,6 +138,7 @@ export default async function StrapiBlogPage({ params }) {
                 stickyLinks={preparedArticle.stickyLinks}
                 relatedPosts={relatedPosts}
                 categories={categories}
+                postCategory={getBlogCategories(post)[0] ?? null}
             >
                 <BlogStrapiArticle html={preparedArticle.html} />
             </BlogDetailPage>

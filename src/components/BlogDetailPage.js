@@ -31,6 +31,7 @@ export default function BlogDetailPage({
   relatedPosts: relatedPostsProp,
   latestPosts: latestPostsProp,
   categories: categoriesProp,
+  postCategory,
   children,
 }) {
   const stickyLinks = stickyLinksProp ?? [];
@@ -68,14 +69,24 @@ export default function BlogDetailPage({
                   </div>
                 ) : null}
                 {image ? (
-                  <Image
-                    src={image}
-                    alt={imageAlt}
-                    width={1030}
-                    height={709}
-                    className="blog_detail_img"
-                    priority
-                  />
+                  <div className="blog_detail_img_wrap">
+                    <Image
+                      src={image}
+                      alt={imageAlt}
+                      width={1030}
+                      height={709}
+                      className="blog_detail_img"
+                      priority
+                    />
+                    {postCategory ? (
+                      <Link
+                        href={`/blog?category=${postCategory.slug}`}
+                        className="blog_category_badge"
+                      >
+                        {postCategory.title}
+                      </Link>
+                    ) : null}
+                  </div>
                 ) : null}
                 <BlogAudioPlayer />
                 <div className="blog_title" />
@@ -200,6 +211,14 @@ export default function BlogDetailPage({
                     />
                   </div>
                 </Link>
+                {post.category ? (
+                  <Link
+                    href={`/blog?category=${post.category.slug}`}
+                    className="blog_category_badge"
+                  >
+                    {post.category.title}
+                  </Link>
+                ) : null}
                 <div>
                   <Link href={post.href}>
                     <div className="h5 blog_item_title">{post.title}</div>

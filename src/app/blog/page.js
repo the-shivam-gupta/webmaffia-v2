@@ -19,6 +19,27 @@ const BREADCRUMB_SCHEMA = buildBreadcrumbSchema([
   { name: "Blog", path: "/blog" },
 ]);
 
+// /blog?category=<slug> gets its own tab title, description and canonical URL.
+// Without a (valid) category the layout's default "Blog | Webmaffia" metadata applies.
+export async function generateMetadata({ searchParams }) {
+  const { category } = await searchParams;
+  if (!category) return {};
+
+  const blogs = await getBlog();
+  const match = blogs
+    .flatMap(getBlogCategories)
+    .find((item) => item.slug === categorySlug(category));
+  if (!match) return {};
+
+  return {
+    title: `${match.title} Articles | Webmaffia`,
+    description: `Read the latest ${match.title} articles, guides and insights from the Webmaffia team.`,
+    alternates: {
+      canonical: `https://www.webmaffia.com/blog?category=${match.slug}`,
+    },
+  };
+}
+
 export default async function BlogPage({ searchParams }) {
   const blogs = await getBlog();
 

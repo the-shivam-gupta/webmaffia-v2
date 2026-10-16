@@ -280,6 +280,10 @@
             @include mobile(){
                 width: 100%;
             }
+            // holds the cover image so the category badge can sit on its corner
+            .blog_detail_img_wrap{
+                position: relative;
+            }
             .blog_detail_img{
                 width: 100%;
                 margin-top: 3rem;
@@ -602,10 +606,10 @@
                     margin-top: 3.4rem;
                     display: flex;
                     flex-direction: column;
-                    gap: 1.2rem;
+                    gap: 3.4rem;
                     @include mobile(){
                         margin-top: 6rem;
-                        gap: 2rem;
+                        gap: 4rem;
                     }
                 }
                 .blog_latest_item{
@@ -613,20 +617,42 @@
                     grid-template-columns: 12rem minmax(0, 1fr);
                     gap: 1.6rem;
                     align-items: center;
-                    padding: 1.2rem;
-                    background: $white;
-                    border: .1rem solid $black_10;
-                    border-radius: 1.2rem;
-                    transition: border-color .3s ease, transform .3s ease;
+                    padding: 0;
+                    transition: color .3s ease;
+                    position: relative;
+                    // Same border fill on hover as the Recommended items on /blog
+                    &::before,
+                    &::after{
+                        content: '';
+                        position: absolute;
+                        width: 0;
+                        height: 0;
+                        border: 0.1rem solid transparent;
+                        pointer-events: none;
+                        z-index: 1;
+                        box-sizing: border-box;
+                        transition: none; // no reverse animation on mouse leave
+                    }
+                    &::before{
+                        top: -1.5rem;
+                        left: -1.5rem;
+                        border-top-color: currentColor;
+                        border-left-color: currentColor;
+                    }
+                    &::after{
+                        bottom: -1.5rem;
+                        right: -1.5rem;
+                        border-bottom-color: currentColor;
+                        border-right-color: currentColor;
+                    }
                     @include mobile(){
                         grid-template-columns: 26rem minmax(0, 1fr);
                         gap: 3rem;
-                        padding: 2rem;
+                        padding: 0;
                     }
                     .blog_latest_image{
                         position: relative;
                         aspect-ratio: 4 / 3;
-                        border-radius: .8rem;
                         overflow: hidden;
                         .blog_latest_img{
                             object-fit: cover;
@@ -643,6 +669,7 @@
                         line-clamp: 3;
                         -webkit-box-orient: vertical;
                         overflow: hidden;
+                        transition: color .3s ease;
                         @include mobile(){
                             font-size: 3.6rem;
                         }
@@ -658,12 +685,11 @@
                         }
                     }
                     @media (hover: hover){
-                        &:hover{
-                            border-color: $black;
-                            transform: translateX(.6rem);
-                            .blog_latest_img{
-                                transform: scale(1.1);
-                            }
+                        &:hover::before,
+                        &:hover::after{
+                            width: calc(100% + 3rem);
+                            height: calc(100% + 3rem);
+                            transition: width 0.7s ease-out, height 0.3s ease-out 0.3s;
                         }
                     }
                 }

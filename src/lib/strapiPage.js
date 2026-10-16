@@ -209,6 +209,7 @@ export function getRelatedStrapiPosts(slug, count = 2) {
                 readTime: post.readTime,
                 image: getStrapiImageUrl(post.image),
                 imageAlt: post.image?.alternativeText || "",
+                category: getBlogCategories(post)[0] ?? null,
             }))
     );
 }

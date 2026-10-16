@@ -52,11 +52,7 @@ html{
                 background: $white;
             }
             .blog_latest_item{
-                background: rgba(255,255,255,0.06);
-                border-color: rgba(255,255,255,0.1);
-                &:hover{
-                    border-color: $white;
-                }
+                color: $white;
             }
             .blog_latest_heading{
                 color: $white;
@@ -89,6 +85,16 @@ html{
             color: rgba(255, 255, 255, 0.6);
             .reading_progress_value{
                 color: $white;
+            }
+        }
+        // category badge: light pill on the dark theme (a{color:white} would hide its text)
+        a.blog_category_badge{
+            color: $black;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 .6rem 1.8rem rgba(0, 0, 0, .4);
+            &:hover{
+                color: $white;
+                background: $black;
             }
         }
         .blog_enquiry{
