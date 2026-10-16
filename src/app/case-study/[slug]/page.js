@@ -15,7 +15,10 @@ import {
 export async function generateStaticParams() {
   const [caseStudies, campaigns] = await Promise.all([
     getCaseStudies(),
-    getCampaigns(),
+    getCampaigns().catch((error) => {
+      console.error("Failed to fetch campaigns:", error);
+      return [];
+    }),
   ]);
 
   const caseStudySlugs = new Set(
