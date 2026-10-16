@@ -30,10 +30,12 @@ export default function BlogDetailPage({
   stickyLinks: stickyLinksProp,
   relatedPosts: relatedPostsProp,
   latestPosts: latestPostsProp,
+  categories: categoriesProp,
   children,
 }) {
   const stickyLinks = stickyLinksProp ?? [];
   const relatedPosts = relatedPostsProp ?? [];
+  const categories = categoriesProp ?? [];
   const latestPosts = (latestPostsProp ?? relatedPosts).slice(0, 3);
 
   return (
@@ -106,6 +108,21 @@ export default function BlogDetailPage({
                         </Link>
                       ))}
                     </div>
+                  </div>
+                ) : null}
+                {categories.length > 0 ? (
+                  <div className="blog_categories">
+                    <div className="aside_title">Categories</div>
+                    <ul className="blog_categories_list">
+                      {categories.map((item) => (
+                        <li key={item.slug}>
+                          <Link href={`/blog?category=${item.slug}`}>
+                            <span>{item.title}</span>
+                            <em>{item.count}</em>
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                 ) : null}
                 <div className="blog_services">

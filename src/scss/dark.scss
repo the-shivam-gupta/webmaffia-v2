@@ -25,6 +25,27 @@ html{
                 }
             }
         }
+        .blog_section .blog_set aside .blog_categories{
+            background: rgba(255,255,255,0.04);
+            .aside_title::after{
+                background: $white;
+            }
+            .blog_categories_list a{
+                background: rgba(255,255,255,0.06);
+                border-color: rgba(255,255,255,0.1);
+                em{
+                    color: rgba(255,255,255,0.6);
+                }
+                &:hover{
+                    color: $black;
+                    background: $white;
+                    border-color: $white;
+                    em{
+                        color: $black_60;
+                    }
+                }
+            }
+        }
         .blog_section .blog_set aside .blog_latest{
             background: rgba(255,255,255,0.04);
             .aside_title::after{

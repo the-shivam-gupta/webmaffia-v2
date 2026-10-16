@@ -947,3 +947,36 @@ export async function getCities() {
         return [];
     }
 }
+
+/** URL-safe slug for a blog category name, used in /blog?category=<slug>. */
+export function categorySlug(title) {
+    return String(title ?? "")
+        .toLowerCase()
+        .replace(/&/g, "and")
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+}
+
+/** Category titles of a blog post (from its CMS `workTitle` tags). */
+export function getBlogCategories(post) {
+    return (post?.workTitle ?? [])
+        .map((tag) => tag?.title?.trim())
+        .filter(Boolean)
+        .map((title) => ({ title, slug: categorySlug(title) }));
+}
+
+/** Every blog category with its post count, most-used first. */
+export async function getAllBlogCategories() {
+    const posts = await getBlog();
+    const counts = new Map();
+    for (const post of posts) {
+        for (const { title, slug } of getBlogCategories(post)) {
+            const entry = counts.get(slug) ?? { title, slug, count: 0 };
+            entry.count += 1;
+            counts.set(slug, entry);
+        }
+    }
+    return [...counts.values()].sort(
+        (a, b) => b.count - a.count || a.title.localeCompare(b.title)
+    );
+}

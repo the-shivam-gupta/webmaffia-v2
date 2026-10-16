@@ -520,6 +520,69 @@
             .blog_toc_wrap{
                 margin-bottom: 6rem;
             }
+            .blog_categories{
+                background: $black_4;
+                padding: 4.2rem 3rem 3.6rem;
+                margin-bottom: 6rem;
+                .aside_title{
+                    &::after{
+                        content: '';
+                        display: block;
+                        width: 6rem;
+                        height: .4rem;
+                        border-radius: 1rem;
+                        margin-top: 2rem;
+                        background: $black;
+                    }
+                }
+                .blog_categories_list{
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 1rem;
+                    margin: 3.4rem 0 0;
+                    padding: 0;
+                    list-style: none;
+                    @include mobile(){
+                        gap: 2rem;
+                        margin-top: 6rem;
+                    }
+                    a{
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 1rem;
+                        padding: 1rem 1.6rem;
+                        font-size: 1.6rem;
+                        background: $white;
+                        border: .1rem solid $black_10;
+                        border-radius: 10rem;
+                        transition: background .3s ease, color .3s ease, border-color .3s ease;
+                        @include mobile(){
+                            font-size: 3.2rem;
+                            padding: 2rem 3.2rem;
+                            gap: 1.6rem;
+                        }
+                        em{
+                            font-style: normal;
+                            font-size: 1.2rem;
+                            color: $black_60;
+                            transition: color .3s ease;
+                            @include mobile(){
+                                font-size: 2.6rem;
+                            }
+                        }
+                        @media (hover: hover){
+                            &:hover{
+                                color: $white;
+                                background: $black;
+                                border-color: $black;
+                                em{
+                                    color: $white_60;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
             .blog_latest{
                 background: $black_4;
                 padding: 4.2rem 3rem 3.6rem;

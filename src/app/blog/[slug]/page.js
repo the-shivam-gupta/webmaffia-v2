@@ -6,6 +6,7 @@ import { buildFaqPageSchema, prepareStrapiArticleHtml } from "@/lib/blog-helpers
 import { buildBreadcrumbSchema, SITE_URL } from "@/lib/schema";
 import {
     formatBlogDate,
+    getAllBlogCategories,
     getBlog,
     getBlogBySlug,
     getPostAuthor,
@@ -72,6 +73,7 @@ export default async function StrapiBlogPage({ params }) {
 
     const preparedArticle = prepareStrapiArticleHtml(post.description);
     const relatedPosts = await getRelatedStrapiPosts(post.slug, 3);
+    const categories = await getAllBlogCategories();
 
     const author = getPostAuthor(post);
     const headline = post.heading?.replace(/\n/g, " ") ?? "";
@@ -134,6 +136,7 @@ export default async function StrapiBlogPage({ params }) {
                 imageAlt={post.image?.alternativeText || post.heading || ""}
                 stickyLinks={preparedArticle.stickyLinks}
                 relatedPosts={relatedPosts}
+                categories={categories}
             >
                 <BlogStrapiArticle html={preparedArticle.html} />
             </BlogDetailPage>

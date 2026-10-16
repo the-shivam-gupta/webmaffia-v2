@@ -459,3 +459,101 @@
         }
     }
 }
+// Category badge on the featured post image (top right) + category filter view
+.main_blog{
+    position: relative;
+}
+.blog_category_badge{
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    z-index: 2;
+    max-width: calc(100% - 4rem);
+    padding: .9rem 2rem;
+    overflow: hidden;
+    font-size: 1.4rem;
+    letter-spacing: .15rem;
+    text-transform: uppercase;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: $black;
+    background: rgba(255, 255, 255, .92);
+    -webkit-backdrop-filter: blur(.8rem);
+    backdrop-filter: blur(.8rem);
+    border-radius: 10rem;
+    box-shadow: 0 .6rem 1.8rem rgba(0, 0, 0, .12);
+    transition: background .3s ease, color .3s ease;
+    @include mobile(){
+        top: 3rem;
+        right: 3rem;
+        font-size: 2.8rem;
+        padding: 1.4rem 3rem;
+    }
+    @media (hover: hover){
+        &:hover{
+            color: $white;
+            background: $black;
+        }
+    }
+}
+
+.blog_filter_bar{
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 3rem;
+    margin-bottom: 8rem;
+    padding-bottom: 3rem;
+    border-bottom: .1rem solid $black_10;
+    @include mobile(){
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 10rem;
+    }
+    .blog_filter_label{
+        display: block;
+        margin-bottom: 1rem;
+        font-size: 1.4rem;
+        letter-spacing: .3rem;
+        text-transform: uppercase;
+        color: $black_60;
+        @include mobile(){
+            font-size: 2.8rem;
+        }
+    }
+    h1{
+        width: auto;
+        margin: 0;
+        font-size: 5.6rem;
+        line-height: 1.1;
+        @include mobile(){
+            font-size: 8.4rem;
+        }
+    }
+    p{
+        margin: 1rem 0 0;
+        color: $black_60;
+    }
+    .blog_filter_clear{
+        flex: none;
+        padding: 1.2rem 2.4rem;
+        font-size: 1.6rem;
+        border: .1rem solid $black;
+        border-radius: 10rem;
+        transition: background .3s ease, color .3s ease;
+        @include mobile(){
+            font-size: 3.2rem;
+            padding: 2rem 4rem;
+        }
+        @media (hover: hover){
+            &:hover{
+                color: $white;
+                background: $black;
+            }
+        }
+    }
+}
+.blog_filter_empty{
+    text-align: center;
+    color: $black_60;
+}

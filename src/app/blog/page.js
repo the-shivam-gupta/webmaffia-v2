@@ -3,7 +3,13 @@ import Link from "next/link";
 import BlogListItem from "@/components/BlogListItem";
 import BlogPagination from "@/components/BlogPagination";
 import JsonLd from "@/components/JsonLd";
-import { formatBlogDate, getBlog, getStrapiImageUrl } from "@/lib/strapiPage";
+import {
+  categorySlug,
+  formatBlogDate,
+  getBlog,
+  getBlogCategories,
+  getStrapiImageUrl,
+} from "@/lib/strapiPage";
 import { buildBreadcrumbSchema } from "@/lib/schema";
 
 const BLOG_PAGE_SIZE = 9;
@@ -16,13 +22,27 @@ const BREADCRUMB_SCHEMA = buildBreadcrumbSchema([
 export default async function BlogPage({ searchParams }) {
   const blogs = await getBlog();
 
-  const featuredBlog = blogs[0];
+  const { page, category } = await searchParams;
+
+  // /blog?category=<slug> shows every post tagged with that category
+  const activeCategory = category
+    ? blogs
+        .flatMap(getBlogCategories)
+        .find((item) => item.slug === categorySlug(category)) ?? null
+    : null;
+  const categoryPosts = activeCategory
+    ? blogs.filter((post) =>
+        getBlogCategories(post).some((item) => item.slug === activeCategory.slug)
+      )
+    : [];
+
+  const featuredBlog = activeCategory ? null : blogs[0];
   const featuredHref = featuredBlog ? `/blog/${featuredBlog.slug}` : "/blog";
-  const recommendedBlogs = blogs.slice(1, 5);
-  const remainingBlogs = blogs.slice(5);
+  const featuredCategory = featuredBlog ? getBlogCategories(featuredBlog)[0] : null;
+  const recommendedBlogs = activeCategory ? [] : blogs.slice(1, 5);
+  const remainingBlogs = activeCategory ? categoryPosts : blogs.slice(5);
 
   const totalPages = Math.max(1, Math.ceil(remainingBlogs.length / BLOG_PAGE_SIZE));
-  const { page } = await searchParams;
   const requestedPage = Number.parseInt(page, 10) || 1;
   const currentPage = Math.min(Math.max(requestedPage, 1), totalPages);
 
@@ -37,6 +57,22 @@ export default async function BlogPage({ searchParams }) {
       <div className="blog_listing">
 
         <section className="our_blog">
+          {activeCategory ? (
+            <div className="blog_filter_bar">
+              <div>
+                <span className="blog_filter_label">Category</span>
+                <h1>{activeCategory.title}</h1>
+                <p>
+                  {categoryPosts.length}{" "}
+                  {categoryPosts.length === 1 ? "article" : "articles"}
+                </p>
+              </div>
+              <Link href="/blog" className="blog_filter_clear">
+                View all articles
+              </Link>
+            </div>
+          ) : null}
+
           {featuredBlog && currentPage === 1 ? (
           <div className="blog_top">
             <div className="main_blog">
@@ -52,6 +88,14 @@ export default async function BlogPage({ searchParams }) {
                   />
                 </div>
               </Link>
+              {featuredCategory ? (
+                <Link
+                  href={`/blog?category=${featuredCategory.slug}`}
+                  className="blog_category_badge"
+                >
+                  {featuredCategory.title}
+                </Link>
+              ) : null}
               <Link href={featuredHref} className="main_blog_text">
                 <h2 className="h5">{featuredBlog.heading}</h2>
                 <div className="blogs_date">
@@ -102,7 +146,15 @@ export default async function BlogPage({ searchParams }) {
             ))}
           </div>
 
-          <BlogPagination currentPage={currentPage} totalPages={totalPages} />
+          {activeCategory && otherBlogs.length === 0 ? (
+            <p className="blog_filter_empty">No articles in this category yet.</p>
+          ) : null}
+
+          <BlogPagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            category={activeCategory?.slug}
+          />
         </section>
       </div>
     </main>
