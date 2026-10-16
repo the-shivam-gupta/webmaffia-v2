@@ -7,7 +7,6 @@ const MANUAL_SCROLL_LOCK_MS = 900;
 
 export default function BlogStickyNav({ links }) {
   const [activeHref, setActiveHref] = useState(links[0]?.href ?? "");
-  const [progress, setProgress] = useState(0);
   const isManualScrollRef = useRef(false);
   const manualScrollTimerRef = useRef(null);
   const navRef = useRef(null);
@@ -94,18 +93,7 @@ export default function BlogStickyNav({ links }) {
       })
       .filter(Boolean);
 
-    const articleEl = document.querySelector(".blog_page .blog_content");
-    const onProgress = () => {
-      if (!articleEl) return;
-      const rect = articleEl.getBoundingClientRect();
-      const total = rect.height - window.innerHeight * 0.5;
-      const done = window.innerHeight * 0.25 - rect.top;
-      const pct = total > 0 ? Math.round((done / total) * 100) : 0;
-      setProgress(Math.min(100, Math.max(0, pct)));
-    };
-
     const onScroll = () => {
-      onProgress();
       if (!sections.length || isManualScrollRef.current) return;
       const offset = window.innerHeight * 0.25;
       let current = sections[0].href;
@@ -137,11 +125,8 @@ export default function BlogStickyNav({ links }) {
         <div className="sticky_article" ref={navRef}>
           <div className="sticky_head">
             <span className="sticky_head_label">In this article</span>
-            <span className="sticky_head_percent">{progress}%</span>
           </div>
-          <div className="sticky_progress" aria-hidden="true">
-            <span style={{ transform: `scaleX(${progress / 100})` }} />
-          </div>
+          <div className="sticky_progress" aria-hidden="true" />
           {links.map((link, index) => (
             <a
               key={link.href}

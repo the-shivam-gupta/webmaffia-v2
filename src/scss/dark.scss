@@ -25,6 +25,122 @@ html{
                 }
             }
         }
+        .blog_section .blog_set aside .blog_latest{
+            background: rgba(255,255,255,0.04);
+            .aside_title::after{
+                background: $white;
+            }
+            .blog_latest_item{
+                background: rgba(255,255,255,0.06);
+                border-color: rgba(255,255,255,0.1);
+                &:hover{
+                    border-color: $white;
+                }
+            }
+            .blog_latest_heading{
+                color: $white;
+            }
+            .blog_latest_meta{
+                color: rgba(255,255,255,0.6);
+            }
+        }
+        .blog_google_source{
+            background: rgba(255,255,255,0.06);
+            .blog_google_source_title{
+                color: $white;
+            }
+            .blog_google_source_text{
+                color: rgba(255,255,255,0.6);
+            }
+            .blog_google_source_light{
+                display: none;
+            }
+            .blog_google_source_dark{
+                display: block;
+            }
+        }
+        .reading_progress_bar span{
+            background: $white;
+        }
+        .reading_progress_chip{
+            background: $black;
+            border-color: rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.6);
+            .reading_progress_value{
+                color: $white;
+            }
+        }
+        .blog_enquiry{
+            background: rgba(255, 255, 255, 0.04);
+            color: $white;
+            &::before{
+                background: radial-gradient(circle, rgba(255, 255, 255, .1), transparent 70%);
+            }
+            .blog_enquiry_tag{
+                background: rgba(255, 255, 255, 0.08);
+                border-color: rgba(255, 255, 255, 0.15);
+                i{
+                    background: $white;
+                    animation-name: enquiry_pulse_dark;
+                }
+            }
+            .blog_enquiry_dots button{
+                background: rgba(255, 255, 255, 0.3);
+                &.is_on{
+                    background: $white;
+                }
+            }
+            .blog_enquiry_field{
+                background: rgba(255, 255, 255, 0.06);
+                border-color: rgba(255, 255, 255, 0.12);
+                svg{
+                    stroke: rgba(255, 255, 255, 0.6);
+                }
+                &:focus-within{
+                    border-color: $white;
+                    svg{
+                        stroke: $white;
+                    }
+                }
+                input{
+                    color: $white;
+                    &::placeholder{
+                        color: rgba(255, 255, 255, 0.6);
+                    }
+                }
+            }
+            .blog_enquiry_submit{
+                color: $white;
+                border-color: $white;
+                &:hover:not(:disabled){
+                    color: $black;
+                    background: $white;
+                }
+            }
+            .blog_enquiry_note,
+            .blog_enquiry_error{
+                color: rgba(255, 255, 255, 0.6);
+            }
+        }
+        .blog_share.blog_share_float{
+            background: $black;
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+        .blog_share{
+            .blog_share_label{
+                color: rgba(255, 255, 255, 0.6);
+            }
+            .blog_share_btn{
+                color: $white;
+                border-color: rgba(255, 255, 255, 0.2);
+                &:hover,
+                &.is_copied{
+                    color: $black;
+                    background: $white;
+                    border-color: $white;
+                }
+            }
+        }
         .blog_audio{
             background: rgba(255, 255, 255, 0.04);
             border-color: rgba(255, 255, 255, 0.12);
@@ -204,6 +320,16 @@ html{
         }
         header{
             background: $black;
+            .header_nav a{
+                color: $white;
+            }
+            .header_nav .header_nav_dropdown{
+                background: $black;
+                border-color: rgba(255, 255, 255, 0.15);
+                a:hover{
+                    background: rgba(255, 255, 255, 0.08);
+                }
+            }
             .logo, .menu{
                 img{
                     filter: invert(1);

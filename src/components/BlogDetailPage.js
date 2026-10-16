@@ -1,6 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import BlogAudioPlayer from "./BlogAudioPlayer";
+import BlogEnquiryForm from "./BlogEnquiryForm";
+import BlogReadingProgress from "./BlogReadingProgress";
+import BlogShare from "./BlogShare";
 import BlogStickyNav from "./BlogStickyNav";
 
 const BLOG_SERVICES = [
@@ -26,13 +29,16 @@ export default function BlogDetailPage({
   imageAlt = "",
   stickyLinks: stickyLinksProp,
   relatedPosts: relatedPostsProp,
+  latestPosts: latestPostsProp,
   children,
 }) {
   const stickyLinks = stickyLinksProp ?? [];
   const relatedPosts = relatedPostsProp ?? [];
+  const latestPosts = (latestPostsProp ?? relatedPosts).slice(0, 3);
 
   return (
     <main className="wrapper">
+      <BlogReadingProgress />
       <div className="ml-setter blog_detail">
         <section className="blog_main" data-section="blog_main">
           <div className="blog_section">
@@ -45,10 +51,14 @@ export default function BlogDetailPage({
                   <Link href="/blog">Blog</Link>
                 </nav>
                 <h1>{title}</h1>
-                <div className="blog_date">
-                  <span>{date}</span>
-                  <span>|</span>
-                  <span>{readTime}</span>
+                <div className="blog_meta">
+                  <div className="blog_date">
+                    <span>{date}</span>
+                    <span>|</span>
+                    <span>{readTime}</span>
+                  </div>
+                  <BlogShare title={title} />
+                  <BlogShare title={title} variant="float" />
                 </div>
                 {author ? (
                   <div className="author_byline">
@@ -71,6 +81,33 @@ export default function BlogDetailPage({
                 <div className="blog_info" />
               </div>
               <aside>
+                {latestPosts.length > 0 ? (
+                  <div className="blog_latest">
+                    <div className="aside_title">Latest articles</div>
+                    <div className="blog_latest_list">
+                      {latestPosts.map((post) => (
+                        <Link key={post.href} href={post.href} className="blog_latest_item">
+                          <div className="blog_latest_image">
+                            <Image
+                              src={post.image}
+                              alt={post.imageAlt || ""}
+                              fill
+                              sizes="(max-width: 900px) 40vw, 14rem"
+                              className="blog_latest_img"
+                            />
+                          </div>
+                          <div className="blog_latest_info">
+                            <div className="blog_latest_heading">{post.title}</div>
+                            <div className="blog_latest_meta">
+                              <span>{post.date}</span>
+                              <span>{post.readTime}</span>
+                            </div>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
                 <div className="blog_services">
                   <div className="aside_title">
                     Services that <br />
@@ -89,7 +126,34 @@ export default function BlogDetailPage({
                     ))}
                   </div>
                 </div>
-                <BlogStickyNav links={stickyLinks} />
+                <div className="blog_toc_wrap">
+                  <BlogStickyNav links={stickyLinks} />
+                </div>
+                {/* Same Google "preferred source" button as the footer. The script
+                    (loaded in the footer) only scans the DOM once, so both
+                    themes are rendered and toggled with CSS. */}
+                <div className="blog_google_source">
+                  <div className="blog_google_source_title">
+                    Prefer our articles on Google?
+                  </div>
+                  <p className="blog_google_source_text">
+                    See more of Webmaffia in the Top stories section when you
+                    search on Google.
+                  </p>
+                  <div
+                    className="blog_google_source_light"
+                    google-add-preferred-source-btn=""
+                    data-theme="light"
+                  />
+                  <div
+                    className="blog_google_source_dark"
+                    google-add-preferred-source-btn=""
+                    data-theme="dark"
+                  />
+                </div>
+                <div className="blog_enquiry_wrap">
+                  <BlogEnquiryForm />
+                </div>
               </aside>
             </div>
           </div>

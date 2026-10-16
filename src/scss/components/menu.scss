@@ -31,6 +31,111 @@ header{
             overflow: visible;
         }
     }
+// Desktop-only inline navigation inside the header
+.header_nav{
+    display: none;
+    @media all and (min-width: 1025px){
+        display: flex;
+        align-items: center;
+        gap: 4rem;
+        margin-left: auto; // push the links to the right, next to the menu controls
+        margin-right: 2rem;
+    }
+    a{
+        position: relative;
+        font-size: 2rem;
+        font-weight: 500;
+        letter-spacing: .05rem;
+        color: $black;
+        padding: .8rem 0;
+        &::after{
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: .2rem;
+            width: 100%;
+            height: .1rem;
+            background: currentColor;
+            transform: scaleX(0);
+            transform-origin: left center;
+            transition: transform .3s ease;
+        }
+        &:hover::after{
+            transform: scaleX(1);
+        }
+    }
+    .header_nav_item{
+        position: relative;
+        > a{
+            display: inline-flex;
+            align-items: center;
+            gap: .8rem;
+            // small chevron
+            &::before{
+                content: '';
+                order: 2;
+                width: .6rem;
+                height: .6rem;
+                margin-top: -.3rem;
+                border-right: .15rem solid currentColor;
+                border-bottom: .15rem solid currentColor;
+                transform: rotate(45deg);
+                transition: transform .3s ease;
+            }
+        }
+        // invisible bridge so the dropdown doesn't close while moving the mouse down
+        &.has_dropdown::before{
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 100%;
+            height: 2rem;
+        }
+        .header_nav_dropdown{
+            position: absolute;
+            top: calc(100% + 1.4rem);
+            left: -2rem;
+            min-width: 28rem;
+            margin: 0;
+            padding: 1.2rem;
+            list-style: none;
+            background: $white;
+            border: .1rem solid $black_10;
+            border-radius: 1.6rem;
+            box-shadow: 0 1.2rem 3rem rgba(0, 0, 0, .1);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(1rem);
+            transition: opacity .25s ease, transform .25s ease, visibility .25s;
+            a{
+                display: block;
+                font-size: 1.5rem;
+                font-weight: 400;
+                padding: 1rem 1.4rem;
+                border-radius: .8rem;
+                transition: background .2s ease;
+                &::after{
+                    display: none;
+                }
+                &:hover{
+                    background: $black_4;
+                }
+            }
+        }
+        &:hover,
+        &:focus-within{
+            > a::before{
+                transform: rotate(225deg);
+            }
+            .header_nav_dropdown{
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(0);
+            }
+        }
+    }
+}
 .logo{
     width: 16.6rem;
     @include mobile(){
@@ -67,11 +172,10 @@ header{
     display: flex;
     align-items: center;
     gap: 1.9rem;
-    margin-left: 4.1rem;
-    @include mobile(){
-     &>div{
+    margin-left: 2rem;
+    // icon only: the text label is hidden (kept in the DOM for screen readers)
+    &>div{
         display: none;
-     }   
     }
     img{
         width: 2.5rem;

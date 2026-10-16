@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import Banner from "@/components/Banner";
 import BlogListItem from "@/components/BlogListItem";
 import BlogPagination from "@/components/BlogPagination";
 import JsonLd from "@/components/JsonLd";
@@ -14,37 +13,13 @@ const BREADCRUMB_SCHEMA = buildBreadcrumbSchema([
   { name: "Blog", path: "/blog" },
 ]);
 
-const bannerData = {
-  imagePosition: "right",
-  priority: true,
-  subheading: {
-    enabled: true,
-    text: "OUR BLOGS",
-  },
-  title: {
-    line1: "Creating a",
-    line2: "platform for your",
-    line3: "purpose",
-  },
-  description:
-    "Transforming visions into captivating digital landscapes,\nwe crafts tailored solutions that elevate brands and engage\naudiences. With a focus on innovation and precision, we\nbring your online presence to life, delivering seamless user\nexperiences that resonate and inspire.",
-  images: {
-    banner: {
-      url: "/assets/images/blogs/blog-banner.svg",
-      alt: "",
-      width: 788,
-      height: 693,
-    },
-  },
-};
-
 export default async function BlogPage({ searchParams }) {
   const blogs = await getBlog();
 
   const featuredBlog = blogs[0];
   const featuredHref = featuredBlog ? `/blog/${featuredBlog.slug}` : "/blog";
-  const recommendedBlogs = blogs.slice(1, 4);
-  const remainingBlogs = blogs.slice(4);
+  const recommendedBlogs = blogs.slice(1, 5);
+  const remainingBlogs = blogs.slice(5);
 
   const totalPages = Math.max(1, Math.ceil(remainingBlogs.length / BLOG_PAGE_SIZE));
   const { page } = await searchParams;
@@ -60,7 +35,6 @@ export default async function BlogPage({ searchParams }) {
     <main className="wrapper">
       <JsonLd data={BREADCRUMB_SCHEMA} />
       <div className="blog_listing">
-        <Banner data={bannerData} />
 
         <section className="our_blog">
           {featuredBlog && currentPage === 1 ? (

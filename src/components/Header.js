@@ -7,6 +7,17 @@ import { toggleTheme } from "@/lib/theme";
 import { openKlaviyoPopup } from "@/lib/klaviyo";
 import KlaviyoFormEmbed from "@/components/KlaviyoFormEmbed";
 
+const SERVICE_LINKS = [
+  { href: "/services/digital-strategy", label: "Digital Strategy" },
+  { href: "/services/website-design-development-services", label: "Design and Development" },
+  { href: "/services/search-engine-optimization-services", label: "SEO" },
+  { href: "/services/ai-powered-solutions-services", label: "AI-Powered Solutions" },
+  { href: "/services/social-media-marketing-strategy", label: "Social Media" },
+  { href: "/services/content-marketing-strategy", label: "Content Marketing" },
+  { href: "/services/app-store-optimization", label: "App Store Optimization" },
+  { href: "/services/influencer-marketing", label: "Influencer Marketing" },
+];
+
 const Header = () => {
   const servicesSubRef = useRef(null);
   const campaignsSubRef = useRef(null);
@@ -112,7 +123,9 @@ const Header = () => {
 
   return (
     <>
-      <header className={menuOpen ? "opacity_0 menu_active" : "opacity_0"}>
+      <header
+        className={menuOpen ? "opacity_0 menu_active" : "opacity_0"}
+      >
         <Link href="/" className="logo">
           <Image
             src="/assets/images/icons/webmaffia.webp"
@@ -122,9 +135,27 @@ const Header = () => {
           />
         </Link>
 
+        {/* Desktop-only quick links (hidden below 1025px via CSS) */}
+        <nav className="header_nav" aria-label="Main">
+          <Link href="/about">About Us</Link>
+          <div className="header_nav_item has_dropdown">
+            <Link href="/services">Services</Link>
+            <ul className="header_nav_dropdown">
+              {SERVICE_LINKS.map(({ href, label }) => (
+                <li key={href}>
+                  <Link href={href}>{label}</Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <Link href="/case-study">Our Work</Link>
+          <Link href="/clients">Our Client</Link>
+          <Link href="/blog">Blog</Link>
+        </nav>
+
         <div className="right_menu">
           {/* Menu toggle */}
-          <a href="" className="menu" onClick={openMenu}>
+          <a href="" className="menu" onClick={openMenu} aria-label="Open menu">
             <div>Menu</div>
             <Image
               src="/assets/images/icons/menu.webp"
