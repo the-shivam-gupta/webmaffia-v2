@@ -1,11 +1,12 @@
 import Link from "next/link";
 
-function buildHref(page, category) {
+function buildHref(page, category, search) {
   const params = new URLSearchParams();
   if (category) params.set("category", category);
+  if (search) params.set("q", search);
   if (page > 1) params.set("page", String(page));
-  const query = params.toString();
-  return query ? `/blog?${query}` : "/blog";
+  const qs = params.toString();
+  return qs ? `/blog?${qs}` : "/blog";
 }
 
 function getPageNumbers(currentPage, totalPages) {
@@ -15,7 +16,7 @@ function getPageNumbers(currentPage, totalPages) {
     .sort((a, b) => a - b);
 }
 
-export default function BlogPagination({ currentPage, totalPages, category }) {
+export default function BlogPagination({ currentPage, totalPages, category, query }) {
   if (totalPages <= 1) return null;
 
   const pageNumbers = getPageNumbers(currentPage, totalPages);
@@ -23,7 +24,7 @@ export default function BlogPagination({ currentPage, totalPages, category }) {
   return (
     <nav className="blog_pagination" aria-label="Blog pagination">
       <Link
-        href={buildHref(currentPage - 1, category)}
+        href={buildHref(currentPage - 1, category, query)}
         className={`blog_pagination_arrow ${currentPage === 1 ? "disabled" : ""}`}
         aria-disabled={currentPage === 1}
         tabIndex={currentPage === 1 ? -1 : undefined}
@@ -40,7 +41,7 @@ export default function BlogPagination({ currentPage, totalPages, category }) {
             <li key={page}>
               {showEllipsis ? <span className="blog_pagination_ellipsis">…</span> : null}
               <Link
-                href={buildHref(page, category)}
+                href={buildHref(page, category, query)}
                 className={`blog_pagination_number ${page === currentPage ? "active" : ""}`}
                 aria-current={page === currentPage ? "page" : undefined}
               >
@@ -52,7 +53,7 @@ export default function BlogPagination({ currentPage, totalPages, category }) {
       </ul>
 
       <Link
-        href={buildHref(currentPage + 1, category)}
+        href={buildHref(currentPage + 1, category, query)}
         className={`blog_pagination_arrow ${currentPage === totalPages ? "disabled" : ""}`}
         aria-disabled={currentPage === totalPages}
         tabIndex={currentPage === totalPages ? -1 : undefined}

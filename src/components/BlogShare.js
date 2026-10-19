@@ -41,17 +41,24 @@ export default function BlogShare({ title = "", variant = "inline" }) {
     setUrl(window.location.href);
   }, []);
 
-  // floating bar: hide it once it would touch the footer
+  // floating bar: hidden until the audio player scrolls into view, and hidden
+  // again once it would touch the footer
   useEffect(() => {
     if (variant !== "float") return undefined;
     const footer = document.querySelector("footer");
-    if (!footer) return undefined;
 
     const onScroll = () => {
       const bar = rootRef.current;
       if (!bar) return;
+      const audio = document.querySelector(".blog_audio");
+      const beforeAudio = audio
+        ? audio.getBoundingClientRect().top > window.innerHeight
+        : false;
       const barBottom = bar.getBoundingClientRect().bottom;
-      setHidden(footer.getBoundingClientRect().top <= barBottom + 24);
+      const atFooter = footer
+        ? footer.getBoundingClientRect().top <= barBottom + 24
+        : false;
+      setHidden(beforeAudio || atFooter);
     };
 
     onScroll();

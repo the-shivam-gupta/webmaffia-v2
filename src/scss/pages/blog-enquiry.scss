@@ -11,13 +11,14 @@
 .blog_enquiry{
     position: sticky;
     top: 11rem;
-    overflow: hidden;
-    padding: 3.4rem 3rem 3rem;
+    overflow: visible;
+    padding: 2.4rem 2.4rem 1rem;
     color: $black;
     background: $black_4;
     @include mobile(){
-        position: static;
-        padding: 6rem 5rem;
+        position: relative; // keeps the ::before wash contained to the card
+        top: auto;
+        padding: 4rem 4rem 2rem;
     }
 
     // light blue wash across the whole card
@@ -28,16 +29,131 @@
         background: linear-gradient(160deg, rgba(120, 190, 255, .28) 0%, rgba(120, 190, 255, .1) 55%, rgba(120, 190, 255, .02) 100%);
         pointer-events: none;
     }
+    // Klaviyo form: let it grow to full height (no inner clipping/scroll) and tighten it
+    .formWarpperx,
+    [class*="klaviyo-form"],
+    [class*="klaviyo-form"] form{
+        overflow: visible !important;
+        max-height: none !important;
+        height: auto !important;
+    }
+    // inner wrappers must never clip or fix their height (last checkbox was cut off)
+    [class*="klaviyo-form"] form *{
+        overflow: visible !important;
+        max-height: none !important;
+    }
+    [class*="klaviyo-form"] form [role="group"],
+    [class*="klaviyo-form"] form [role="radiogroup"],
+    [class*="klaviyo-form"] form fieldset{
+        height: auto !important;
+        min-height: 0 !important;
+        padding-bottom: 1rem !important;
+    }
+    [class*="klaviyo-form"] form{
+        padding-bottom: 1rem !important;
+        > div{
+            margin-bottom: 0 !important;
+        }
+        input:not([type="checkbox"]):not([type="radio"]){
+            padding-top: .8rem !important;
+            padding-bottom: .8rem !important;
+            min-height: 0 !important;
+            height: 4.2rem !important;
+            font-size: 1.4rem !important;
+        }
+        // "Services Interested In": compact, aligned checkbox list
+        fieldset,
+        [role="group"],
+        [role="radiogroup"]{
+            display: flex !important;
+            flex-direction: column;
+            align-items: stretch !important;
+            justify-content: flex-start !important;
+            text-align: left !important;
+            gap: .6rem;
+            margin: 0 !important;
+            padding: 0 !important;
+            border: 0 !important;
+            @include mobile(){
+                gap: 1.4rem;
+            }
+        }
+        // each option: box + text on one line
+        [role="group"] > *,
+        [role="radiogroup"] > *,
+        fieldset > div{
+            display: flex !important;
+            align-items: center;
+            justify-content: flex-start !important;
+            width: 100% !important;
+            gap: 1rem;
+            margin: 0 !important;
+            padding-left: 0 !important;
+            text-align: left !important;
+            white-space: normal;
+            word-break: normal !important;
+            overflow-wrap: normal !important;
+        }
+        input[type="checkbox"],
+        input[type="radio"]{
+            flex: none;
+            width: 1.8rem !important;
+            height: 1.8rem !important;
+            min-height: 0 !important;
+            margin: 0 !important;
+            accent-color: $black;
+            cursor: pointer;
+            @include mobile(){
+                width: 3.4rem !important;
+                height: 3.4rem !important;
+            }
+        }
+        // inner wrappers Klaviyo adds around each checkbox/label must not centre or indent
+        [role="group"] > * > *,
+        [role="radiogroup"] > * > *,
+        fieldset > div > *{
+            justify-content: flex-start !important;
+            margin-left: 0 !important;
+            text-align: left !important;
+        }
+        input[type="checkbox"] + *,
+        input[type="radio"] + *,
+        label:has(input[type="checkbox"]),
+        label:has(input[type="radio"]){
+            font-size: 1.4rem !important;
+            line-height: 1.3 !important;
+            color: $black !important;
+            cursor: pointer;
+            @include mobile(){
+                font-size: 3rem !important;
+            }
+        }
+        label{
+            margin-bottom: .2rem !important;
+            font-size: 1.3rem !important;
+        }
+    }
     > *{
         position: relative;
     }
 
+    // tag on the left, heading dots on the right - one row instead of two
+    .blog_enquiry_top{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1.2rem;
+        margin-bottom: 1.2rem;
+        @include mobile(){
+            margin-bottom: 2.4rem;
+        }
+    }
     .blog_enquiry_tag{
         display: inline-flex;
         align-items: center;
         gap: .8rem;
         padding: .6rem 1.4rem;
-        margin-bottom: 1.8rem;
+        margin-bottom: 0;
         font-size: 1.2rem;
         letter-spacing: .15rem;
         text-transform: uppercase;
@@ -58,13 +174,13 @@
     }
 
     .blog_enquiry_heading{
-        min-height: 7.2rem;
-        margin-bottom: 1.4rem;
-        font-size: 2.8rem;
+        min-height: 0;
+        margin-bottom: 1rem;
+        font-size: 2.4rem;
         line-height: 1.25;
         @include mobile(){
-            min-height: 14rem;
-            font-size: 5.2rem;
+            min-height: 0;
+            font-size: 4.4rem;
         }
         span{
             display: block;
@@ -75,8 +191,9 @@
     // heading position dots (clickable)
     .blog_enquiry_dots{
         display: flex;
+        flex: none;
         gap: .6rem;
-        margin-bottom: 2.4rem;
+        margin-bottom: 0;
         @include mobile(){
             gap: 1.2rem;
         }
@@ -101,139 +218,6 @@
                 }
             }
         }
-    }
-
-    .blog_enquiry_field{
-        display: flex;
-        align-items: center;
-        gap: 1.2rem;
-        margin-bottom: 1rem;
-        padding: 0 1.6rem;
-        // frosted glass so the blue gradient shows through
-        background: rgba(255, 255, 255, .55);
-        -webkit-backdrop-filter: blur(.8rem);
-        backdrop-filter: blur(.8rem);
-        border: .1rem solid rgba(255, 255, 255, .85);
-        border-radius: 1.2rem;
-        transition: border-color .3s ease, box-shadow .3s ease, background .3s ease;
-        @include mobile(){
-            gap: 2rem;
-            padding: 0 3rem;
-            margin-bottom: 2rem;
-        }
-        svg{
-            flex: none;
-            width: 1.8rem;
-            height: 1.8rem;
-            fill: none;
-            stroke: $black_60;
-            stroke-width: 1.6;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-            transition: stroke .3s ease;
-            @include mobile(){
-                width: 3.6rem;
-                height: 3.6rem;
-            }
-        }
-        &:focus-within{
-            background: rgba(255, 255, 255, .9);
-            border-color: $black;
-            box-shadow: 0 .4rem 1.4rem rgba(60, 130, 200, .18);
-            svg{
-                stroke: $black;
-            }
-        }
-        input{
-            flex: 1;
-            min-width: 0;
-            padding: 1.5rem 0;
-            font: inherit;
-            font-size: 1.6rem;
-            color: $black;
-            background: transparent;
-            border: 0;
-            outline: none;
-            @include mobile(){
-                font-size: 3.6rem;
-                padding: 2.6rem 0;
-            }
-            &::placeholder{
-                color: $black_60;
-            }
-        }
-    }
-
-    .blog_enquiry_submit{
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 1.2rem;
-        width: 100%;
-        margin-top: 1.6rem;
-        padding: 1.6rem 2rem;
-        font: inherit;
-        font-size: 1.6rem;
-        cursor: pointer;
-        color: $black;
-        background: transparent;
-        border: .1rem solid $black;
-        border-radius: 1.2rem;
-        transition: background .3s ease, color .3s ease;
-        @include mobile(){
-            font-size: 3.6rem;
-            padding: 3rem 2rem;
-            gap: 2rem;
-        }
-        svg{
-            width: 1.8rem;
-            height: 1.8rem;
-            fill: none;
-            stroke: currentColor;
-            stroke-width: 1.6;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-            transition: transform .3s ease;
-            @include mobile(){
-                width: 3.6rem;
-                height: 3.6rem;
-            }
-        }
-        &:hover:not(:disabled){
-            color: $white;
-            background: $black;
-            svg{
-                transform: translateX(.5rem);
-            }
-        }
-        &:disabled{
-            opacity: .6;
-            cursor: default;
-        }
-    }
-
-    .blog_enquiry_note{
-        margin: 1.4rem 0 0;
-        font-size: 1.2rem;
-        text-align: center;
-        letter-spacing: .05rem;
-        color: $black_60;
-        @include mobile(){
-            font-size: 2.6rem;
-            margin-top: 3rem;
-        }
-    }
-    .blog_enquiry_done,
-    .blog_enquiry_error{
-        margin: 2rem 0 0;
-        font-size: 1.6rem;
-        line-height: 1.5;
-        @include mobile(){
-            font-size: 3.4rem;
-        }
-    }
-    .blog_enquiry_error{
-        color: $black_60;
     }
 }
 

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import BlogListItem from "@/components/BlogListItem";
+import BlogSearch from "@/components/BlogSearch";
 import BlogPagination from "@/components/BlogPagination";
 import JsonLd from "@/components/JsonLd";
 import {
@@ -22,16 +23,20 @@ const BREADCRUMB_SCHEMA = buildBreadcrumbSchema([
 // /blog?category=<slug> gets its own tab title, description and canonical URL.
 // Without a (valid) category the layout's default "Blog | Webmaffia" metadata applies.
 export async function generateMetadata({ searchParams }) {
-  const { category } = await searchParams;
-  if (!category) return {};
+  const { category, q } = await searchParams;
+  // Search results are thin, duplicate-prone pages: keep them out of the index
+  const isSearch = typeof q === "string" && q.trim() !== "";
+  const robots = isSearch ? { robots: { index: false, follow: true } } : {};
+  if (!category) return robots;
 
   const blogs = await getBlog();
   const match = blogs
     .flatMap(getBlogCategories)
     .find((item) => item.slug === categorySlug(category));
-  if (!match) return {};
+  if (!match) return robots;
 
   return {
+    ...robots,
     title: `${match.title} Articles | Webmaffia`,
     description: `Read the latest ${match.title} articles, guides and insights from the Webmaffia team.`,
     alternates: {
@@ -43,7 +48,8 @@ export async function generateMetadata({ searchParams }) {
 export default async function BlogPage({ searchParams }) {
   const blogs = await getBlog();
 
-  const { page, category } = await searchParams;
+  const { page, category, q } = await searchParams;
+  const query = typeof q === "string" ? q.trim() : "";
 
   // /blog?category=<slug> shows every post tagged with that category
   const activeCategory = category
@@ -57,11 +63,22 @@ export default async function BlogPage({ searchParams }) {
       )
     : [];
 
-  const featuredBlog = activeCategory ? null : blogs[0];
+  // /blog?q=<text> lists posts whose title or slug contains every search word.
+  // With an active category the search runs inside that category only.
+  const words = query.toLowerCase().split(/\s+/).filter(Boolean);
+  const searchPosts = query
+    ? (activeCategory ? categoryPosts : blogs).filter((post) => {
+        const haystack = `${post.heading ?? ""} ${post.slug ?? ""}`.toLowerCase();
+        return words.every((word) => haystack.includes(word));
+      })
+    : [];
+  const isFiltered = Boolean(activeCategory || query);
+
+  const featuredBlog = isFiltered ? null : blogs[0];
   const featuredHref = featuredBlog ? `/blog/${featuredBlog.slug}` : "/blog";
   const featuredCategory = featuredBlog ? getBlogCategories(featuredBlog)[0] : null;
-  const recommendedBlogs = activeCategory ? [] : blogs.slice(1, 5);
-  const remainingBlogs = activeCategory ? categoryPosts : blogs.slice(5);
+  const recommendedBlogs = isFiltered ? [] : blogs.slice(1, 5);
+  const remainingBlogs = query ? searchPosts : activeCategory ? categoryPosts : blogs.slice(5);
 
   const totalPages = Math.max(1, Math.ceil(remainingBlogs.length / BLOG_PAGE_SIZE));
   const requestedPage = Number.parseInt(page, 10) || 1;
@@ -78,7 +95,28 @@ export default async function BlogPage({ searchParams }) {
       <div className="blog_listing">
 
         <section className="our_blog">
-          {activeCategory ? (
+          <BlogSearch defaultValue={query} category={activeCategory?.slug} />
+          {query ? (
+            <div className="blog_filter_bar">
+              <div>
+                <span className="blog_filter_label">
+                  {activeCategory ? `Search in ${activeCategory.title}` : "Search"}
+                </span>
+                <h1>&ldquo;{query}&rdquo;</h1>
+                <p>
+                  {searchPosts.length}{" "}
+                  {searchPosts.length === 1 ? "article" : "articles"} found
+                </p>
+              </div>
+              <Link
+                href={activeCategory ? `/blog?category=${activeCategory.slug}` : "/blog"}
+                className="blog_filter_clear"
+              >
+                {activeCategory ? `Clear search` : "View all articles"}
+              </Link>
+            </div>
+          ) : null}
+          {activeCategory && !query ? (
             <div className="blog_filter_bar">
               <div>
                 <span className="blog_filter_label">Category</span>
@@ -167,14 +205,17 @@ export default async function BlogPage({ searchParams }) {
             ))}
           </div>
 
-          {activeCategory && otherBlogs.length === 0 ? (
-            <p className="blog_filter_empty">No articles in this category yet.</p>
+          {isFiltered && otherBlogs.length === 0 ? (
+            <p className="blog_filter_empty">
+              {query ? "No articles match your search." : "No articles in this category yet."}
+            </p>
           ) : null}
 
           <BlogPagination
             currentPage={currentPage}
             totalPages={totalPages}
             category={activeCategory?.slug}
+            query={query}
           />
         </section>
       </div>

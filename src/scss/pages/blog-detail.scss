@@ -606,10 +606,10 @@
                     margin-top: 3.4rem;
                     display: flex;
                     flex-direction: column;
-                    gap: 3.4rem;
+                    gap: 1rem; // items carry 1.2rem padding each, so this keeps the old visual spacing
                     @include mobile(){
                         margin-top: 6rem;
-                        gap: 4rem;
+                        gap: 1.6rem; // items carry 2.4rem padding on mobile
                     }
                 }
                 .blog_latest_item{
@@ -617,42 +617,25 @@
                     grid-template-columns: 12rem minmax(0, 1fr);
                     gap: 1.6rem;
                     align-items: center;
-                    padding: 0;
-                    transition: color .3s ease;
+                    padding: 1.2rem; // breathing room so the hover shadow doesn't hug the image
+                    transition: color .3s ease, transform .45s cubic-bezier(.2, .7, .2, 1), box-shadow .45s ease, background-color .45s ease;
                     position: relative;
-                    // Same border fill on hover as the Recommended items on /blog
-                    &::before,
-                    &::after{
-                        content: '';
-                        position: absolute;
-                        width: 0;
-                        height: 0;
-                        border: 0.1rem solid transparent;
-                        pointer-events: none;
-                        z-index: 1;
-                        box-sizing: border-box;
-                        transition: none; // no reverse animation on mouse leave
-                    }
-                    &::before{
-                        top: -1.5rem;
-                        left: -1.5rem;
-                        border-top-color: currentColor;
-                        border-left-color: currentColor;
-                    }
-                    &::after{
-                        bottom: -1.5rem;
-                        right: -1.5rem;
-                        border-bottom-color: currentColor;
-                        border-right-color: currentColor;
+                    border-radius: 1.2rem;
+                    @media (hover: hover){
+                        &:hover{
+                            background-color: $white;
+                            transform: translateY(-.3rem);
+                            box-shadow: 0 .2rem .6rem rgba(0, 0, 0, .04), 0 1.6rem 3.2rem -1rem rgba(0, 0, 0, .2);
+                        }
                     }
                     @include mobile(){
                         grid-template-columns: 26rem minmax(0, 1fr);
                         gap: 3rem;
-                        padding: 0;
+                        padding: 2.4rem;
                     }
                     .blog_latest_image{
                         position: relative;
-                        aspect-ratio: 4 / 3;
+                        aspect-ratio: 16 / 9;
                         overflow: hidden;
                         .blog_latest_img{
                             object-fit: cover;
@@ -682,14 +665,6 @@
                         color: $black_60;
                         @include mobile(){
                             font-size: 2.8rem;
-                        }
-                    }
-                    @media (hover: hover){
-                        &:hover::before,
-                        &:hover::after{
-                            width: calc(100% + 3rem);
-                            height: calc(100% + 3rem);
-                            transition: width 0.7s ease-out, height 0.3s ease-out 0.3s;
                         }
                     }
                 }
