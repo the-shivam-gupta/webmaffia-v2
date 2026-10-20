@@ -126,11 +126,9 @@
         grid-template-columns: 17.6rem minmax(0, 1fr);
         gap: 1.6rem;
         align-items: center;
-        padding: 1.2rem; // breathing room so the hover shadow doesn't hug the image
         @include mobile(){
             grid-template-columns: 32rem minmax(0, 1fr);
             gap: 3rem;
-            padding: 2.4rem;
         }
         .recommended_image{
             position: relative;
@@ -166,11 +164,7 @@
             }
         }
         position: relative;
-        border-radius: 1.2rem;
         transition: transform .45s cubic-bezier(.2, .7, .2, 1), box-shadow .45s ease, background-color .45s ease;
-        @include mobile(){
-            border-radius: 2.4rem;
-        }
         @media (hover: hover){
             &:hover{
                 transform: translateY(-.3rem);
@@ -228,12 +222,13 @@
     }
     .blog_item{
         position: relative;
-        padding: 1.6rem; // breathing room so the hover shadow doesn't hug the image
-        border-radius: 1.6rem;
         transition: transform .45s cubic-bezier(.2, .7, .2, 1), box-shadow .45s ease, background-color .45s ease;
-        @include mobile(){
-            padding: 3.2rem;
-            border-radius: 3.2rem;
+        // image runs edge to edge; only the content below is padded
+        > div{
+            padding: 0 1.6rem 1.6rem;
+            @include mobile(){
+                padding: 0 3.2rem 3.2rem;
+            }
         }
         @media (hover: hover){
             &:hover{

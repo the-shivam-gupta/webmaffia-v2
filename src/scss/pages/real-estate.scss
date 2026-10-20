@@ -1,0 +1,574 @@
+// /services/real-estate-website-design-development
+// Editorial layout on a plain white page. Scoped under .re_page so nothing
+// leaks into the CMS-driven service pages. The hero is the shared Banner.
+
+.re_page{
+    --re-bg: #{$white};
+    --re-ink: #{$black};
+    --re-muted: #{$black_60};
+    --re-line: #{$black_10};
+    margin: 8rem 8rem 4rem;
+    background: var(--re-bg);
+    color: var(--re-ink);
+    @include tablet(){
+        margin: 8rem 4rem 4rem;
+    }
+    @include mobile(){
+        margin: 12rem 3rem 4rem;
+    }
+
+    // dark mode toggle: colours follow the site theme (white stays white in light mode)
+    html.active &{
+        --re-bg: #{$black};
+        --re-ink: #{$white};
+        --re-muted: #{$white_60};
+        --re-line: #{$white_10};
+    }
+
+    h2, h3, p, a, li, span, b, dt, dd, th, td{
+        color: inherit;
+    }
+    h2, h3, p, dl, dd, ol, ul{
+        width: auto;
+        margin: 0;
+        padding: 0;
+    }
+    ul, ol{
+        list-style: none;
+    }
+    a{
+        text-decoration: none;
+    }
+
+    // ---------- shared type ----------
+    .re_label{
+        margin-bottom: 2rem;
+        font-size: 1.4rem;
+        font-weight: $medium;
+        letter-spacing: .14em;
+        text-transform: uppercase;
+        color: var(--re-muted);
+        @include mobile(){
+            font-size: 2.6rem;
+            margin-bottom: 3rem;
+        }
+    }
+    h2, h3{
+        text-transform: none;
+        letter-spacing: normal;
+    }
+    h2{
+        font-size: 5.6rem;
+        line-height: 1.04;
+        font-weight: $exlight;
+        letter-spacing: -.01em;
+        @include mobile(){
+            font-size: 8.4rem;
+        }
+    }
+    h3{
+        font-size: 2.4rem;
+        line-height: 1.2;
+        font-weight: $regular;
+        @include mobile(){
+            font-size: 4.2rem;
+        }
+    }
+    p{
+        font-size: 1.8rem;
+        line-height: 1.6;
+        @include mobile(){
+            font-size: 3.2rem;
+        }
+    }
+    .re_sub{
+        margin-top: 2.2rem;
+        max-width: 68rem;
+        font-size: 2rem;
+        line-height: 1.5;
+        color: var(--re-muted);
+        @include mobile(){
+            font-size: 3.2rem;
+            margin-top: 3rem;
+        }
+    }
+    .re_lead{
+        font-size: 2.8rem;
+        line-height: 1.35;
+        font-weight: $exlight;
+        @include mobile(){
+            font-size: 4.6rem;
+        }
+    }
+
+    // ---------- facts strip ----------
+    .re_facts{
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        border-top: .1rem solid var(--re-ink);
+        margin-bottom: 14rem;
+        @include mobile(){
+            grid-template-columns: 1fr;
+            margin-bottom: 20rem;
+        }
+        .re_fact{
+            padding: 3rem 3rem 0 0;
+            @include mobile(){
+                padding: 5rem 0 0;
+            }
+            b{
+                display: block;
+                font-size: 4.8rem;
+                line-height: 1;
+                font-weight: $exlight;
+                @include mobile(){
+                    font-size: 8rem;
+                }
+            }
+            span{
+                display: block;
+                margin-top: 1.2rem;
+                font-size: 1.6rem;
+                color: var(--re-muted);
+                @include mobile(){
+                    font-size: 3rem;
+                    margin-bottom: 3rem;
+                }
+            }
+        }
+    }
+
+    // ---------- split: pinned heading + content ----------
+    .re_split{
+        display: grid;
+        grid-template-columns: 4fr 7fr;
+        gap: 8rem;
+        padding-top: 5rem;
+        margin-bottom: 14rem;
+        border-top: .1rem solid var(--re-line);
+        @include tablet(){
+            grid-template-columns: 1fr;
+            gap: 5rem;
+        }
+        @include mobile(){
+            margin-bottom: 20rem;
+            padding-top: 8rem;
+        }
+        .re_split_head{
+            // reset the global header rules (flex row, padding, fixed position)
+            display: block;
+            width: auto;
+            height: auto;
+            padding: 0;
+            margin: 0;
+            background: none;
+            align-self: start;
+            position: sticky;
+            top: 12rem;
+            @include tablet(){
+                position: static;
+            }
+        }
+        .re_split_body{
+            > p + p{
+                margin-top: 2.4rem;
+            }
+            > p{
+                max-width: 76rem;
+            }
+        }
+    }
+
+    // ---------- named list (rules between rows) ----------
+    .re_named{
+        li{
+            display: flex;
+            gap: 3rem;
+            padding: 3.2rem 0;
+            border-bottom: .1rem solid var(--re-line);
+            &:first-child{
+                padding-top: 0;
+            }
+            @include mobile(){
+                padding: 5rem 0;
+                gap: 5rem;
+            }
+            h3{
+                margin-bottom: 1rem;
+            }
+            p{
+                max-width: 64rem;
+                color: var(--re-muted);
+            }
+        }
+        .re_n{
+            flex: none;
+            width: 5rem;
+            font-size: 1.6rem;
+            font-weight: $medium;
+            color: var(--re-muted);
+            padding-top: .6rem;
+            @include mobile(){
+                width: 9rem;
+                font-size: 3rem;
+            }
+        }
+    }
+
+    // ---------- definition rows ----------
+    .re_defs{
+        margin-top: 6rem;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0 4rem;
+        @include mobile(){
+            grid-template-columns: 1fr;
+            margin-top: 9rem;
+        }
+        > div{
+            padding: 2rem 0;
+            border-top: .1rem solid var(--re-line);
+            @include mobile(){
+                padding: 4rem 0;
+            }
+        }
+        dt{
+            font-size: 2rem;
+            font-weight: $regular;
+            @include mobile(){
+                font-size: 3.6rem;
+            }
+        }
+        dd{
+            margin-top: .6rem;
+            font-size: 1.6rem;
+            line-height: 1.5;
+            color: var(--re-muted);
+            @include mobile(){
+                font-size: 3rem;
+            }
+        }
+    }
+    .re_defs_row{
+        grid-template-columns: repeat(4, 1fr);
+        margin-top: 0;
+        @include tablet(){
+            grid-template-columns: 1fr 1fr;
+        }
+        @include mobile(){
+            grid-template-columns: 1fr;
+        }
+    }
+
+    // ---------- full-width block ----------
+    .re_block{
+        padding-top: 5rem;
+        margin-bottom: 14rem;
+        border-top: .1rem solid var(--re-line);
+        @include mobile(){
+            padding-top: 8rem;
+            margin-bottom: 20rem;
+        }
+    }
+
+    // ---------- tiles: open grid, no boxes ----------
+    .re_tiles{
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        margin-top: 7rem;
+        border-left: .1rem solid var(--re-line);
+        @include tablet(){
+            grid-template-columns: 1fr 1fr;
+        }
+        @include mobile(){
+            grid-template-columns: 1fr;
+            margin-top: 9rem;
+        }
+        article{
+            padding: 3.4rem 3.4rem 4.4rem;
+            border-right: .1rem solid var(--re-line);
+            border-bottom: .1rem solid var(--re-line);
+            border-top: .1rem solid var(--re-line);
+            margin-top: -.1rem;
+            transition: background-color .3s ease, color .3s ease;
+            @include mobile(){
+                padding: 6rem 5rem 7rem;
+            }
+            h3{
+                margin-bottom: 1.4rem;
+            }
+            p{
+                font-size: 1.6rem;
+                color: var(--re-muted);
+                transition: color .3s ease;
+                @include mobile(){
+                    font-size: 3rem;
+                }
+            }
+            &:hover{
+                background: var(--re-ink);
+                color: var(--re-bg);
+                p{
+                    color: inherit;
+                    opacity: .75;
+                }
+            }
+        }
+    }
+
+    // ---------- table ----------
+    .re_table_wrap{
+        margin-top: 6rem;
+        @include mobile(){
+            margin-top: 9rem;
+        }
+    }
+    .re_table{
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+        th, td{
+            padding: 2.4rem 2rem 2.4rem 0;
+            font-size: 1.7rem;
+            line-height: 1.45;
+            vertical-align: top;
+            border-bottom: .1rem solid var(--re-line);
+            font-weight: $light;
+        }
+        thead th{
+            font-size: 1.3rem;
+            font-weight: $medium;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            color: var(--re-muted);
+            border-bottom-color: var(--re-ink);
+        }
+        tbody th{
+            font-size: 2.2rem;
+            font-weight: $regular;
+        }
+        @include tablet(){
+            thead{
+                position: absolute;
+                width: .1rem;
+                height: .1rem;
+                overflow: hidden;
+                clip: rect(0 0 0 0);
+            }
+            tr, th, td{
+                display: block;
+            }
+            tr{
+                padding: 2.6rem 0;
+                border-bottom: .1rem solid var(--re-line);
+            }
+            th, td{
+                border: 0;
+                padding: .5rem 0;
+            }
+            td::before{
+                content: attr(data-label) ": ";
+                font-weight: $medium;
+                color: var(--re-muted);
+            }
+        }
+        @include mobile(){
+            th, td{
+                font-size: 3rem;
+            }
+            tbody th{
+                font-size: 4.2rem;
+            }
+        }
+    }
+    .re_link{
+        display: inline-block;
+        margin-top: 4rem;
+        font-size: 1.8rem;
+        border-bottom: .1rem solid currentColor;
+        padding-bottom: .3rem;
+        @include mobile(){
+            font-size: 3.2rem;
+            margin-top: 7rem;
+        }
+    }
+
+    // ---------- timeline ----------
+    .re_steps{
+        position: relative;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 7rem 4rem;
+        margin-top: 8rem;
+        counter-reset: none;
+        @include tablet(){
+            grid-template-columns: 1fr 1fr;
+        }
+        @include mobile(){
+            grid-template-columns: 1fr;
+            gap: 8rem;
+            margin-top: 10rem;
+        }
+        li{
+            position: relative;
+            padding-top: 3rem;
+            border-top: .2rem solid var(--re-ink);
+            @include mobile(){
+                padding-top: 5rem;
+            }
+            h3{
+                margin: 1.6rem 0 1rem;
+            }
+            p{
+                font-size: 1.6rem;
+                color: var(--re-muted);
+                @include mobile(){
+                    font-size: 3rem;
+                }
+            }
+        }
+        .re_step_n{
+            display: block;
+            font-size: 4.4rem;
+            line-height: 1;
+            font-weight: $exlight;
+            @include mobile(){
+                font-size: 7rem;
+            }
+        }
+    }
+    .re_subhead{
+        margin: 10rem 0 3rem;
+        font-size: 3.2rem;
+        font-weight: $exlight;
+        @include mobile(){
+            margin: 14rem 0 5rem;
+            font-size: 5.6rem;
+        }
+    }
+
+    .re_links{
+        display: flex;
+        gap: 3.6rem;
+        margin-top: 4rem !important;
+        a{
+            font-size: 1.8rem;
+            border-bottom: .1rem solid currentColor;
+            padding-bottom: .3rem;
+            @include mobile(){
+                font-size: 3.2rem;
+            }
+        }
+    }
+
+    // ---------- measures ----------
+    .re_measures{
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 4rem;
+        margin: 7rem 0 5rem;
+        @include mobile(){
+            grid-template-columns: 1fr;
+            gap: 7rem;
+            margin: 9rem 0 7rem;
+        }
+        b{
+            display: block;
+            font-size: 4rem;
+            line-height: 1.1;
+            font-weight: $exlight;
+            @include mobile(){
+                font-size: 7rem;
+            }
+        }
+        span{
+            display: block;
+            margin-top: 1.2rem;
+            font-size: 1.7rem;
+            color: var(--re-muted);
+            @include mobile(){
+                font-size: 3.2rem;
+            }
+        }
+    }
+
+    // ---------- faq ----------
+    .re_faq{
+        max-width: 110rem;
+        .service_faqs{
+            margin-top: 4rem;
+        }
+    }
+
+    // ---------- related ----------
+    .re_related{
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 1.6rem 3.4rem;
+        margin-bottom: 14rem;
+        padding-top: 4rem;
+        border-top: .1rem solid var(--re-line);
+        @include mobile(){
+            gap: 3rem 5rem;
+            margin-bottom: 20rem;
+            padding-top: 7rem;
+        }
+        span{
+            font-size: 1.4rem;
+            font-weight: $medium;
+            letter-spacing: .14em;
+            text-transform: uppercase;
+            color: var(--re-muted);
+            @include mobile(){
+                width: 100%;
+                font-size: 2.6rem;
+            }
+        }
+        a{
+            font-size: 1.8rem;
+            border-bottom: .1rem solid transparent;
+            transition: border-color .3s ease;
+            @include mobile(){
+                font-size: 3.2rem;
+            }
+            &:hover{
+                border-bottom-color: currentColor;
+            }
+        }
+    }
+
+    // ---------- final CTA (white, type-led) ----------
+    .re_final{
+        padding: 6rem 0 2rem;
+        border-top: .2rem solid var(--re-ink);
+        h2{
+            max-width: 90rem;
+            font-size: 8rem;
+            @include mobile(){
+                font-size: 10rem;
+            }
+        }
+        .re_final_links{
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.6rem 5rem;
+            margin-top: 5rem;
+            @include mobile(){
+                flex-direction: column;
+                margin-top: 8rem;
+                gap: 4rem;
+            }
+            a{
+                font-size: 3.2rem;
+                font-weight: $exlight;
+                border-bottom: .1rem solid currentColor;
+                padding-bottom: .4rem;
+                @include mobile(){
+                    font-size: 5.4rem;
+                    align-self: flex-start;
+                }
+            }
+        }
+    }
+}

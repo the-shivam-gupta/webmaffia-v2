@@ -268,6 +268,8 @@
     }
     .blog_set{
         margin-top: 1rem;
+        flex: 1 1 auto;
+        min-width: 0; // let the row shrink to the viewport instead of pushing the aside off-screen
         display: flex;
         justify-content: space-between;
         align-items: stretch; // aside spans the article height so the nav can stick
@@ -277,8 +279,11 @@
         }
         .blog_page{
             width: 103rem;
+            flex: 0 1 103rem;
+            min-width: 0;
             @include mobile(){
                 width: 100%;
+                flex: none;
             }
             // holds the cover image so the category badge can sit on its corner
             .blog_detail_img_wrap{
@@ -432,8 +437,11 @@
             display: flex;
             flex-direction: column;
             width: 49rem;
+            flex: 0 1 49rem;
+            min-width: 0;
             @include mobile(){
                 width: 100%;
+                flex: none;
             }
             .blog_services{
                 background: $black_4;
@@ -614,13 +622,11 @@
                 }
                 .blog_latest_item{
                     display: grid;
-                    grid-template-columns: 12rem minmax(0, 1fr);
+                    grid-template-columns: 17rem minmax(0, 1fr);
                     gap: 1.6rem;
                     align-items: center;
-                    padding: 1.2rem; // breathing room so the hover shadow doesn't hug the image
                     transition: color .3s ease, transform .45s cubic-bezier(.2, .7, .2, 1), box-shadow .45s ease, background-color .45s ease;
                     position: relative;
-                    border-radius: 1.2rem;
                     @media (hover: hover){
                         &:hover{
                             background-color: $white;
@@ -629,17 +635,26 @@
                         }
                     }
                     @include mobile(){
-                        grid-template-columns: 26rem minmax(0, 1fr);
-                        gap: 3rem;
-                        padding: 2.4rem;
+                        grid-template-columns: 32rem minmax(0, 1fr);
+                        gap: 2.4rem;
                     }
                     .blog_latest_image{
                         position: relative;
-                        aspect-ratio: 16 / 9;
+                        min-width: 0; // stops the aspect-ratio from widening the image over the text
+                        aspect-ratio: 16 / 9; // keeps the artwork uncropped; the item height is matched to it
+                        align-self: stretch; // only grows (slight crop) if the text is taller
                         overflow: hidden;
                         .blog_latest_img{
                             object-fit: cover;
                             transition: transform .4s ease;
+                        }
+                    }
+                    // only the text is padded; the image sits flush to the item edge
+                    .blog_latest_info{
+                        padding: 1.2rem 1.2rem 1.2rem 0;
+                        min-width: 0;
+                        @include mobile(){
+                            padding: 1.6rem 1.6rem 1.6rem 0;
                         }
                     }
                     .blog_latest_heading{
@@ -648,8 +663,8 @@
                         line-height: 1.3;
                         margin-bottom: .8rem;
                         display: -webkit-box;
-                        -webkit-line-clamp: 3;
-                        line-clamp: 3;
+                        -webkit-line-clamp: 2;
+                        line-clamp: 2;
                         -webkit-box-orient: vertical;
                         overflow: hidden;
                         transition: color .3s ease;
