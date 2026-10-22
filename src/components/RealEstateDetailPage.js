@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Banner from "@/components/Banner";
+import Image from "next/image";
 import JsonLd from "@/components/JsonLd";
 import ServiceFaqAccordion from "@/components/ServiceFaqAccordion";
 import { buildBreadcrumbSchema, buildFaqSchema, SITE_URL } from "@/lib/schema";
@@ -25,129 +25,135 @@ const SERVICE_SCHEMA = {
     "Real estate websites with project pages, property search, lead capture and CRM integration.",
 };
 
-// Same hero/banner component and artwork the other service pages use.
-const BANNER_DATA = {
-  imagePosition: "right",
-  priority: true,
-  cta: { text: "Discuss your real estate website", href: "#contact" },
-  subheading: {
-    enabled: true,
-    text: "Services",
-    link: "/services",
-    current: "Real estate website design",
-  },
-  title: {
-    line1: "Real estate websites that drive site visits",
-  },
-  images: {
-    banner: {
-      url: "/assets/images/design-and-development.svg",
-      alt: "",
-      width: 871,
-      height: 767,
-    },
-    bannerMobile: { url: "/assets/images/hero-mobile.webp", alt: "" },
-  },
-};
-
-const HERO_COPY = [
-  "Webmaffia designs and builds real estate websites for developers, builders and brokers in India: project pages that answer buyer questions, property search that works on a phone, and enquiry forms that reach your sales team without delay.",
-];
-
-const FACTS = [
-  { value: "8", label: "digital services under one roof" },
-  { value: "3", label: "offices: Mumbai, Bengaluru, Dubai" },
-  { value: "ISO 27001", label: "2022 certified for information security" },
-];
-
-const TAKEAWAYS = [
-  { title: "Project pages", text: "price range, plans, location, status and RERA details." },
-  { title: "Search", text: "filters and maps for buyers comparing options." },
-  { title: "Fast follow-up", text: "enquiries routed to your team or CRM." },
-  { title: "Measured", text: "enquiries and site visits tracked against a baseline." },
+const STATS = [
+  { value: "100+", label: "Real estate websites delivered" },
+  { value: "5+ years", label: "Average client partnership" },
+  { value: "High", label: "Performance & SEO focused" },
+  { value: "100%", label: "Client satisfaction" },
 ];
 
 const PROBLEMS = [
-  { title: "Leads you do not own", text: "Enquiries come from portals and aggregators, and your own site adds little. A strong site gives buyers a reason to come to you directly." },
-  { title: "Slow on mobile", text: "Heavy galleries and videos load slowly on phones, where most buyers browse. Visitors leave before they see the project." },
-  { title: "Pages that skip buyer questions", text: "Buyers look for price range, configuration, possession status, location and RERA details. If they cannot find them, they move on." },
-  { title: "Leads that go cold", text: "Enquiries land in an inbox with no routing or reminder. Faster handoff to sales means fewer lost conversations." },
-  { title: "One microsite per launch", text: "Each launch gets a separate site with copied content. Search visibility and brand trust get split across many thin sites." },
+  { title: "Low quality leads", text: "We design websites with clear calls-to-action, better content structure and optimized UX to attract the right audience." },
+  { title: "Unclear property information", text: "We organize listings with detailed information, intuitive filters and high-quality visuals for easy decision-making." },
+  { title: "Poor mobile experience", text: "We build fully responsive websites that look and perform flawlessly on every device." },
+  { title: "Lack of trust & credibility", text: "We include testimonials, project details, certifications and professional design to build confidence." },
+  { title: "Limited online visibility", text: "We follow SEO best practices to help your website rank higher and get discovered by more potential buyers." },
 ];
 
-const BUILDS = [
-  { title: "Developer and builder websites", text: "A company website that shows your track record, projects and credibility, and sends visitors to the right project page." },
-  { title: "Project and microsite pages", text: "A page per launch with highlights, configurations, floor plans, amenities, location, status and an enquiry form. Built so they also support the main site." },
-  { title: "Property listing and search", text: "Listings with filters for location, budget and configuration, plus map views and shortlisting, where your inventory calls for it." },
-  { title: "Lead capture and CRM integration", text: "Forms, callback and site-visit booking that pass enquiries to your CRM or sales team, with source tracking so you know what works." },
-  { title: "Brochures, plans and media", text: "Image galleries, floor plans, brochure downloads and video that stay quick to load on mobile." },
-  { title: "SEO and analytics foundation", text: "Clean structure, fast pages, schema and analytics set up from launch, so project pages can be found and measured." },
+const ICONS = {
+  design: <><rect x="3" y="4" width="18" height="12" rx="1.5" /><path d="M8 20h8M12 16v4" /></>,
+  code: <path d="m8 7-5 5 5 5M16 7l5 5-5 5M14 4l-4 16" />,
+  db: <><ellipse cx="12" cy="5.5" rx="7" ry="2.5" /><path d="M5 5.5v13c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5v-13M5 12c0 1.4 3.1 2.5 7 2.5s7-1.1 7-2.5" /></>,
+  shield: <path d="M12 3 4.5 6v5.5c0 4.6 3.1 8 7.5 9.5 4.4-1.5 7.5-4.9 7.5-9.5V6L12 3Z" />,
+  home: <path d="m3 11 9-7 9 7v9H3zM9 20v-6h6v6" />,
+  sell: <><rect x="4" y="4" width="16" height="16" rx="2" /><path d="M4 10h16M10 10v10" /></>,
+  speed: <path d="M4 18a8 8 0 1 1 16 0M12 18l4-6" />,
+  user: <><circle cx="12" cy="8" r="4" /><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7" /></>,
+};
+
+function Icon({ name }) {
+  return (
+    <svg
+      className="re_icon"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      {ICONS[name]}
+    </svg>
+  );
+}
+
+function Check() {
+  return (
+    <svg
+      className="re_tick"
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.4"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="m3.5 8.5 3 3 6-7" />
+    </svg>
+  );
+}
+
+const SERVICES = [
+  { icon: "design", title: "Website Design", text: "Modern, elegant and user-friendly designs that reflect your brand and properties.", points: ["Custom UI/UX Design", "Brand-aligned Visuals", "Mobile-First Approach"] },
+  { icon: "code", title: "Development", text: "Fast, secure and scalable websites built for performance and growth.", points: ["Next.js / React Development", "CMS Integration (Strapi / WordPress)", "SEO & Performance Optimization"] },
+  { icon: "db", title: "Ongoing Support", text: "We keep your website updated, secure and running at its best.", points: ["Content Updates", "Technical Support", "Performance Monitoring"] },
 ];
 
-const SITE_TYPES = [
-  { type: "Developer website", best: "Builders with several projects", features: "Company story, project directory, news, enquiry forms", goal: "Brand trust and direct enquiries" },
-  { type: "Project microsite", best: "A single launch", features: "Plans, pricing range, location, RERA details, site-visit booking", goal: "Enquiries for one project" },
-  { type: "Listing site", best: "Brokers and consultants with inventory", features: "Search filters, maps, shortlist, agent contact", goal: "Matching buyers to properties" },
-  { type: "PropTech platform", best: "Rental, resale or marketplace ideas", features: "Accounts, listings, workflows, integrations", goal: "A working product" },
+const SITE_TYPES = ["Property Listing Website", "Project Landing Page", "Real Estate Portal"];
+const FEATURES = [
+  { name: "Property Listings", has: [1, 1, 1] },
+  { name: "Advanced Filters", has: [1, 1, 1] },
+  { name: "Virtual Tours / 360°", has: [0, 1, 1] },
+  { name: "Lead Management", has: [1, 1, 1] },
+  { name: "Multi-Location Support", has: [0, 0, 1] },
+  { name: "Custom Integrations", has: [1, 1, 1] },
 ];
 
 const STEPS = [
-  { title: "Discovery", text: "We learn your projects, buyers, sales process and what the website must achieve." },
-  { title: "Audit and research", text: "We review your current site, competitors and how buyers search for your projects." },
-  { title: "Structure and wireframes", text: "We plan page structure, search and enquiry paths before any visual design." },
-  { title: "Design", text: "We design the pages and show you how they look on mobile and desktop." },
-  { title: "Build and test", text: "We build, connect forms and CRM, and test across devices, browsers and speed." },
-  { title: "Launch and improve", text: "We launch, track enquiries against your baseline and refine with you." },
+  { title: "Discover & Plan", text: "We understand your goals, audience and brand to create a clear strategy." },
+  { title: "Design & Develop", text: "We design a compelling UI and build a high-performing, secure website." },
+  { title: "Launch & Grow", text: "We go live, then support, optimize and help you get more traffic and leads." },
 ];
 
-const NEEDS = [
-  { title: "Project details", text: "pricing ranges, configurations, status and RERA information." },
-  { title: "Assets", text: "floor plans, brochures, images and videos." },
-  { title: "Systems", text: "your CRM, sales tools and current website access." },
-  { title: "A decision-maker", text: "one contact who can approve content and design." },
+const RECEIVE = [
+  "Custom website design & development",
+  "Mobile & cross-browser compatibility",
+  "Technical documentation",
+  "CMS setup (easy content management)",
+  "Property listing setup & admin training",
+  "Ongoing support & maintenance",
+  "SEO optimization",
+  "Analytics & performance tracking",
+  "Post-launch growth recommendations",
 ];
 
-const COMPLIANCE = [
-  { title: "RERA details", text: "We place RERA registration information on project pages in the format your compliance or legal team approves." },
-  { title: "Buyer data", text: "Forms collect only what you need. Handle personal data in line with applicable law, including India’s Digital Personal Data Protection Act, 2023, and review requirements with your legal advisers." },
-  { title: "Certified company", text: "Pixtop Media Solutions Pvt Ltd, the company behind Webmaffia, is ISO/IEC 27001:2022 certified for information security management." },
+const SECURITY = [
+  "SSL encryption (HTTPS)",
+  "Secure hosting & backups",
+  "GDPR compliant practices",
+  "Regular security updates",
 ];
 
 const WHY = [
-  { title: "Website, search and content together", text: "The same team can plan the website, SEO, content and social around your launches." },
-  { title: "Real estate project experience", text: "We have built a website for HoABL, a real estate brand. Read the case study for the scope." },
-  { title: "A practical approach", text: "We recommend the simplest site that does the job, and say so when a heavier build is not needed." },
-  { title: "India and the UAE", text: "Offices in Mumbai, Bengaluru and Dubai." },
+  { icon: "home", title: "Real Estate Expertise", text: "We understand the market, the audience and what works." },
+  { icon: "sell", title: "Design That Sells", text: "Clean, modern and conversion-focused designs." },
+  { icon: "speed", title: "Performance Driven", text: "Faster sites, better rankings, more leads." },
+  { icon: "user", title: "Personal Support", text: "A dedicated team that cares about your success." },
 ];
 
-const MEASURES = [
-  { value: "Deliverables", label: "The pages, search and forms we build." },
-  { value: "Results", label: "Enquiries, callbacks and site-visit bookings." },
-  { value: "Outcomes", label: "Lead quality and sales follow-through." },
+const RESULTS = [
+  { value: "60%", label: "Average increase in site visits" },
+  { value: "3x", label: "More qualified inquiries" },
+  { value: "40%", label: "Higher engagement rate" },
+  { value: "95%", label: "Client retention rate" },
 ];
 
 const FAQS = [
-  { question: "What does a real estate website need to do?", answer: "A real estate website needs to help a buyer find the right project, trust the developer and take a next step such as booking a site visit or requesting a callback. Everything else, from design to search filters, supports that path." },
-  { question: "What is the difference between a developer website and a project microsite?", answer: "A developer website presents the company, its track record and all its projects. A project microsite focuses on one launch, with its own pricing, floor plans, location and enquiry form. Many developers use both, linked together so project pages also build the main brand’s search visibility." },
-  { question: "Can you build a property listing and search feature?", answer: "Yes. We can build listing pages with filters such as location, budget, configuration and status, along with map views and shortlisting. The right scope depends on how many properties you list and how often they change, which we confirm during discovery." },
-  { question: "Can the website connect to our CRM?", answer: "Often, yes. Enquiries can be passed to your CRM or sales tool so no lead sits in an inbox. This depends on the integration options your CRM offers, and we check it during discovery." },
-  { question: "How do you handle RERA details on the website?", answer: "We place RERA registration information on project pages in the format your compliance or legal team approves. Rules differ by state and project, so we work from the details you provide rather than assume them." },
-  { question: "How long does a real estate website take to build?", answer: "It depends on scope. A single-project microsite is quicker than a multi-project developer website with listings and CRM integration. We give a realistic timeline after discovery." },
-  { question: "How much does a real estate website cost?", answer: "Cost depends on the number of projects and pages, whether you need listing search, the integrations, and the media involved. We provide a scoped estimate after a conversation about your requirements." },
-  { question: "Can you redesign our current website without losing search visibility?", answer: "Yes. We review your existing pages and URLs first, plan redirects where addresses change, and keep pages that already attract visitors. Results still depend on your market and content." },
-  { question: "Will we own the website and its content?", answer: "Ownership and access terms are agreed in writing before the project starts, so you know what you receive at handover." },
-].map((item, index) => ({
+  { question: "How long does it take to build a real estate website?", answer: "It depends on scope. A single-project microsite is quicker than a multi-project developer website with listings and CRM integration. We give a realistic timeline after discovery." },
+  { question: "Can you integrate with my existing CRM?", answer: "Often, yes. Enquiries can be passed to your CRM or sales tool so no lead sits in an inbox. This depends on the integration options your CRM offers, and we check it during discovery." },
+  { question: "Will I be able to update the content myself?", answer: "Yes. We set up a CMS so your team can update listings and content, and we train your team to use it." },
+  { question: "Do you offer ongoing support after launch?", answer: "Yes. We offer content updates, technical support and performance monitoring after launch." },
+  { question: "Do you provide SEO as part of the service?", answer: "We build a clean structure, fast pages, schema and analytics from launch, and can plan ongoing SEO alongside the website." },
+  { question: "What platforms do you work with?", answer: "We build with Next.js and React, and integrate CMS platforms such as Strapi and WordPress, depending on what suits your project." },
+];
+
+const FAQ_SCHEMA_ITEMS = FAQS.map((item, index) => ({
   id: `re-faq-${index}`,
   question: item.question,
   answer: `<p>${item.answer}</p>`,
 }));
-
-const RELATED = [
-  { href: "/services/website-design-development-services", label: "Website design and development" },
-  { href: "/services/search-engine-optimization-services", label: "SEO" },
-  { href: "/services/content-marketing-strategy", label: "Content marketing" },
-  { href: "/services/digital-strategy", label: "Digital strategy" },
-];
 
 const pad = (n) => String(n + 1).padStart(2, "0");
 
@@ -155,165 +161,166 @@ function Label({ children }) {
   return <div className="re_label">{children}</div>;
 }
 
-// Heading on the left, content on the right; the heading stays pinned on
-// desktop while the content scrolls.
-function Split({ id, label, title, sub, children, className = "" }) {
-  return (
-    <section
-      id={id}
-      className={`re_split ${className}`.trim()}
-      aria-labelledby={`${id}-h`}
-    >
-      <header className="re_split_head">
-        <Label>{label}</Label>
-        <h2 id={`${id}-h`}>{title}</h2>
-        {sub ? <p className="re_sub">{sub}</p> : null}
-      </header>
-      <div className="re_split_body">{children}</div>
-    </section>
-  );
-}
-
-function NamedList({ items, numbered = false }) {
-  return (
-    <ul className="re_named">
-      {items.map((item, i) => (
-        <li key={item.title}>
-          {numbered ? <span className="re_n">{pad(i)}</span> : null}
-          <div>
-            <h3>{item.title}</h3>
-            <p>{item.text}</p>
-          </div>
-        </li>
-      ))}
-    </ul>
-  );
-}
-
 export default function RealEstateDetailPage() {
   return (
     <main className="wrapper">
       <JsonLd data={buildBreadcrumbSchema(BREADCRUMBS)} />
       <JsonLd data={SERVICE_SCHEMA} />
-      <JsonLd data={buildFaqSchema(FAQS)} />
+      <JsonLd data={buildFaqSchema(FAQ_SCHEMA_ITEMS)} />
 
       <div className="ml-setter service_detail">
-        <Banner data={BANNER_DATA}>
-          {HERO_COPY.map((text) => (
-            <p key={text}>{text}</p>
-          ))}
-        </Banner>
-
         <div className="re_page">
-          {/* Facts */}
-          <div className="re_facts" role="list">
-            {FACTS.map((item) => (
-              <div className="re_fact" role="listitem" key={item.value}>
+          {/* Hero */}
+          <section className="re_hero" aria-labelledby="re-h1">
+            <div className="re_hero_copy">
+              <Label>Real estate website design &amp; development</Label>
+              <h1 id="re-h1">Real estate websites that drive site visits</h1>
+              <p>
+                We build fast, modern and high-performing real estate websites
+                that showcase properties, build trust and turn interest into
+                inquiries — helping you get more site visits and qualified
+                leads.
+              </p>
+              <div className="re_btns">
+                <Link href="#contact" className="re_btn re_btn_dark">
+                  Start a Project <span aria-hidden="true">→</span>
+                </Link>
+                <Link href="/case-study" className="re_btn re_btn_line">
+                  View Our Work
+                </Link>
+              </div>
+            </div>
+            <figure className="re_hero_img">
+              <Image
+                src="/assets/images/real-estate/modern-villa.png"
+                alt="Modern villa with large glass windows"
+                width={1672}
+                height={941}
+                priority
+                sizes="(max-width: 1024px) 100vw, 45vw"
+              />
+            </figure>
+          </section>
+
+          <div className="re_stats" role="list">
+            {STATS.map((item) => (
+              <div className="re_stat" role="listitem" key={item.label}>
                 <b>{item.value}</b>
                 <span>{item.label}</span>
               </div>
             ))}
           </div>
 
-          {/* About */}
-          <Split
-            id="about"
-            label="The brief"
-            title="What a real estate website has to do"
-          >
-            <p className="re_lead">
-              A real estate website has to help a buyer find the right
-              project, trust the developer and take a next step, such as
-              booking a site visit or requesting a callback. Good design
-              supports that path. Bad design interrupts it.
-            </p>
-            <p>
-              We build for developers and builders, brokers and channel
-              partners, property consultants and PropTech teams. Each has a
-              different job for the website, so we start there, not with a
-              template.
-            </p>
-            <p>
-              Buyers compare several projects on their phones before they call
-              anyone. Your site has to load fast, show the facts they look for
-              and make the next step obvious.
-            </p>
-            <dl className="re_defs">
-              {TAKEAWAYS.map((item) => (
-                <div key={item.title}>
-                  <dt>{item.title}</dt>
-                  <dd>{item.text}</dd>
-                </div>
-              ))}
-            </dl>
-          </Split>
+          {/* Approach */}
+          <section className="re_approach" aria-labelledby="approach-h">
+            <Image
+              src="/assets/images/real-estate/laptop-scenary.png"
+              alt="Real estate website shown on a laptop"
+              width={1408}
+              height={768}
+              sizes="(max-width: 1024px) 100vw, 45vw"
+            />
+            <div>
+              <Label>Our approach</Label>
+              <h2 id="approach-h">
+                More than just a website. A powerful sales tool.
+              </h2>
+              <p>
+                We create real estate websites that do more than look good.
+                They help you showcase your properties, highlight key
+                features, build credibility and guide visitors towards taking
+                the next step — be it an inquiry, a site visit or a purchase.
+              </p>
+            </div>
+          </section>
 
           {/* Problems */}
-          <Split
-            id="problems"
-            label="Where enquiries leak"
-            title="Problems we see on real estate websites"
-            sub="Most of them cost enquiries quietly."
-          >
-            <NamedList items={PROBLEMS} numbered />
-          </Split>
-
-          {/* What we build */}
-          <section id="build" className="re_block" aria-labelledby="build-h">
-            <Label>Scope</Label>
-            <h2 id="build-h">What Webmaffia builds</h2>
-            <p className="re_sub">
-              The parts of a real estate website, scoped to what you need.
-            </p>
-            <div className="re_tiles">
-              {BUILDS.map((item) => (
-                <article key={item.title}>
+          <section className="re_block" aria-labelledby="problems-h">
+            <Label>The problems we solve</Label>
+            <h2 id="problems-h">
+              Real estate businesses face unique digital challenges. We solve
+              them.
+            </h2>
+            <ul className="re_rows">
+              {PROBLEMS.map((item, i) => (
+                <li key={item.title}>
+                  <span className="re_n">{pad(i)}</span>
                   <h3>{item.title}</h3>
                   <p>{item.text}</p>
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          {/* Services */}
+          <section className="re_block" aria-labelledby="services-h">
+            <Label>Our services</Label>
+            <h2 id="services-h">End-to-end real estate website solutions</h2>
+            <div className="re_cols re_cols3">
+              {SERVICES.map((item) => (
+                <article key={item.title}>
+                  <Icon name={item.icon} />
+                  <h3>{item.title}</h3>
+                  <p>{item.text}</p>
+                  <ul>
+                    {item.points.map((pt) => (
+                      <li key={pt}>
+                        <Check />
+                        {pt}
+                      </li>
+                    ))}
+                  </ul>
                 </article>
               ))}
             </div>
           </section>
 
-          {/* Which type fits */}
-          <section id="fit" className="re_block" aria-labelledby="fit-h">
-            <Label>Choose a format</Label>
-            <h2 id="fit-h">Which type of site fits you?</h2>
+          {/* Types & features */}
+          <section className="re_block" aria-labelledby="types-h">
+            <Label>Website types &amp; features</Label>
+            <h2 id="types-h">Tailored for every real estate need</h2>
             <div className="re_table_wrap">
               <table className="re_table">
                 <thead>
                   <tr>
-                    <th scope="col">Site type</th>
-                    <th scope="col">Best for</th>
-                    <th scope="col">Typical features</th>
-                    <th scope="col">Main goal</th>
+                    <th scope="col">Feature</th>
+                    {SITE_TYPES.map((t) => (
+                      <th scope="col" key={t}>
+                        {t}
+                      </th>
+                    ))}
                   </tr>
                 </thead>
                 <tbody>
-                  {SITE_TYPES.map((row) => (
-                    <tr key={row.type}>
-                      <th scope="row">{row.type}</th>
-                      <td data-label="Best for">{row.best}</td>
-                      <td data-label="Typical features">{row.features}</td>
-                      <td data-label="Main goal">{row.goal}</td>
+                  {FEATURES.map((row) => (
+                    <tr key={row.name}>
+                      <th scope="row">{row.name}</th>
+                      {row.has.map((v, i) => (
+                        <td key={SITE_TYPES[i]} data-label={SITE_TYPES[i]}>
+                          {v ? (
+                            <>
+                              <Check />
+                              <span className="re_sr">Included</span>
+                            </>
+                          ) : (
+                            <>
+                              <span aria-hidden="true">—</span>
+                              <span className="re_sr">Not included</span>
+                            </>
+                          )}
+                        </td>
+                      ))}
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
-            <Link href="#contact" className="re_link">
-              Not sure which you need? Tell us your projects
-            </Link>
           </section>
 
           {/* Process */}
-          <section id="process" className="re_block" aria-labelledby="process-h">
-            <Label>Process</Label>
-            <h2 id="process-h">How a project typically works</h2>
-            <p className="re_sub">
-              Every project is different. We confirm a timeline once discovery
-              is done.
-            </p>
+          <section className="re_block" aria-labelledby="process-h">
+            <Label>Our process</Label>
+            <h2 id="process-h">A Simple 3-Step Process</h2>
             <ol className="re_steps">
               {STEPS.map((item, i) => (
                 <li key={item.title}>
@@ -323,84 +330,92 @@ export default function RealEstateDetailPage() {
                 </li>
               ))}
             </ol>
-            <h3 className="re_subhead">What we need from you</h3>
-            <dl className="re_defs re_defs_row">
-              {NEEDS.map((item) => (
-                <div key={item.title}>
-                  <dt>{item.title}</dt>
-                  <dd>{item.text}</dd>
-                </div>
-              ))}
-            </dl>
           </section>
 
-          {/* Compliance */}
-          <Split
-            id="compliance"
-            label="Trust"
-            title="Compliance, data and security"
-            sub="Real estate marketing is regulated and buyer data is sensitive."
-          >
-            <NamedList items={COMPLIANCE} />
-          </Split>
+          {/* Receive */}
+          <section className="re_block" aria-labelledby="receive-h">
+            <Label>What you receive</Label>
+            <h2 id="receive-h">Everything you need for a successful launch</h2>
+            <ul className="re_checks">
+              {RECEIVE.map((t) => (
+                <li key={t}>
+                  <Check />
+                  {t}
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          {/* Security */}
+          <section className="re_security" aria-labelledby="security-h">
+            <Icon name="shield" />
+            <div>
+              <Label>Security &amp; compliance</Label>
+              <h2 id="security-h">Built for trust. Secured for the long run.</h2>
+              <p>
+                We follow the latest security standards and best practices to
+                keep your data, your customers and your brand safe.
+              </p>
+            </div>
+            <ul className="re_checks re_checks_1">
+              {SECURITY.map((t) => (
+                <li key={t}>
+                  <Check />
+                  {t}
+                </li>
+              ))}
+            </ul>
+          </section>
 
           {/* Why */}
-          <Split id="why" label="Why us" title="Why work with Webmaffia">
-            <NamedList items={WHY} />
-            <p className="re_links">
-              <Link href="/case-study/hoabl">HoABL case study</Link>
-              <Link href="/case-study">All work</Link>
-            </p>
-          </Split>
+          <section className="re_block" aria-labelledby="why-h">
+            <Label>Why Webmaffia</Label>
+            <h2 id="why-h">Why real estate brands choose Webmaffia</h2>
+            <div className="re_cols re_cols4">
+              {WHY.map((item) => (
+                <article key={item.title}>
+                  <Icon name={item.icon} />
+                  <h3>{item.title}</h3>
+                  <p>{item.text}</p>
+                </article>
+              ))}
+            </div>
+          </section>
 
-          {/* Measure */}
-          <section id="measure" className="re_block" aria-labelledby="measure-h">
-            <Label>Measurement</Label>
-            <h2 id="measure-h">How we measure it</h2>
-            <div className="re_measures">
-              {MEASURES.map((item) => (
-                <div key={item.value}>
+          {/* Results */}
+          <section className="re_block" aria-labelledby="results-h">
+            <Label>Real results</Label>
+            <h2 id="results-h">Real Numbers. Real Impact.</h2>
+            <div className="re_cols re_cols4 re_results">
+              {RESULTS.map((item) => (
+                <div key={item.label}>
                   <b>{item.value}</b>
                   <span>{item.label}</span>
                 </div>
               ))}
             </div>
-            <p className="re_sub">
-              Before launch we record how your current site performs. After
-              launch we compare against that baseline. Results depend on your
-              market, pricing and sales process, so we do not promise specific
-              figures.
-            </p>
           </section>
 
           {/* FAQ */}
-          <section id="faq" className="re_block re_faq" aria-labelledby="faq-h">
-            <Label>FAQ</Label>
-            <h2 id="faq-h">Quick answers</h2>
-            <ServiceFaqAccordion items={FAQS} />
+          <section id="faq" className="re_block">
+            <Label>Frequently asked questions</Label>
+            <ServiceFaqAccordion heading="Got questions? We’ve got answers." items={FAQ_SCHEMA_ITEMS} />
           </section>
 
-          {/* Related */}
-          <nav className="re_related" aria-label="Related services">
-            <span>Related services</span>
-            {RELATED.map((item) => (
-              <Link href={item.href} key={item.href}>
-                {item.label}
-              </Link>
-            ))}
-          </nav>
-
-          {/* Final CTA */}
+          {/* CTA */}
           <section id="contact" className="re_final" aria-labelledby="contact-h">
-            <Label>Start here</Label>
-            <h2 id="contact-h">Tell us about your next launch</h2>
-            <p className="re_sub">
-              Share your projects, your current website, the CRM you use and
-              what a good result looks like. We will recommend where to start.
-            </p>
-            <div className="re_final_links">
-              <a href="mailto:veera@webmaffia.com">veera@webmaffia.com</a>
-              <a href="tel:+919867625909">+91 9867625909</a>
+            <div>
+              <Label>Let’s build something great</Label>
+              <h2 id="contact-h">
+                Ready to create a real estate website that brings in more site
+                visits?
+              </h2>
+            </div>
+            <div className="re_final_cta">
+              <Link href="/contact" className="re_btn re_btn_dark">
+                Get in Touch <span aria-hidden="true">→</span>
+              </Link>
+              <span>Talk to our team about your project</span>
             </div>
           </section>
         </div>
