@@ -3,13 +3,16 @@ import BlogDetailPage from "@/components/BlogDetailPage";
 import BlogStrapiArticle from "@/components/BlogStrapiArticle";
 import JsonLd from "@/components/JsonLd";
 import { buildFaqPageSchema, prepareStrapiArticleHtml } from "@/lib/blog-helpers";
+import { buildLocalizedAlternates, localesForSlug } from "@/lib/blog-seo";
+import { t } from "@/lib/dictionaries";
+import { DEFAULT_LOCALE, isLocale, localizePath } from "@/lib/i18n";
 import { buildBreadcrumbSchema, SITE_URL } from "@/lib/schema";
 import {
     formatBlogDate,
     getAllBlogCategories,
-    getBlog,
     getBlogBySlug,
     getBlogCategories,
+    getBlogsByLocale,
     getPostAuthor,
     getRelatedStrapiPosts,
     getSeoFields,
@@ -28,29 +31,42 @@ function BlogTitle({ heading }) {
     ));
 }
 
-export async function generateStaticParams() {
-    const blogs = await getBlog();
-    return blogs.map((post) => ({ slug: post.slug }));
+// Runs once per locale from the [lang] layout. Only posts that really exist in
+// a locale are prerendered; anything else (e.g. English fallback under /hi/...)
+// renders on demand.
+export async function generateStaticParams({ params }) {
+    const { lang } = await params;
+    const postsByLocale = await getBlogsByLocale();
+    return (postsByLocale[lang] ?? []).map((post) => ({ slug: post.slug }));
 }
 
 export async function generateMetadata({ params }) {
-    const { slug } = await params;
-    const post = await getBlogBySlug(slug);
+    const { lang, slug } = await params;
+    if (!isLocale(lang)) return {};
+
+    const post = await getBlogBySlug(slug, lang);
 
     if (!post) {
-        return { title: "Blog | Webmaffia" };
+        return { title: t(lang, "meta.blog.title") };
     }
 
-    const title = post.heading?.replace(/\n/g, " ") ?? "Blog";
-    const canonicalSlug = post.slug;
+    const title = post.heading?.replace(/\n/g, " ") ?? t(lang, "blog.detail.fallbackTitle");
     const seo = getSeoFields(post.seo);
+    const postsByLocale = await getBlogsByLocale();
+    const alternates = buildLocalizedAlternates({
+        lang,
+        path: `/blog/${post.slug}`,
+        isFallback: post.isFallback,
+        availableLocales: localesForSlug(postsByLocale, post.slug),
+    });
 
     return {
         title: seo.title ?? `${title} | Webmaffia`,
         description: seo.description ?? post.excerpt,
         ...(seo.keywords ? { keywords: seo.keywords } : {}),
         alternates: {
-            canonical: seo.canonical ?? `https://www.webmaffia.com/blog/${canonicalSlug}`,
+            ...alternates,
+            canonical: seo.canonical ?? alternates.canonical,
         },
     };
 }
@@ -61,20 +77,26 @@ function toAbsoluteUrl(url) {
 }
 
 export default async function StrapiBlogPage({ params }) {
-    const { slug } = await params;
-    const post = await getBlogBySlug(slug);
+    const { lang, slug } = await params;
+    if (!isLocale(lang)) notFound();
+
+    const post = await getBlogBySlug(slug, lang);
 
     if (!post) {
         notFound();
     }
 
     if (post.slug !== slug) {
-        permanentRedirect(`/blog/${post.slug}`);
+        permanentRedirect(localizePath(lang, `/blog/${post.slug}`));
     }
 
     const preparedArticle = prepareStrapiArticleHtml(post.description);
-    const relatedPosts = await getRelatedStrapiPosts(post.slug, 3);
-    const categories = await getAllBlogCategories();
+    const relatedPosts = await getRelatedStrapiPosts(post.slug, 3, lang);
+    const categories = await getAllBlogCategories(lang);
+
+    // Fallback content is English, so its structured data points at the English URL.
+    const schemaLang = post.isFallback ? DEFAULT_LOCALE : lang;
+    const schemaPostPath = localizePath(schemaLang, `/blog/${post.slug}`);
 
     const author = getPostAuthor(post);
     const headline = post.heading?.replace(/\n/g, " ") ?? "";
@@ -86,7 +108,7 @@ export default async function StrapiBlogPage({ params }) {
         "@type": "BlogPosting",
         mainEntityOfPage: {
             "@type": "WebPage",
-            "@id": `${SITE_URL}/blog/${post.slug}`,
+            "@id": `${SITE_URL}${schemaPostPath}`,
         },
         headline,
         description: post.excerpt ?? "",
@@ -95,7 +117,7 @@ export default async function StrapiBlogPage({ params }) {
             ? {
                 "@type": "Person",
                 name: author.name,
-                url: `${SITE_URL}/author/${author.slug}`,
+                url: `${SITE_URL}${localizePath(schemaLang, `/author/${author.slug}`)}`,
             }
             : {
                 "@type": "Organization",
@@ -115,9 +137,9 @@ export default async function StrapiBlogPage({ params }) {
     };
 
     const breadcrumbSchema = buildBreadcrumbSchema([
-        { name: "Home", path: "/" },
-        { name: "Blog", path: "/blog" },
-        { name: headline || post.slug, path: `/blog/${post.slug}` },
+        { name: t(lang, "breadcrumb.home"), path: "/" },
+        { name: t(lang, "breadcrumb.blog"), path: localizePath(schemaLang, "/blog") },
+        { name: headline || post.slug, path: schemaPostPath },
     ]);
 
     const faqPageSchema = buildFaqPageSchema(post.description);
@@ -128,6 +150,7 @@ export default async function StrapiBlogPage({ params }) {
             <JsonLd data={breadcrumbSchema} />
             {faqPageSchema && <JsonLd data={faqPageSchema} />}
             <BlogDetailPage
+                lang={lang}
                 slug={post.slug}
                 title={<BlogTitle heading={post.heading} />}
                 date={formatBlogDate(post.date)}

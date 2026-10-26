@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { toggleTheme } from "@/lib/theme";
 import { openKlaviyoPopup } from "@/lib/klaviyo";
 import KlaviyoFormEmbed from "@/components/KlaviyoFormEmbed";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 const SERVICE_LINKS = [
   { href: "/services/digital-strategy", label: "Digital Strategy" },
@@ -154,6 +155,9 @@ const Header = () => {
         </nav>
 
         <div className="right_menu">
+          {/* Language switcher (blog + author pages only) */}
+          <LanguageSwitcher />
+
           {/* Menu toggle */}
           <a href="" className="menu" onClick={openMenu} aria-label="Open menu">
             <div>Menu</div>

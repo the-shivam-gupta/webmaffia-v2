@@ -685,3 +685,162 @@ address{
         }
     }
 }
+/* Header language dropdown (blog + author pages) */
+.lang_switcher{
+    position: relative;
+    margin-inline-end: 1.2rem;
+    @include mobile(){
+        margin-inline-end: 2rem;
+    }
+    .lang_switcher_btn{
+        display: inline-flex;
+        align-items: center;
+        gap: 0.8rem;
+        height: 4rem;
+        margin-left: 0;
+        padding: 0 1.4rem;
+        border: 0.1rem solid $black_30;
+        border-radius: 2.5rem;
+        background: transparent;
+        color: $black;
+        font-size: 1.5rem;
+        font-weight: $light;
+        letter-spacing: 0.1rem;
+        line-height: 1;
+        cursor: pointer;
+        transition: background 0.3s ease-in, border-color 0.3s ease-in;
+        @include mobile(){
+            height: 6rem;
+            padding: 0 2.2rem;
+            gap: 1.2rem;
+            font-size: 2.6rem;
+            border-radius: 5rem;
+        }
+        &:hover,
+        &:focus-visible{
+            border-color: $black;
+            background: $black_4;
+        }
+        &:focus-visible{
+            outline: 0.2rem solid $black;
+            outline-offset: 0.2rem;
+        }
+    }
+    .lang_switcher_globe{
+        width: 1.8rem;
+        height: 1.8rem;
+        flex-shrink: 0;
+        @include mobile(){
+            width: 3.2rem;
+            height: 3.2rem;
+        }
+    }
+    .lang_switcher_chevron{
+        width: 1.2rem;
+        height: 1.2rem;
+        flex-shrink: 0;
+        transition: transform 0.3s ease-in;
+        @include mobile(){
+            width: 2.2rem;
+            height: 2.2rem;
+        }
+    }
+    &.open .lang_switcher_chevron{
+        transform: rotate(180deg);
+    }
+    .lang_switcher_list{
+        position: absolute;
+        top: calc(100% + 1.2rem);
+        inset-inline-end: 0;
+        z-index: 2;
+        min-width: 18rem;
+        margin: 0;
+        padding: 0.6rem;
+        list-style: none;
+        background: $white;
+        border: 0.1rem solid $black_10;
+        border-radius: 1.6rem;
+        box-shadow: 0 1.2rem 3rem rgba($black, 0.12);
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-0.8rem);
+        transition: opacity 0.25s ease-in, transform 0.25s ease-in, visibility 0.25s;
+        @include mobile(){
+            min-width: 32rem;
+            padding: 1rem;
+            border-radius: 3rem;
+            top: calc(100% + 2rem);
+        }
+        a{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+            padding: 1rem 1.4rem;
+            border-radius: 1.1rem;
+            color: $black;
+            font-size: 1.6rem;
+            letter-spacing: 0;
+            transition: background 0.2s ease-in;
+            @include mobile(){
+                padding: 2rem 2.4rem;
+                border-radius: 2.2rem;
+                font-size: 3rem;
+            }
+            &:hover,
+            &:focus-visible{
+                background: $black_4;
+            }
+            &.active{
+                font-weight: 600;
+                background: $black_10;
+            }
+        }
+        .lang_switcher_abbr{
+            color: $black_60;
+            font-size: 1.2rem;
+            letter-spacing: 0.1rem;
+            @include mobile(){
+                font-size: 2.2rem;
+            }
+        }
+    }
+    &.open .lang_switcher_list{
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+}
+
+html.active .lang_switcher{
+    .lang_switcher_btn{
+        border-color: $white_30;
+        color: $white;
+        &:hover,
+        &:focus-visible{
+            border-color: $white;
+            background: $white_10;
+        }
+        &:focus-visible{
+            outline-color: $white;
+        }
+    }
+    .lang_switcher_list{
+        background: $black_light;
+        border-color: $white_10;
+        box-shadow: 0 1.2rem 3rem rgba($black, 0.5);
+        a{
+            color: $white;
+            &:hover,
+            &:focus-visible{
+                background: $white_10;
+            }
+            &.active{
+                background: $white_10;
+            }
+        }
+        .lang_switcher_abbr{
+            color: $white_60;
+        }
+    }
+}

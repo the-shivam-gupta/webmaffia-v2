@@ -1,9 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
+import { t } from "@/lib/dictionaries";
+import { localizePath } from "@/lib/i18n";
 import { formatBlogDate, getBlogCategories, getStrapiImageUrl } from "@/lib/strapiPage";
 
-export default function BlogListItem({ post }) {
-  const href = `/blog/${post.slug}`;
+export default function BlogListItem({ post, lang = "en" }) {
+  const href = localizePath(lang, `/blog/${post.slug}`);
   const imageUrl = getStrapiImageUrl(post.image);
   const category = getBlogCategories(post)[0];
 
@@ -13,7 +15,7 @@ export default function BlogListItem({ post }) {
         <div className="blog_item_image">
           <Image
             src={imageUrl}
-            alt={post.image?.alternativeText || post.heading || "Blog post"}
+            alt={post.image?.alternativeText || post.heading || t(lang, "blog.postAlt")}
             fill
             sizes="(max-width: 900px) 100vw, 67rem"
             className="blog_item_img"
@@ -22,7 +24,7 @@ export default function BlogListItem({ post }) {
       </Link>
       {category ? (
         <Link
-          href={`/blog?category=${category.slug}`}
+          href={`${localizePath(lang, "/blog")}?category=${category.slug}`}
           className="blog_category_badge"
         >
           {category.title}
@@ -37,7 +39,7 @@ export default function BlogListItem({ post }) {
               <span>{formatBlogDate(post.date)}</span>
               <span>{post.readTime}</span>
             </div>
-            <span className="link blog_link">READ MORE</span>
+            <span className="link blog_link">{t(lang, "blog.readMore")}</span>
           </div>
         </Link>
       </div>

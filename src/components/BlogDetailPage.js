@@ -5,21 +5,33 @@ import BlogEnquiryForm from "./BlogEnquiryForm";
 import BlogReadingProgress from "./BlogReadingProgress";
 import BlogShare from "./BlogShare";
 import BlogStickyNav from "./BlogStickyNav";
+import { t } from "@/lib/dictionaries";
+import { localizePath } from "@/lib/i18n";
+
+function Lines({ text }) {
+  return text.split("\n").map((line, index) => (
+    <span key={index}>
+      {index > 0 ? <br /> : null}
+      {line}
+    </span>
+  ));
+}
 
 const BLOG_SERVICES = [
-  { href: "/services/digital-strategy", num: "01", label: "Digital Strategy" },
+  { href: "/services/digital-strategy", num: "01", labelKey: "blog.services.digitalStrategy" },
   {
     href: "/services/website-design-development-services",
     num: "02",
-    label: "Design & development",
+    labelKey: "blog.services.design",
   },
-  { href: "/services/search-engine-optimization-services", num: "03", label: "SEO" },
-  { href: "/services/social-media-marketing-strategy", num: "04", label: "Social media" },
-  { href: "/services/content-marketing-strategy", num: "05", label: "Content marketing" },
-  { href: "/services/influencer-marketing", num: "06", label: "Influencer marketing" },
+  { href: "/services/search-engine-optimization-services", num: "03", labelKey: "blog.services.seo" },
+  { href: "/services/social-media-marketing-strategy", num: "04", labelKey: "blog.services.social" },
+  { href: "/services/content-marketing-strategy", num: "05", labelKey: "blog.services.content" },
+  { href: "/services/influencer-marketing", num: "06", labelKey: "blog.services.influencer" },
 ];
 
 export default function BlogDetailPage({
+  lang = "en",
   slug,
   title,
   date,
@@ -49,9 +61,9 @@ export default function BlogDetailPage({
             <div className="blog_set">
               <div className="blog_page">
                 <nav className="blog_breadcrumb" aria-label="Breadcrumb">
-                  <Link href="/">Home</Link>
+                  <Link href="/">{t(lang, "breadcrumb.home")}</Link>
                   <span aria-hidden="true">/</span>
-                  <Link href="/blog">Blog</Link>
+                  <Link href={localizePath(lang, "/blog")}>{t(lang, "breadcrumb.blog")}</Link>
                 </nav>
                 <h1>{title}</h1>
                 <div className="blog_meta">
@@ -65,7 +77,8 @@ export default function BlogDetailPage({
                 </div>
                 {author ? (
                   <div className="author_byline">
-                    By <Link href={`/author/${author.slug}`} className="link">{author.name}</Link>
+                    {t(lang, "blog.detail.by")}{" "}
+                    <Link href={localizePath(lang, `/author/${author.slug}`)} className="link">{author.name}</Link>
                   </div>
                 ) : null}
                 {image ? (
@@ -80,7 +93,7 @@ export default function BlogDetailPage({
                     />
                     {postCategory ? (
                       <Link
-                        href={`/blog?category=${postCategory.slug}`}
+                        href={`${localizePath(lang, "/blog")}?category=${postCategory.slug}`}
                         className="blog_category_badge"
                       >
                         {postCategory.title}
@@ -123,8 +136,7 @@ export default function BlogDetailPage({
                 ) : null}
                 <div className="blog_services">
                   <div className="aside_title">
-                    Services that <br />
-                    we cater
+                    <Lines text={t(lang, "blog.detail.servicesTitle")} />
                   </div>
                   <div className="service_types">
                     {BLOG_SERVICES.map((service) => (
@@ -134,7 +146,7 @@ export default function BlogDetailPage({
                         data-service={service.num}
                         className="service_text"
                       >
-                        <span className="service_label">{service.label}</span>
+                        <span className="service_label">{t(lang, service.labelKey)}</span>
                       </Link>
                     ))}
                   </div>
@@ -179,8 +191,7 @@ export default function BlogDetailPage({
           data-section="other_detail_blogs"
         >
           <div className="detail_title">
-            You might also like the
-            following blog articles.
+            <Lines text={t(lang, "blog.detail.relatedTitle")} />
           </div>
           <div className="other_blogs">
             {relatedPosts.map((post) => (
@@ -198,7 +209,7 @@ export default function BlogDetailPage({
                 </Link>
                 {post.category ? (
                   <Link
-                    href={`/blog?category=${post.category.slug}`}
+                    href={`${localizePath(lang, "/blog")}?category=${post.category.slug}`}
                     className="blog_category_badge"
                   >
                     {post.category.title}
@@ -213,7 +224,7 @@ export default function BlogDetailPage({
                         <span>{post.date}</span>
                         <span>{post.readTime}</span>
                       </div>
-                      <span className="link blog_link">READ MORE</span>
+                      <span className="link blog_link">{t(lang, "blog.readMore")}</span>
                     </div>
                   </Link>
                 </div>

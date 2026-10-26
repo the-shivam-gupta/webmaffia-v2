@@ -1,8 +1,9 @@
 import BlogCategorySelect from "@/components/BlogCategorySelect";
+import { localizePath } from "@/lib/i18n";
 
-export default function BlogSearch({ defaultValue = "", category = "", categories = [] }) {
+export default function BlogSearch({ defaultValue = "", category = "", categories = [], lang = "en" }) {
   return (
-    <form className="blog_search" action="/blog" method="get" role="search">
+    <form className="blog_search" action={localizePath(lang, "/blog")} method="get" role="search">
       <div className="blog_search_bar">
         <div className="blog_search_field">
           <svg viewBox="0 0 24 24" aria-hidden="true">

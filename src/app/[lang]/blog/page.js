@@ -1,54 +1,83 @@
 import Image from "next/image";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import BlogListItem from "@/components/BlogListItem";
 import BlogSearch from "@/components/BlogSearch";
 import BlogPagination from "@/components/BlogPagination";
 import JsonLd from "@/components/JsonLd";
+import { buildLocalizedAlternates, localesWithPosts } from "@/lib/blog-seo";
+import { t } from "@/lib/dictionaries";
+import { isLocale, localizePath } from "@/lib/i18n";
 import {
   categorySlug,
   formatBlogDate,
   getAllBlogCategories,
-  getBlog,
   getBlogCategories,
+  getBlogsByLocale,
+  getBlogWithMeta,
   getStrapiImageUrl,
 } from "@/lib/strapiPage";
-import { buildBreadcrumbSchema } from "@/lib/schema";
+import { buildBreadcrumbSchema, SITE_URL } from "@/lib/schema";
 
 const BLOG_PAGE_SIZE = 9;
 
-const BREADCRUMB_SCHEMA = buildBreadcrumbSchema([
-  { name: "Home", path: "/" },
-  { name: "Blog", path: "/blog" },
-]);
-
 // /blog?category=<slug> gets its own tab title, description and canonical URL.
-// Without a (valid) category the layout's default "Blog | Webmaffia" metadata applies.
-export async function generateMetadata({ searchParams }) {
+// Without a (valid) category the layout's default metadata applies.
+export async function generateMetadata({ params, searchParams }) {
+  const { lang } = await params;
+  if (!isLocale(lang)) return {};
+
   const { category, q } = await searchParams;
   // Search results are thin, duplicate-prone pages: keep them out of the index
   const isSearch = typeof q === "string" && q.trim() !== "";
   const robots = isSearch ? { robots: { index: false, follow: true } } : {};
-  if (!category) return robots;
 
-  const blogs = await getBlog();
-  const match = blogs
-    .flatMap(getBlogCategories)
-    .find((item) => item.slug === categorySlug(category));
-  if (!match) return robots;
+  const [{ posts: blogs, isFallback }, postsByLocale] = await Promise.all([
+    getBlogWithMeta(lang),
+    getBlogsByLocale(),
+  ]);
+
+  if (category) {
+    const match = blogs
+      .flatMap(getBlogCategories)
+      .find((item) => item.slug === categorySlug(category));
+
+    if (match) {
+      return {
+        ...robots,
+        title: `${match.title} Articles | Webmaffia`,
+        description: `Read the latest ${match.title} articles, guides and insights from the Webmaffia team.`,
+        alternates: {
+          canonical: `${SITE_URL}${localizePath(lang, "/blog")}?category=${match.slug}`,
+        },
+      };
+    }
+    return robots;
+  }
 
   return {
     ...robots,
-    title: `${match.title} Articles | Webmaffia`,
-    description: `Read the latest ${match.title} articles, guides and insights from the Webmaffia team.`,
-    alternates: {
-      canonical: `https://www.webmaffia.com/blog?category=${match.slug}`,
-    },
+    alternates: buildLocalizedAlternates({
+      lang,
+      path: "/blog",
+      isFallback,
+      availableLocales: localesWithPosts(postsByLocale),
+    }),
   };
 }
 
-export default async function BlogPage({ searchParams }) {
-  const blogs = await getBlog();
-  const allCategories = await getAllBlogCategories();
+export default async function BlogPage({ params, searchParams }) {
+  const { lang } = await params;
+  if (!isLocale(lang)) notFound();
+
+  const { posts: blogs } = await getBlogWithMeta(lang);
+  const allCategories = await getAllBlogCategories(lang);
+
+  const blogPath = localizePath(lang, "/blog");
+  const breadcrumbSchema = buildBreadcrumbSchema([
+    { name: t(lang, "breadcrumb.home"), path: "/" },
+    { name: t(lang, "breadcrumb.blog"), path: blogPath },
+  ]);
 
   const { page, category, q } = await searchParams;
   const query = typeof q === "string" ? q.trim() : "";
@@ -77,7 +106,9 @@ export default async function BlogPage({ searchParams }) {
   const isFiltered = Boolean(activeCategory || query);
 
   const featuredBlog = isFiltered ? null : blogs[0];
-  const featuredHref = featuredBlog ? `/blog/${featuredBlog.slug}` : "/blog";
+  const featuredHref = featuredBlog
+    ? localizePath(lang, `/blog/${featuredBlog.slug}`)
+    : blogPath;
   const featuredCategory = featuredBlog ? getBlogCategories(featuredBlog)[0] : null;
   const recommendedBlogs = isFiltered ? [] : blogs.slice(1, 5);
   const remainingBlogs = query ? searchPosts : activeCategory ? categoryPosts : blogs.slice(5);
@@ -93,11 +124,16 @@ export default async function BlogPage({ searchParams }) {
 
   return (
     <main className="wrapper">
-      <JsonLd data={BREADCRUMB_SCHEMA} />
+      <JsonLd data={breadcrumbSchema} />
       <div className="blog_listing">
 
         <section className="our_blog">
-          <BlogSearch defaultValue={query} category={activeCategory?.slug} categories={allCategories} />
+          <BlogSearch
+            defaultValue={query}
+            category={activeCategory?.slug}
+            categories={allCategories}
+            lang={lang}
+          />
           {query ? (
             <div className="blog_filter_bar">
               <div>
@@ -111,7 +147,7 @@ export default async function BlogPage({ searchParams }) {
                 </p>
               </div>
               <Link
-                href={activeCategory ? `/blog?category=${activeCategory.slug}` : "/blog"}
+                href={activeCategory ? `${blogPath}?category=${activeCategory.slug}` : blogPath}
                 className="blog_filter_clear"
               >
                 {activeCategory ? `Clear search` : "View all articles"}
@@ -128,7 +164,7 @@ export default async function BlogPage({ searchParams }) {
                   {categoryPosts.length === 1 ? "article" : "articles"}
                 </p>
               </div>
-              <Link href="/blog" className="blog_filter_clear">
+              <Link href={blogPath} className="blog_filter_clear">
                 View all articles
               </Link>
             </div>
@@ -141,7 +177,7 @@ export default async function BlogPage({ searchParams }) {
                 <div className="main_blog_image">
                   <Image
                     src={getStrapiImageUrl(featuredBlog.image)}
-                    alt={featuredBlog.image?.alternativeText || featuredBlog.heading || "Featured blog post"}
+                    alt={featuredBlog.image?.alternativeText || featuredBlog.heading || t(lang, "blog.featuredAlt")}
                     fill
                     sizes="(max-width: 900px) 100vw, 67rem"
                     className="main_blog_img"
@@ -151,7 +187,7 @@ export default async function BlogPage({ searchParams }) {
               </Link>
               {featuredCategory ? (
                 <Link
-                  href={`/blog?category=${featuredCategory.slug}`}
+                  href={`${blogPath}?category=${featuredCategory.slug}`}
                   className="blog_category_badge"
                 >
                   {featuredCategory.title}
@@ -172,13 +208,13 @@ export default async function BlogPage({ searchParams }) {
                 {recommendedBlogs.map((blog) => (
                   <Link
                     key={blog.id}
-                    href={`/blog/${blog.slug}`}
+                    href={localizePath(lang, `/blog/${blog.slug}`)}
                     className="recommended_item"
                   >
                     <div className="recommended_image">
                       <Image
                         src={getStrapiImageUrl(blog.image)}
-                        alt={blog.image?.alternativeText || blog.heading || "Blog post"}
+                        alt={blog.image?.alternativeText || blog.heading || t(lang, "blog.postAlt")}
                         fill
                         sizes="(max-width: 900px) 40vw, 18rem"
                         className="recommended_img"
@@ -203,6 +239,7 @@ export default async function BlogPage({ searchParams }) {
               <BlogListItem
               key={blog.id}
               post={blog}
+              lang={lang}
                />
             ))}
           </div>
@@ -218,6 +255,7 @@ export default async function BlogPage({ searchParams }) {
             totalPages={totalPages}
             category={activeCategory?.slug}
             query={query}
+            lang={lang}
           />
         </section>
       </div>

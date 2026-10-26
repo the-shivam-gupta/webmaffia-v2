@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 // In-memory cache for the redirect map. Persists for the lifetime of the
-// middleware runtime instance (reset on cold start / redeploy), so most
+// proxy runtime instance (reset on cold start / redeploy), so most
 // requests never hit Strapi at all.
 const REDIRECTS_CACHE_TTL_MS = 60_000;
 let redirectsCache = null; // { map: Map<string,{destination,permanent}>, fetchedAt: number }
@@ -96,8 +96,15 @@ async function getRedirectsMap() {
     return inFlightFetch;
 }
 
-export async function middleware(request) {
-    const { pathname, search } = request.nextUrl;
+// Blog + author are the only localized sections. English keeps the unprefixed
+// URL (served internally from /en/...); other locales use /<lang>/....
+const LOCALIZED_SECTION = /^\/(blog|author)(\/.*)?$/;
+const EN_PREFIXED_SECTION = /^\/en\/(blog|author)(\/.*)?$/;
+
+export async function proxy(request) {
+    const { pathname } = request.nextUrl;
+
+    // 1. Strapi-managed redirects win, so a request is never redirected twice.
     const redirects = await getRedirectsMap();
     const match = redirects.get(normalizePath(pathname));
 
@@ -107,6 +114,21 @@ export async function middleware(request) {
             : new URL(match.destination, request.url);
 
         return NextResponse.redirect(destination, match.permanent ? 308 : 307);
+    }
+
+    // 2. /en/blog... is not a public URL: send it to the single canonical,
+    //    unprefixed English URL.
+    if (EN_PREFIXED_SECTION.test(pathname)) {
+        const url = request.nextUrl.clone();
+        url.pathname = normalizePath(pathname.slice("/en".length));
+        return NextResponse.redirect(url, 308);
+    }
+
+    // 3. Unprefixed blog/author paths are English: rewrite internally (no redirect).
+    if (LOCALIZED_SECTION.test(pathname)) {
+        const url = request.nextUrl.clone();
+        url.pathname = `/en${normalizePath(pathname)}`;
+        return NextResponse.rewrite(url);
     }
 
     return NextResponse.next();

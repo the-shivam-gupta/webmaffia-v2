@@ -1,3 +1,5 @@
+import { DEFAULT_LOCALE, LOCALES, localizePath, normalizeLocale } from "@/lib/i18n";
+
 const STRAPI_TOKEN = process.env.STRAPI_API_TOKEN;
 const FALLBACK_IMAGE = "/assets/images/blogs/blog_list_1.webp";
 
@@ -128,14 +130,14 @@ function normalizeBlogPost(post) {
 
 const BLOG_PAGE_SIZE = 100;
 
-async function fetchBlogsPage(page) {
+async function fetchBlogsPage(page, locale) {
     const strapiBaseUrl = getStrapiApiBaseUrl();
     if (!strapiBaseUrl) {
         throw new Error("STRAPI_API_URL is not configured");
     }
 
     const response = await fetch(
-        `${strapiBaseUrl}/api/blogs?populate=*&pagination[page]=${page}&pagination[pageSize]=${BLOG_PAGE_SIZE}`,
+        `${strapiBaseUrl}/api/blogs?populate=*&locale=${encodeURIComponent(locale)}&pagination[page]=${page}&pagination[pageSize]=${BLOG_PAGE_SIZE}`,
         {
             headers: {
                 Authorization: `Bearer ${STRAPI_TOKEN}`,
@@ -151,8 +153,8 @@ async function fetchBlogsPage(page) {
     return response.json();
 }
 
-async function fetchBlogsRaw() {
-    const firstPage = await fetchBlogsPage(1);
+async function fetchBlogsRaw(locale) {
+    const firstPage = await fetchBlogsPage(1, locale);
     const entries = firstPage.data ?? [];
     const pageCount = firstPage.meta?.pagination?.pageCount ?? 1;
 
@@ -162,7 +164,7 @@ async function fetchBlogsRaw() {
 
     const remainingPages = await Promise.all(
         Array.from({ length: pageCount - 1 }, (_, index) =>
-            fetchBlogsPage(index + 2)
+            fetchBlogsPage(index + 2, locale)
         )
     );
 
@@ -173,36 +175,89 @@ async function fetchBlogsRaw() {
     return entries;
 }
 
-export async function getBlog() {
+function sortedBlogPosts(entries) {
+    return entries
+        .map(normalizeBlogPost)
+        .sort((a, b) => parseBlogDate(b.date) - parseBlogDate(a.date));
+}
+
+/**
+ * Blogs for `locale`, plus whether they are English content served in place of
+ * an empty translation. A non-English request with no entries falls back to English.
+ */
+export async function getBlogWithMeta(locale = DEFAULT_LOCALE) {
+    const lang = normalizeLocale(locale);
     try {
-        const posts = await fetchBlogsRaw();
-        return posts
-            .map(normalizeBlogPost)
-            .sort((a, b) => parseBlogDate(b.date) - parseBlogDate(a.date));
+        let entries = await fetchBlogsRaw(lang);
+        let isFallback = false;
+
+        if (!entries.length && lang !== DEFAULT_LOCALE) {
+            entries = await fetchBlogsRaw(DEFAULT_LOCALE);
+            isFallback = true;
+        }
+
+        return { posts: sortedBlogPosts(entries), isFallback };
     } catch (error) {
         console.error("Failed to fetch blogs:", error);
-        return [];
+        return { posts: [], isFallback: false };
     }
 }
 
-export async function getBlogBySlug(slug) {
-    const posts = await getBlog();
-    return (
-        posts.find(
-            (post) =>
-                post.slug === slug ||
-                post.documentId === slug
-        ) ?? null
-    );
+export async function getBlog(locale = DEFAULT_LOCALE) {
+    return (await getBlogWithMeta(locale)).posts;
 }
 
-export function getRelatedStrapiPosts(slug, count = 2) {
-    return getBlog().then((posts) =>
+/**
+ * Blogs that really exist in each locale (no English fallback), keyed by locale.
+ * Used for hreflang, the sitemap and static params.
+ */
+export async function getBlogsByLocale() {
+    const result = {};
+    await Promise.all(
+        LOCALES.map(async (lang) => {
+            try {
+                result[lang] = sortedBlogPosts(await fetchBlogsRaw(lang));
+            } catch (error) {
+                console.error(`Failed to fetch ${lang} blogs:`, error);
+                result[lang] = [];
+            }
+        })
+    );
+    return result;
+}
+
+function matchesBlogSlug(post, slug) {
+    return post.slug === slug || post.documentId === slug;
+}
+
+/**
+ * A post by slug in `locale`. If that locale has no translation of it, the
+ * English post is returned instead with `isFallback: true`.
+ */
+export async function getBlogBySlug(slug, locale = DEFAULT_LOCALE) {
+    const lang = normalizeLocale(locale);
+    const { posts, isFallback } = await getBlogWithMeta(lang);
+    const found = posts.find((post) => matchesBlogSlug(post, slug));
+    if (found) return { ...found, isFallback };
+
+    if (lang !== DEFAULT_LOCALE && !isFallback) {
+        const english = (await getBlog(DEFAULT_LOCALE)).find((post) =>
+            matchesBlogSlug(post, slug)
+        );
+        if (english) return { ...english, isFallback: true };
+    }
+
+    return null;
+}
+
+export function getRelatedStrapiPosts(slug, count = 2, locale = DEFAULT_LOCALE) {
+    const lang = normalizeLocale(locale);
+    return getBlog(lang).then((posts) =>
         posts
             .filter((post) => post.slug !== slug)
             .slice(0, count)
             .map((post) => ({
-                href: `/blog/${post.slug}`,
+                href: localizePath(lang, `/blog/${post.slug}`),
                 title: post.heading?.replace(/\n/g, " ") ?? "",
                 excerpt: post.excerpt,
                 date: formatBlogDate(post.date),
@@ -1092,8 +1147,8 @@ export function getBlogCategories(post) {
 }
 
 /** Every blog category with its post count, most-used first. */
-export async function getAllBlogCategories() {
-    const posts = await getBlog();
+export async function getAllBlogCategories(locale = DEFAULT_LOCALE) {
+    const posts = await getBlog(locale);
     const counts = new Map();
     for (const post of posts) {
         for (const { title, slug } of getBlogCategories(post)) {

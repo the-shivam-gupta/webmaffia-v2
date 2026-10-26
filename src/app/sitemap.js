@@ -4,10 +4,11 @@ import {
 } from "@/lib/serviceLocations";
 import {
   getAuthors,
-  getBlog,
+  getBlogsByLocale,
   getCampaigns,
   getCaseStudies,
 } from "@/lib/strapiPage";
+import { DEFAULT_LOCALE, LOCALES, localizePath } from "@/lib/i18n";
 
 const SITE_URL = "https://www.webmaffia.com";
 
@@ -29,13 +30,25 @@ function toUrl(path) {
   return `${SITE_URL}${normalized}`;
 }
 
-function entry(path, { priority = 0.64, changeFrequency = "weekly", lastModified } = {}) {
+function entry(path, { priority = 0.64, changeFrequency = "weekly", lastModified, languages } = {}) {
   return {
     url: toUrl(path),
     lastModified: lastModified ? new Date(lastModified) : new Date(),
     changeFrequency,
     priority,
+    ...(languages ? { alternates: { languages } } : {}),
   };
+}
+
+/** hreflang map for a localized path, limited to the given locales (2+ only). */
+function hreflangMap(locales, path) {
+  if (locales.length < 2) return undefined;
+  const languages = {};
+  for (const lang of locales) languages[lang] = toUrl(localizePath(lang, path));
+  if (locales.includes(DEFAULT_LOCALE)) {
+    languages["x-default"] = toUrl(localizePath(DEFAULT_LOCALE, path));
+  }
+  return languages;
 }
 
 async function safeFetch(label, fn) {
@@ -48,8 +61,8 @@ async function safeFetch(label, fn) {
 }
 
 export default async function sitemap() {
-  const [blogs, authors, caseStudies, campaigns, services, locationPaths] = await Promise.all([
-    safeFetch("blogs", getBlog),
+  const [blogsByLocale, authors, caseStudies, campaigns, services, locationPaths] = await Promise.all([
+    safeFetch("blogs", getBlogsByLocale),
     safeFetch("authors", getAuthors),
     safeFetch("case studies", getCaseStudies),
     safeFetch("campaigns", getCampaigns),
@@ -57,11 +70,24 @@ export default async function sitemap() {
     safeFetch("service locations", getAllServiceLocationPaths),
   ]);
 
+  // safeFetch falls back to [] on failure; normalise to a locale map.
+  const postsByLocale = Array.isArray(blogsByLocale) ? {} : blogsByLocale;
+  const blogLocales = LOCALES.filter((lang) => (postsByLocale[lang] ?? []).length > 0);
+
   const servicePages = services.map((service) => `/services/${service.slug}`);
 
   const staticEntries = [
-    ...STATIC_PAGES.map(({ path, priority, changeFrequency }) =>
-      entry(path, { priority, changeFrequency })
+    ...STATIC_PAGES.filter(({ path }) => path !== "/blog").map(
+      ({ path, priority, changeFrequency }) =>
+        entry(path, { priority, changeFrequency })
+    ),
+    // Blog index: one entry per locale that has posts, cross-linked via hreflang.
+    ...blogLocales.map((lang) =>
+      entry(localizePath(lang, "/blog"), {
+        priority: 0.8,
+        changeFrequency: "daily",
+        languages: hreflangMap(blogLocales, "/blog"),
+      })
     ),
     ...servicePages.map((path) =>
       entry(path, { priority: 0.8, changeFrequency: "monthly" })
@@ -74,15 +100,27 @@ export default async function sitemap() {
     ),
   ];
 
-  const blogEntries = blogs
-    .filter((post) => post?.slug)
-    .map((post) =>
-      entry(`/blog/${post.slug}`, {
-        priority: 0.64,
-        changeFrequency: "weekly",
-        lastModified: post.updatedAt || post.publishedAt || post.createdAt,
-      })
-    );
+  // Blog posts: one entry per locale the post actually exists in (no fallback copies).
+  const slugLocales = new Map();
+  for (const lang of LOCALES) {
+    for (const post of postsByLocale[lang] ?? []) {
+      if (!post?.slug) continue;
+      slugLocales.set(post.slug, [...(slugLocales.get(post.slug) ?? []), lang]);
+    }
+  }
+
+  const blogEntries = LOCALES.flatMap((lang) =>
+    (postsByLocale[lang] ?? [])
+      .filter((post) => post?.slug)
+      .map((post) =>
+        entry(localizePath(lang, `/blog/${post.slug}`), {
+          priority: 0.64,
+          changeFrequency: "weekly",
+          lastModified: post.updatedAt || post.publishedAt || post.createdAt,
+          languages: hreflangMap(slugLocales.get(post.slug), `/blog/${post.slug}`),
+        })
+      )
+  );
 
   const authorEntries = authors
     .filter((author) => author?.slug)

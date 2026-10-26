@@ -3,6 +3,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import BlogListItem from "@/components/BlogListItem";
 import JsonLd from "@/components/JsonLd";
+import { buildLocalizedAlternates } from "@/lib/blog-seo";
+import { t } from "@/lib/dictionaries";
+import { DEFAULT_LOCALE, isLocale, localizePath } from "@/lib/i18n";
 import { buildBreadcrumbSchema, SITE_URL } from "@/lib/schema";
 import { getAuthorBySlug, getAuthors } from "@/lib/strapiPage";
 
@@ -22,32 +25,41 @@ function getInitials(name) {
         .join("");
 }
 
-function getAuthorDescription(author) {
+function getAuthorDescription(lang, author) {
     if (author.bio?.trim()) return author.bio.trim();
 
-    const role = author.designation ? `${author.designation} at Webmaffia` : "Webmaffia";
-    return `Read articles by ${author.name}, ${role}, on digital marketing, SEO, web development and brand strategy.`;
+    const role = author.designation
+        ? t(lang, "author.roleAtWebmaffia", { designation: author.designation })
+        : t(lang, "author.roleDefault");
+    return t(lang, "author.metaDescription", { name: author.name, role });
 }
 
 export async function generateMetadata({ params }) {
-    const { slug } = await params;
+    const { lang, slug } = await params;
+    if (!isLocale(lang)) return {};
+
     const author = await getAuthorBySlug(slug);
 
     if (!author) {
-        return { title: "Author | Webmaffia" };
+        return { title: t(lang, "author.metaFallbackTitle") };
     }
 
     return {
-        title: `${author.name} - Author at Webmaffia`,
-        description: getAuthorDescription(author),
-        alternates: {
-            canonical: `${SITE_URL}/author/${author.slug}`,
-        },
+        title: t(lang, "author.metaTitle", { name: author.name }),
+        description: getAuthorDescription(lang, author),
+        // Authors are not translated in Strapi, so non-English URLs canonicalise to English.
+        alternates: buildLocalizedAlternates({
+            lang,
+            path: `/author/${author.slug}`,
+            isFallback: true,
+        }),
     };
 }
 
 export default async function AuthorPage({ params }) {
-    const { slug } = await params;
+    const { lang, slug } = await params;
+    if (!isLocale(lang)) notFound();
+
     const author = await getAuthorBySlug(slug);
 
     if (!author) {
@@ -57,13 +69,14 @@ export default async function AuthorPage({ params }) {
     const { blogs } = author;
     const avatarUrl = author.profileImage?.url;
     const postCount = blogs.length;
+    const authorUrl = `${SITE_URL}${localizePath(DEFAULT_LOCALE, `/author/${author.slug}`)}`;
 
     const personSchema = {
         "@context": "https://schema.org",
         "@type": "Person",
-        "@id": `${SITE_URL}/author/${author.slug}#person`,
+        "@id": `${authorUrl}#person`,
         name: author.name,
-        url: `${SITE_URL}/author/${author.slug}`,
+        url: authorUrl,
         ...(author.designation ? { jobTitle: author.designation } : {}),
         ...(author.bio?.trim() ? { description: author.bio.trim() } : {}),
         ...(avatarUrl ? { image: avatarUrl } : {}),
@@ -71,9 +84,9 @@ export default async function AuthorPage({ params }) {
     };
 
     const breadcrumbSchema = buildBreadcrumbSchema([
-        { name: "Home", path: "/" },
-        { name: "Blog", path: "/blog" },
-        { name: author.name, path: `/author/${author.slug}` },
+        { name: t(lang, "breadcrumb.home"), path: "/" },
+        { name: t(lang, "breadcrumb.blog"), path: localizePath(lang, "/blog") },
+        { name: author.name, path: localizePath(lang, `/author/${author.slug}`) },
     ]);
 
     return (
@@ -97,31 +110,34 @@ export default async function AuthorPage({ params }) {
                         )}
                     </div>
                     <div className="author_info">
-                        <span className="author_label">AUTHOR</span>
+                        <span className="author_label">{t(lang, "author.label")}</span>
                         <h1>{author.name}</h1>
                         {author.designation ? (
                             <div className="author_designation">{author.designation}</div>
                         ) : null}
                         {author.bio?.trim() ? <p className="author_bio">{author.bio.trim()}</p> : null}
                         <div className="author_count">
-                            {postCount} {postCount === 1 ? "Article" : "Articles"}
+                            {postCount}{" "}
+                            {t(lang, postCount === 1 ? "author.articleOne" : "author.articleMany")}
                         </div>
                     </div>
                 </section>
 
                 <section className="our_blog author_posts">
-                    <h2 className="h5 author_posts_title">Articles by {author.name}</h2>
+                    <h2 className="h5 author_posts_title">
+                        {t(lang, "author.postsTitle", { name: author.name })}
+                    </h2>
                     {postCount > 0 ? (
                         <div className="other_blogs">
                             {blogs.map((blog) => (
-                                <BlogListItem key={blog.id} post={blog} />
+                                <BlogListItem key={blog.id} post={blog} lang={lang} />
                             ))}
                         </div>
                     ) : (
                         <p className="author_empty">
-                            No articles published yet. Browse all{" "}
-                            <Link href="/blog" className="link">
-                                our blogs
+                            {t(lang, "author.emptyBefore")}{" "}
+                            <Link href={localizePath(lang, "/blog")} className="link">
+                                {t(lang, "author.emptyLink")}
                             </Link>
                             .
                         </p>

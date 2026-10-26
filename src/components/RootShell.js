@@ -18,7 +18,7 @@ const albertSans = Albert_Sans({
   subsets: ["latin"],
 });
 
-export const metadata = {
+export const siteMetadata = {
   title: "Webmaffia | Creative Digital Agency",
   description:
     "Webmaffia is a full-service creative and digital marketing agency in Mumbai.",
@@ -32,7 +32,7 @@ export const metadata = {
   },
 };
 
-export default async function RootLayout({ children }) {
+export default async function RootShell({ lang = "en", dir = "ltr", children }) {
   const footerData = await getFooter();
 
   let campaignSlugs = [];
@@ -44,7 +44,7 @@ export default async function RootLayout({ children }) {
   }
 
   return (
-    <html lang="en" className={albertSans.variable} suppressHydrationWarning>
+    <html lang={lang} dir={dir} className={albertSans.variable} suppressHydrationWarning>
       <head>
         <meta
           httpEquiv="Content-Security-Policy"
