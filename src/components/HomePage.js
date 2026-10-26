@@ -241,7 +241,7 @@ const TEAM_MEMBERS = [
 function TeamSection() {
   return (
     <section data-section="team" className="team_section">
-      <SectionHead tagline="Team" title={"The brains\nbehind the\nbreakthroughs."} />
+      <SectionHead tagline="Team" title="The brains behind the breakthroughs." />
       <div className="team_grid">
         {TEAM_MEMBERS.map(({ role, name }) => (
           <div className="team_member" key={name}>
