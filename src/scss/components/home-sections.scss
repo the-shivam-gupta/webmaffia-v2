@@ -8,7 +8,6 @@
     z-index: 2;
     padding-top: 15.5rem !important;
     overflow-x: hidden;
-    overflow-x: clip; // clip (not hidden) so position: sticky keeps working inside
     @include mobile(){
         padding-top: 21rem !important;
     }
@@ -60,7 +59,7 @@
             right: -7rem;
         }
         img{
-            width: 76.8rem;
+            width: 86.8rem;
             @include mobile(){
                 width: 98%;
             }
@@ -123,6 +122,264 @@
                 object-fit: contain;
             }
         }
+    }
+
+    // Klaviyo form pinned onto the grey card that is part of the banner
+    // artwork (homepage). It has no background of its own; the position is a
+    // percentage of the image so it stays attached at every size.
+    &__form {
+        position: absolute;
+        top: 24.5%;
+        left: 40.8%;
+        width: 53%;
+        height: 74%;
+        z-index: 2;
+        // Sizes below are in cqw (1% of this box's content width) so the
+        // type and spacing scale with the card at every viewport width.
+        // (Padding % is relative to the image; the card is 53% of it.)
+        padding: 0 7.7% 0 6.6%;
+        container-type: inline-size;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        background: transparent;
+        line-height: normal;
+
+        // max() floors keep the type legible when the card gets small.
+        --form-title-size: max(9cqw, 15px);
+        --form-input-size: max(4.4cqw, 9px);
+        --form-btn-size: max(5.2cqw, 9px);
+        --form-row-gap: 10cqw;
+        --form-title-gap: 12cqw;
+        --form-btn-pad-y: 4.6cqw;
+        --form-btn-pad-x: 11cqw;
+
+        // Tablets: the image (and card) is small, so the floors above would
+        // overflow it unless the spacing tightens too.
+        @media (min-width: 541px) and (max-width: 1100px) {
+            --form-row-gap: 5cqw;
+            --form-title-gap: 5cqw;
+            --form-btn-pad-y: 3.4cqw;
+        }
+
+        // Narrow tablets / large phones: the image shrinks to ~250px, so the
+        // card is tiny; pack the content from the top.
+        @media (min-width: 541px) and (max-width: 600px) {
+            --form-title-size: 12px;
+            --form-input-size: 8px;
+            --form-btn-size: 8px;
+            --form-row-gap: 1.5cqw;
+            --form-title-gap: 1.5cqw;
+            --form-btn-pad-y: 2.4cqw;
+            justify-content: flex-start;
+            padding-top: 2%;
+        }
+
+        // The card in the artwork is narrow on phones, so use tighter side
+        // padding, smaller type and tighter spacing so everything fits.
+        @include mobile() {
+            // The phone image is 98% wide and nudged 7rem right (see
+            // .hero_section picture), so move the form with it.
+            left: calc(40% + 7rem);
+            width: 52%;
+            padding: 0 3.5%;
+            justify-content: flex-start;
+            padding-top: 2.5%;
+            --form-title-size: max(10cqw, 15px);
+            --form-input-size: max(5.2cqw, 9px);
+            --form-btn-size: max(5.6cqw, 9px);
+            --form-row-gap: 5cqw;
+            --form-title-gap: 3cqw;
+            --form-btn-pad-y: 3cqw;
+            --form-btn-pad-x: 8cqw;
+        }
+
+        .formWarpperx,
+        [class*="klaviyo-form"],
+        [class*="klaviyo-form"] > div,
+        [class*="klaviyo-form"] form {
+            width: 100%;
+            background: transparent !important;
+            overflow: visible !important;
+            max-height: none !important;
+            height: auto !important;
+        }
+
+        // Restyle the Klaviyo fields: underlined, uppercase, no boxes.
+        form {
+            padding: 0 !important;
+
+            input:not([type="submit"]):not([type="checkbox"]) {
+                height: auto !important;
+                padding: 0 0 2cqw !important;
+                border: 0 !important;
+                border-radius: 0 !important;
+                background: transparent !important;
+                color: #000 !important;
+                font-size: var(--form-input-size) !important;
+                font-weight: 400 !important;
+                line-height: 1.5 !important;
+                letter-spacing: 0.05rem;
+
+                // Light placeholder (uppercase); typed text is solid black and
+                // keeps its case.
+                text-overflow: ellipsis;
+
+                &::placeholder {
+                    text-overflow: ellipsis;
+                    color: #8a8a8a !important;
+                    font-size: inherit !important;
+                    font-weight: 300;
+                    opacity: 1;
+                    text-transform: uppercase;
+                }
+            }
+
+            // Underline stays black in every state (Klaviyo turns it white
+            // on hover/focus). The phone field's underline sits on its wrapper
+            // so the country picker and number share one line.
+            input:not([type="submit"]):not([type="checkbox"]):not([type="tel"]),
+            input:not([type="submit"]):not([type="checkbox"]):not([type="tel"]):hover,
+            input:not([type="submit"]):not([type="checkbox"]):not([type="tel"]):focus {
+                border-bottom: 0.1rem solid #000 !important;
+                box-shadow: none !important;
+                outline: 0 !important;
+            }
+
+            [role="combobox"],
+            input[type="tel"],
+            input[type="tel"]:hover,
+            input[type="tel"]:focus {
+                border: 0 !important;
+                border-radius: 0 !important;
+                background: transparent !important;
+                box-shadow: none !important;
+                outline: 0 !important;
+            }
+
+            // Even vertical rhythm between the fields (Klaviyo adds its own
+            // px padding around each one).
+            div:has(> input:not([type="submit"]):not([type="checkbox"])) {
+                margin: 0 0 var(--form-row-gap) !important;
+                padding: 0 !important;
+            }
+
+            div:has(> input[type="tel"]) input[type="tel"] {
+                padding: 0 0 2cqw !important;
+            }
+
+            // Drop Klaviyo's fixed-px padding around each row so the only
+            // spacing is the cqw-based one above; that keeps the layout
+            // proportional (and left-aligned with the title) at every width.
+            div {
+                padding: 0 !important;
+            }
+
+            // Phone row: Klaviyo gives the country picker a fixed pixel height.
+            [role="combobox"] {
+                height: auto !important;
+                min-height: 0 !important;
+                padding: 0 2cqw 2cqw 0 !important;
+            }
+
+            input[type="tel"] {
+                min-height: 0 !important;
+            }
+
+            div:has(> button.klaviyo-form-button) {
+                width: auto !important;
+                min-width: max-content !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            // The underline is a pseudo-element so Klaviyo's hover/focus border
+            // colour can't override it.
+            // (:not(#x) chains lift specificity above Klaviyo's hover rules.)
+            div:has(> input[type="tel"]),
+            div:has(> input[type="tel"]):not(#x):not(#y):not(#z):hover,
+            div:has(> input[type="tel"]):not(#x):not(#y):not(#z):focus-within {
+                position: relative;
+                border: 0 !important;
+                border-radius: 0 !important;
+                background: transparent !important;
+                box-shadow: none !important;
+
+                &::after {
+                    content: "";
+                    position: absolute;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    height: 0.1rem;
+                    background: #000;
+                    pointer-events: none;
+                }
+            }
+
+            button.klaviyo-form-button {
+                width: max-content !important;
+                min-width: max-content !important;
+                height: auto !important;
+                display: inline-flex !important;
+                align-items: center;
+                flex-wrap: nowrap !important;
+                margin: 5cqw 0 0 !important;
+                padding: var(--form-btn-pad-y) var(--form-btn-pad-x) !important;
+                white-space: nowrap !important;
+                text-align: left !important;
+                border: 0 !important;
+                border-radius: 5rem !important;
+                background: #000 !important;
+                color: #fff !important;
+                // The label is drawn by ::before so it always reads "Submit",
+                // whatever text the Klaviyo form variant puts in the button.
+                font-size: 0 !important;
+                font-weight: 300 !important;
+                line-height: 1.2 !important;
+                letter-spacing: 0.1rem;
+                opacity: 1 !important;
+                cursor: pointer;
+                box-shadow: inset 0 0 0 0.1rem #000 !important;
+                transition: background-color 0.3s ease, color 0.3s ease;
+
+                &::before,
+                &::after {
+                    font-size: var(--form-btn-size);
+                }
+
+                &::before {
+                    content: "Submit";
+                }
+
+                &::after {
+                    content: "\2192";
+                    margin-left: 3cqw;
+                    transition: transform 0.3s ease;
+                }
+
+                &:hover,
+                &:focus-visible {
+                    background: transparent !important;
+                    color: #000 !important;
+                    -webkit-text-fill-color: #000 !important;
+                    opacity: 1 !important;
+
+                    &::after {
+                        transform: translateX(0.4rem);
+                    }
+                }
+            }
+        }
+    }
+
+    &__form_title {
+        margin: 0 0 var(--form-title-gap);
+        color: #000;
+        font-size: var(--form-title-size) !important;
+        font-weight: 300;
+        line-height: 1.2;
+        letter-spacing: 0.05rem;
     }
 
     &__overlay {
@@ -252,335 +509,180 @@ p{
     }
 }
 
-// Banner CTA button — rendered in Banner.js whenever a CMS banner's
-// `button`/`href` fields are both populated. Global so it works on every
-// page that renders <Banner>, not just one section. Styled to match
-// `.cta_text` (underline-slide link) instead of a bordered/filled pill.
+// Banner CTAs — rendered in Banner.js from a CMS banner's `button`/`href`
+// (primary, filled pill) and `secondaryButton` (secondary, underlined text
+// link). Global so it works on every page that renders <Banner>.
 .banner_content{
     h1{
-        font-size: 12rem;
+        font-size: 11rem;
+    }
+    .banner_cta_group{
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 2rem 3rem;
+        margin-top: 3rem;
+        @include mobile(){
+            gap: 4rem 6rem;
+            margin-top: 6rem;
+        }
     }
     .banner_cta{
         display: inline-block;
-        font-size: 3.6rem;
-        color: $black;
+        padding: 1.4rem 3rem;
+        border: 0.1rem solid $black;
+        border-radius: 5rem;
+        background: $black;
+        color: $white;
+        font-size: 1.8rem;
         line-height: 1;
         font-weight: $exlight;
-        span{
-            color: $gray_dark;
-            position: relative;
-            &::before{
-                display: block;
-                content: '';
-                position: absolute;
-                width: 105%;
-                height: 0.2rem;
-                background: $gray_dark;
-                left: 50%;
-                top: 55%;
-                transform: translateX(-50%) scaleX(1);
-                transform-origin: bottom left;
-                transition: transform 0.3s ease-in;
-            }
-        }
+        transition: background 0.3s ease-in, color 0.3s ease-in;
         &:hover{
-            span::before{
-                transform: translateX(-50%) scaleX(0);
-                transform-origin: bottom right;
-            }
+            background: transparent;
+            color: $black;
         }
         @include mobile(){
-            font-size: 6.188rem;
+            padding: 2.8rem 5.6rem;
+            font-size: 3.4rem;
         }
     }
-}
-
-// FIX: 94rem -> 100vh so the pinned section always equals exactly one screen
-.main_horizontal{
-    position: relative;
-    height: 100vh;
-    min-height: 100vh;
-    max-height: 100vh;
-    // margin-top: 15rem !important; // see note below re: pin + margin
-    overflow: hidden;
-    box-sizing: border-box;
-    @include mobile(){
-        margin-top: 0 !important;
-        height: auto;
-        min-height: auto;
-        max-height: none;
-        padding-bottom: 11vw !important;
-        padding-left: 0 !important;
-    }
-}
-
-// FIX: 94rem -> 100vh to match .main_horizontal
-.horizontal_section{
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 3;
-    width: 62vw;
-    height: 100vh;
-    margin-bottom: 0;
-    pointer-events: none;
-    @include mobile(){
-        height: auto !important;
-        width: auto !important;
-        position: static !important;
-    }
-    &>div{
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
+    // Underline slides out to the right on hover, same as `.link` (blog_link).
+    .banner_cta_secondary{
         position: relative;
-        width: 100%;
-        height: 100%;
-        pointer-events: auto;
+        display: inline-block;
+        color: $black;
+        font-size: 2.4rem;
+        line-height: 1.4;
+        font-weight: 400;
+        &::after{
+            content: '';
+            position: absolute;
+            width: 100%;
+            left: 0;
+            bottom: 0;
+            height: 0.1rem;
+            background: $black_60;
+            transform: scaleX(1);
+            transform-origin: bottom left;
+            transition: transform 0.3s ease-in;
+        }
+        &:hover::after{
+            transform: scaleX(0);
+            transform-origin: bottom right;
+        }
         @include mobile(){
-            align-items: self-start;
-            position: static !important;
-            top: auto !important;
-            height: auto !important;
-            left: auto !important;
-            right: auto !important;
-            width: auto !important;
+            font-size: 4.2rem;
+            &::after{
+                height: 0.2rem;
+            }
         }
     }
 }
 
-// FIX: 90vh -> 100% (fills the 100vh .horizontal_section), and removed the
-// `top: -14vh !important` that was pulling content above the overflow:hidden
-// boundary and getting clipped. Vertical centering already comes from
-// `.horizontal_section > div` (display:flex; align-items:center) above.
-.staticSection{
-    position: relative;
-    left: 0;
-    z-index: 2;
-    background: #fff;
-    height: 100%;
-    top: 0;
-    width: 100% !important;
-    overflow: hidden;
-    isolation: isolate;
+// Services grid — static 3-column replacement for the old pinned
+// horizontal-scroll slider. Intro copy on top, one card per service below.
+.services_grid{
+    margin: 0 8rem 14rem;
     @include mobile(){
-        top: auto !important;
-        height: auto;
-        z-index: 9 !important;
-        position: static !important;
+        margin: 0 6.5rem 14rem;
     }
-}
-
-.ourService-swiper{
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100% !important;
-    // FIX: 94rem -> 100vh
-    height: 100vh;
-    z-index: 2;
-    overflow: hidden;
-    &.testimonial_wrapper{
-        position: absolute !important;
-        top: 0;
-        left: 0;
-        width: 100% !important;
-        max-width: none;
-        // FIX: 94rem -> 100vh
-        height: 100vh;
-        margin: 0 !important;
-        z-index: 2;
+    .services_intro{
+        margin-bottom: 9rem;
+        @include mobile(){
+            margin-bottom: 8rem;
+        }
+        .sub_title{
+            margin-bottom: 2rem;
+        }
+        .sub_heading{
+            font-size: 9.5rem;
+            margin-bottom: 3rem;
+            @include mobile(){
+                font-size: 10rem;
+            }
+        }
     }
-    .swiper{
-        height: 100%;
-        overflow: hidden;
+    .services_list{
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 9rem 6rem;
+        @include mobile(){
+            grid-template-columns: 1fr;
+            gap: 12rem;
+        }
     }
-    .swiper-wrapper{
-        height: 100%;
-    }
-    // FIX: re-added height:100% + flex centering so .horizontal_sliders is
-    // vertically centered within the full-screen slide instead of sitting
-    // flush at top:0
-    .swiper-slide{
-        width: 100% !important;
-        height: 100%;
+    .services_item{
         display: flex;
-        align-items: center;
-        position: relative;
-        right: -50vw;
-        overflow: hidden;
-        @media (max-width: 1024px) {
-            right: auto !important;
-            height: auto !important;
-            align-items: flex-start;
-            overflow: visible;
-        }
-    }
-    .horizontal_sliders{
-        z-index: auto;
-        justify-content: center;
-        // width: 60% !important;
-        @media (min-width: 541px) {
-            > div {
-                width: 45%;
-                max-width: 45%;
-                min-width: 0;
-                box-sizing: border-box;
-                flex-shrink: 0;
-
-                .sub_heading {
-                    width: 100%;
-                    max-width: 100%;
-                }
-
-                > p {
-                    max-width: 80%;
-                    width: 100%;
-                }
-            }
-        }
-        @media (max-width: 1024px) {
-            width: 100% !important;
-            margin-left: 0;
-            flex-direction: column;
-            align-items: flex-start;
-
-            > div {
-                margin: 0 6.5rem;
-                width: auto;
-                max-width: 100%;
-                box-sizing: border-box;
-            }
-
-            .sub_heading {
-                white-space: pre-line;
-                width: 100%;
-                max-width: 100%;
-            }
-
-            > img {
-                width: 80%;
-                max-width: 100%;
-                height: auto;
-                margin: 4rem 6.5rem 0;
-                align-self: flex-start;
-            }
-        }
-    }
-    @media (max-width: 1024px) {
-        position: relative !important;
-        width: 100% !important;
-        height: auto;
-        overflow: hidden;
-        &.testimonial_wrapper{
-            position: relative !important;
-            height: auto;
-            margin-bottom: 0 !important;
-        }
-        .swiper{
-            height: auto;
-            overflow: hidden;
-        }
-        .swiper-wrapper{
-            height: auto;
-        }
-    }
-}
-
-@media (min-width: 1025px) {
-    .main_horizontal{
-        --main-horizontal-offset: 15.5rem;
-    }
-
-    .horizontal_section,
-    .ourService-swiper,
-    .ourService-swiper.testimonial_wrapper{
-        top: var(--main-horizontal-offset);
-        height: calc(100vh - var(--main-horizontal-offset));
-    }
-
-    .ourService-swiper .swiper-slide{
-        overflow: visible;
-    }
-
-    // Inset static intro copy only — keep .staticSection full-bleed so the
-    // white mask still covers the swiper during the horizontal scroll animation.
-    .staticSection.hs1 .horizontal_sliders > div{
-        margin-left: 8rem;
-    }
-
-    .main_horizontal > .slide_cta{
-        bottom: 6rem;
-        right: 8rem;
-        width: auto;
-        gap: 11rem;
-        z-index: 999;
-        pointer-events: auto;
-    }
-}
-
-@media (max-width: 1024px) {
-    .main_horizontal{
-        height: auto;
-        min-height: auto;
-        max-height: none;
-        overflow: visible;
-        margin-top: 0 !important;
-        padding-bottom: 11vw !important;
-        padding-left: 0 !important;
-    }
-
-    .horizontal_section{
-        height: auto !important;
-        width: auto !important;
-        position: static !important;
-
-        &>div{
-            align-items: flex-start;
-            position: static !important;
-            top: auto !important;
-            height: auto !important;
-            left: auto !important;
-            right: auto !important;
-            width: auto !important;
-        }
-    }
-
-    .staticSection{
-        top: auto !important;
-        height: auto;
-        z-index: 9 !important;
-        position: static !important;
-        overflow: visible;
-        padding-bottom: 12vw;
-    }
-
-    .main_horizontal .staticSection .horizontal_sliders{
-        width: 100% !important;
-        margin-left: 0;
         flex-direction: column;
         align-items: flex-start;
-
-        > div{
-            margin: 0 6.5rem;
-            width: auto;
-            max-width: 100%;
-        }
-
-        .sub_heading{
-            width: 100%;
-            max-width: 100%;
+    }
+    .services_item_img{
+        width: 100%;
+        max-width: 42rem;
+        height: auto;
+        margin-bottom: 5rem;
+        mix-blend-mode: multiply;
+        @include mobile(){
+            max-width: 80%;
+            margin-bottom: 6rem;
         }
     }
-
-    .main_horizontal > .slide_cta{
-        position: relative;
-        bottom: auto;
-        right: auto;
-        width: auto;
-        margin: 4rem 6.5rem 0;
-        justify-content: space-between;
-        gap: 8rem;
+    .services_item_label{
+        margin-bottom: 2.4rem;
+        font-size: 1.4rem;
+        font-weight: $exlight;
+        letter-spacing: 0.4em;
+        line-height: 1;
+        text-transform: uppercase;
+        @include mobile(){
+            font-size: 2.6rem;
+            margin-bottom: 4rem;
+        }
+    }
+    .services_item_heading{
+        margin-bottom: 2.4rem;
+        font-size: 5.2rem;
+        font-weight: $exlight;
+        line-height: 1;
+        @include mobile(){
+            font-size: 8rem;
+            margin-bottom: 4rem;
+        }
+    }
+    p{
+        max-width: 40rem;
+        margin-bottom: 3rem;
+        font-weight: 400;
+        @include mobile(){
+            max-width: 100%;
+            margin-bottom: 5rem;
+        }
+    }
+    .services_more{
+        display: flex;
+        justify-content: flex-start;
+        margin-top: 10rem;
+        @include mobile(){
+            margin-top: 12rem;
+        }
+    }
+    .services_item_link{
+        display: inline-block;
+        padding-bottom: 0.4rem;
+        font-size: 1.8rem;
+        color: $black;
+        font-weight: 600;
+        @include mobile(){
+            font-size: 3.4rem;
+            padding-bottom: 0.8rem;
+        }
+        &::after{
+            height: 0.1rem;
+            @include mobile(){
+                height: 0.2rem;
+            }
+        }
     }
 }
 
@@ -658,6 +760,40 @@ h2, .sub_heading{
     font-size: 9.5rem;
     @include mobile(){
         font-size: 8rem;
+    }
+}
+
+// Homepage only: every section heading takes 70% of its container so long
+// titles wrap earlier. Mobile keeps the full width.
+.home_wrapper .sub_heading{
+    width: 70%;
+    @include mobile(){
+        width: 100%;
+    }
+}
+
+// Homepage only: one vertical rhythm between sections. Side and top margins
+// stay with each section's own rule.
+.home_wrapper .ml-setter > section[data-section]:not([data-section="statistics"]){
+    margin-bottom: 14rem;
+}
+
+// Content that follows a heading (or its description) always gets breathing
+// room, so sections without a description don't stick to their title.
+.home_wrapper{
+    .work_box{
+        margin-top: 6rem;
+    }
+    .section_description{
+        margin-bottom: 0;
+    }
+}
+
+// Homepage only: every section description shares one width.
+.home_wrapper .section_description{
+    max-width: 52rem;
+    @include mobile(){
+        max-width: 100%;
     }
 }
 
@@ -749,65 +885,273 @@ h2, .sub_heading{
 }
 
 
+// Featured work — "THE WORK" intro + three case-study cards. Each card is a
+// full-bleed photo with a bottom gradient; hover zooms the photo, deepens the
+// shade, lifts the copy and slides the arrow.
 .features{
-    padding: 0 6.5rem 10rem;
-   
-    picture{
-        display: block;
-        img{
-            display: block;
-            object-fit: cover;
-            width: 100%;
-            height: 100%;
+    margin: 0 8rem 14rem;
+    @include mobile(){
+        margin: 0 6.5rem 14rem;
+    }
+    .features_head{
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 6rem;
+        margin-bottom: 8rem;
+        @include mobile(){
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 4rem;
+        }
+        .sub_title{
+            margin-bottom: 2rem;
+        }
+        .sub_heading{
+            font-size: 9.5rem;
+            margin-bottom: 0;
+            @include mobile(){
+                font-size: 10rem;
+            }
+        }
+        p{
+            margin-bottom: 1rem;
         }
     }
-    .swiper_content{
+    // Accordion: cards share the row by flex-grow. Hovering the grid evens
+    // them out, and the hovered card grows while its siblings shrink.
+    .features_grid{
+        display: flex;
+        gap: 3.2rem;
+        @include mobile(){
+            flex-direction: column;
+            gap: 4rem;
+        }
+    }
+    .feature_card{
         position: relative;
-        &::before{
+        display: block;
+        overflow: hidden;
+        flex: 1 1 0;
+        min-width: 0;
+        min-height: 60rem;
+        border-radius: 0.4rem;
+        color: $white;
+        isolation: isolate;
+        transition: flex-grow 0.5s cubic-bezier(0.65, 0, 0.35, 1),
+            box-shadow 0.35s ease;
+        &:first-child{
+            flex-grow: 1.4;
+        }
+        @include mobile(){
+            flex: none;
+            min-height: 100rem;
+        }
+        &:hover{
+            box-shadow: 0 3rem 6rem rgba($black, 0.28);
+        }
+    }
+    @media (hover: hover) and (min-width: 541px){
+        .features_grid:hover .feature_card{
+            flex-grow: 1;
+        }
+        .features_grid:hover .feature_card:hover{
+            flex-grow: 1.9;
+        }
+    }
+    .feature_card_img{
+        object-fit: cover;
+        transform: scale(1);
+        transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+        will-change: transform;
+        z-index: -2;
+    }
+    .feature_card_shade{
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background: linear-gradient(
+            to top,
+            rgba($black, 0.88) 0%,
+            rgba($black, 0.55) 38%,
+            rgba($black, 0.05) 70%
+        );
+        opacity: 0.85;
+        transition: opacity 0.35s ease;
+    }
+    .feature_card_content{
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: 0 3.2rem 3.2rem;
+        transform: translateY(1.6rem);
+        transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+        @include mobile(){
+            padding: 0 5rem 5rem;
+        }
+        p{
+            max-width: 32rem;
+            margin: 0 0 2.4rem;
+            font-size: 1.5rem;
+            line-height: 1.4;
+            color: $white_80;
+            transition: max-width 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+            @include mobile(){
+                max-width: 100%;
+                font-size: 3rem;
+                margin-bottom: 4rem;
+            }
+        }
+    }
+    .feature_card_tags{
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.8rem;
+        margin: 0 0 2rem;
+        padding: 0;
+        list-style: none;
+        li{
+            list-style: none;
+            padding: 0.7rem 1.3rem;
+            border: 0.1rem solid $white_60;
+            border-radius: 5rem;
+            font-size: 1rem;
+            letter-spacing: 0.1em;
+            line-height: 1;
+            color: $white;
+            transition: border-color 0.25s ease;
+            @include mobile(){
+                padding: 1.4rem 2.6rem;
+                font-size: 2rem;
+            }
+        }
+    }
+    .feature_card_title{
+        margin-bottom: 1.6rem;
+        font-size: 5.2rem;
+        font-weight: $exlight;
+        line-height: 1;
+        color: $white;
+        @include mobile(){
+            font-size: 8rem;
+            margin-bottom: 3rem;
+        }
+    }
+    .feature_card_link{
+        position: relative;
+        display: inline-block;
+        padding-bottom: 0.4rem;
+        font-size: 1.5rem;
+        color: $white;
+        @include mobile(){
+            font-size: 3rem;
+            padding-bottom: 0.8rem;
+        }
+        &::after{
             content: '';
             position: absolute;
+            left: 0;
+            bottom: 0;
             width: 100%;
-            height: 100%;
-            background: rgba($color: #000, $alpha: 0.5);
+            height: 0.1rem;
+            background: $white;
+            transform-origin: bottom left;
+            transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
         }
-        &>div{
-            position: absolute;
-            bottom: 8.9rem;
-            left: 8.9rem;
-            top: auto;
+        i{
+            display: inline-block;
+            font-style: normal;
+            transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+    }
+    .feature_card:hover{
+        .feature_card_img{
+            transform: scale(1.08);
+        }
+        .feature_card_shade{
+            opacity: 1;
+        }
+        .feature_card_content{
+            transform: translateY(0);
+            // The hovered card grows wide, so let the copy use that width.
+            p{
+                max-width: 100%;
+            }
+        }
+        .feature_card_tags li{
+            border-color: $white;
+        }
+        .feature_card_link i{
+            transform: translateX(0.8rem);
+        }
+        .feature_card_link::after{
+            transform: scaleX(0.35);
+        }
+    }
+    .features_more{
+        margin-top: 8rem;
+        @include mobile(){
+            margin-top: 10rem;
+        }
+    }
+    .features_all{
+        display: inline-block;
+        padding-bottom: 0.4rem;
+        font-weight: 400;
+        font-size: 2.4rem;
+        color: $black;
+        @include mobile(){
+            font-size: 4.2rem;
+        }
+        &::after{
+            height: 0.1rem;
             @include mobile(){
-                bottom: 8rem;
-                left: 6.5rem;
+                height: 0.2rem;
             }
         }
-        .project_content{
-            margin-top: 5rem;
-            margin-bottom: 8rem;
-            @include mobile(){
-                margin-top: 4rem;
-                margin-bottom: 5rem;
+    }
+
+    // Scroll reveal (class added by HomePage once JS is running).
+    &.reveal_ready{
+        .features_head,
+        .feature_card,
+        .features_more{
+            opacity: 0;
+            transform: translateY(4rem);
+            transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+                flex-grow 0.5s cubic-bezier(0.65, 0, 0.35, 1),
+                box-shadow 0.35s ease;
+        }
+        .feature_card{
+            transition-delay: calc(var(--i, 0) * 0.15s + 0.15s),
+                calc(var(--i, 0) * 0.15s + 0.15s), 0s, 0s;
+        }
+        &.is_inview{
+            .features_head,
+            .feature_card,
+            .features_more{
+                opacity: 1;
+                transform: none;
             }
-            .project_title{
-                font-size: 5.8rem;
-                color: $white;
-                margin-bottom: 2rem;
-                letter-spacing: 0.3rem;
-                line-height: 0.8;
-                @include mobile(){
-                    font-size: 7.8rem;
-                }
-            }
-            .project_text{                
-                color: $white_80;
-                font-size: 2.2rem;
-                letter-spacing: 0.2rem;
-                @include mobile(){
-                    font-size: 4.2rem;
-                }
+            .features_more{
+                transition-delay: 0.7s;
             }
         }
-        .cta_text{
-            color: $white;
+    }
+    @media (prefers-reduced-motion: reduce){
+        .feature_card,
+        .feature_card_img,
+        .feature_card_content,
+        .feature_card_link i{
+            transition: none !important;
+        }
+        &.reveal_ready .features_head,
+        &.reveal_ready .feature_card,
+        &.reveal_ready .features_more{
+            opacity: 1;
+            transform: none;
         }
     }
 }
@@ -893,6 +1237,9 @@ h2, .sub_heading{
         margin-bottom: 5.5rem;
         .sub_heading{
             margin-bottom: 0;
+        }
+        .section_description{
+            margin-top: 3rem;
         }
     }
     .testimonial_top > img,
@@ -1157,9 +1504,9 @@ h5, .h5{
     }
 }
 
-// .h5{
-//     letter-spacing: .8rem;
-// }
+.h5{
+    letter-spacing: .8rem;
+}
 
 h4, .aside_title{
     font-size: 5.4rem;
@@ -1177,28 +1524,6 @@ h3, .h2{
     letter-spacing: normal;
     @include mobile(){
         font-size: 7rem;
-    }
-}
-
-
-
-@media all and (min-width: 1023px) {
-    .hs1 .sub_heading {
-        width: 57%;
-    }
-
-    .hs2 .sub_heading,
-    .hs3 .sub_heading {
-        width: 45%;
-    }
-
-    .hs4 .sub_heading,
-    .hs5 .sub_heading {
-        width: 65%;
-    }
-
-    .hs7 .sub_heading {
-        width: 85%;
     }
 }
 
@@ -1228,4 +1553,354 @@ h3, .h2{
 
 .client_work{
     margin: 0 8rem;
+}
+
+// Statistics bar — sits right below the home banner. Locations line comes
+// from the footer offices; each cell is a CMS `statisticsBar` entry.
+.statistics_bar{
+    margin: 12rem 0;
+    @include mobile(){
+        margin: 6rem 0 14rem;
+    }
+    .statistics_locations{
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.8rem;
+        margin: 0 8rem 3rem;
+        font-size: 1.2rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        line-height: 1;
+        @include mobile(){
+            margin: 0 6.5rem 5rem;
+            font-size: 2.4rem;
+            gap: 1.4rem;
+        }
+        span + span::before{
+            content: '·';
+            margin-right: 0.8rem;
+            @include mobile(){
+                margin-right: 1.4rem;
+            }
+        }
+    }
+    .statistics_grid{
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        border-top: 0.1rem solid rgba($black, 0.1);
+        border-bottom: 0.1rem solid rgba($black, 0.1);
+        @include mobile(){
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    .statistics_item{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1.2rem;
+        padding: 5rem 2rem;
+        text-align: center;
+        border-left: 0.1rem solid rgba($black, 0.1);
+        &:first-child{
+            border-left: 0;
+        }
+        @include mobile(){
+            padding: 7rem 2rem;
+            gap: 2rem;
+            // Rows are divided by a top line on every item after the first
+            // row; the grid's own bottom border closes the last row.
+            &:nth-child(n + 3){
+                border-top: 0.1rem solid rgba($black, 0.1);
+            }
+            &:nth-child(odd){
+                border-left: 0;
+            }
+            // A lone last item takes the whole row so both its top line and
+            // the grid's bottom line run edge to edge.
+            &:last-child:nth-child(odd){
+                grid-column: 1 / -1;
+            }
+        }
+    }
+    .statistics_value{
+        font-size: 9.6rem;
+        line-height: 1;
+        font-weight: $exlight;
+        sup{
+            font-size: 0.4em;
+            vertical-align: top;
+            position: relative;
+            top: 0.15em;
+            margin-left: 0.15em;
+        }
+        @include mobile(){
+            font-size: 12rem;
+        }
+    }
+    .statistics_label{
+        font-size: 1.4rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        line-height: 1.3;
+        @include mobile(){
+            font-size: 2.6rem;
+        }
+    }
+    .statistics_item--icon{
+        .statistics_icon{
+            width: auto;
+            height: 8rem;
+            @include mobile(){
+                height: 11rem;
+            }
+        }
+        .statistics_label{
+            text-transform: none;
+            font-size: 1.2rem;
+            max-width: 14rem;
+            @include mobile(){
+                font-size: 2.2rem;
+                max-width: 24rem;
+            }
+        }
+    }
+}
+.home_industries{
+    margin-left: 8rem;
+    margin-right: 8rem;
+    @include mobile(){
+        margin-left: 4rem;
+        margin-right: 4rem;
+    }
+    .home_industries_head .section_description{
+        margin-top: 3rem;
+    }
+    // Outer hairline frame + 1px inner dividers (box-shadow on each cell,
+    // clipped on the outer right/bottom edge) so lines survive fractional
+    // device pixels at any zoom.
+    .home_industries_grid{
+        margin-top: 8rem;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        border-top: 1px solid rgba($black, .15);
+        border-left: 1px solid rgba($black, .15);
+        border-right: 1px solid rgba($black, .15);
+        @include mobile(){
+            grid-template-columns: 1fr;
+            margin-top: 6rem;
+        }
+    }
+    .home_industries_cell{
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        min-height: 28rem;
+        padding: 5rem 5rem 4.2rem;
+        overflow: hidden;
+        color: $black;
+        border-bottom: 1px solid rgba($black, .15);
+        // Right divider on all but the last column.
+        &:not(:nth-child(3n)){
+            border-right: 1px solid rgba($black, .15);
+        }
+        // Fill that wipes up from the bottom on hover.
+        &::before{
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: $black;
+            transform: scaleY(0);
+            transform-origin: bottom;
+            transition: transform .5s cubic-bezier(.65, 0, .35, 1);
+            z-index: 0;
+        }
+        > *{
+            position: relative;
+            z-index: 1;
+        }
+        @include mobile(){
+            min-height: 0;
+            padding: 5rem 4rem 4rem;
+            &:not(:nth-child(3n)){
+                border-right: 0;
+            }
+        }
+    }
+    a.home_industries_cell{
+        cursor: pointer;
+        &:hover,
+        &:focus-visible{
+            &::before{
+                transform: scaleY(1);
+            }
+            .home_industries_name,
+            .home_industries_clients,
+            .home_industries_cta{
+                color: $white;
+            }
+            .home_industries_name{
+                transform: translateY(-.6rem);
+            }
+            .home_industries_arrow{
+                transform: translateX(1rem);
+            }
+        }
+    }
+    .home_industries_name{
+        margin: 0 0 1.6rem;
+        font-size: 4.2rem;
+        font-weight: 400;
+        letter-spacing: 0;
+        line-height: 1.15;
+        color: $black;
+        transition: color .4s ease, transform .5s cubic-bezier(.65, 0, .35, 1);
+        @include mobile(){
+            font-size: 5rem;
+        }
+    }
+    .home_industries_clients{
+        margin: 0;
+        font-size: 1.8rem;
+        line-height: 1.4;
+        color: $black_60;
+        transition: color .4s ease;
+        @include mobile(){
+            font-size: 3rem;
+        }
+    }
+    .home_industries_cta{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        margin-top: auto;
+        padding-top: 4rem;
+        font-size: 1.5rem;
+        letter-spacing: .1rem;
+        text-transform: uppercase;
+        color: $black;
+        transition: color .4s ease;
+        @include mobile(){
+            font-size: 2.6rem;
+        }
+    }
+    .home_industries_arrow{
+        font-style: normal;
+        font-size: 2.8rem;
+        line-height: 1;
+        transition: transform .4s cubic-bezier(.65, 0, .35, 1);
+        @include mobile(){
+            font-size: 4rem;
+        }
+    }
+}
+
+.home_blogs{
+    margin-left: 8rem;
+    margin-right: 8rem;
+    @include mobile(){
+        margin-left: 6.5rem;
+        margin-right: 6.5rem;
+    }
+    .section_description{
+        margin-top: 3rem;
+    }
+    .other_blogs{
+        margin-top: 7.5rem;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6rem;
+        @include mobile(){
+            grid-template-columns: 1fr;
+        }
+        .blog_item .blog_para{
+            width: auto;
+        }
+        .home_blogs_excerpt{
+            margin: 0;
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            width: 100%;
+        }
+    }
+}
+
+// "Let's talk" — copy on the left, the /contact Klaviyo form on the right.
+// `.contact_us` (also on the section) supplies the form's field styling; the
+// overrides below only fix its page-level layout for this two-column spot.
+.home_contact{
+    margin-left: 8rem;
+    margin-right: 8rem;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 4rem;
+    align-items: start;
+    @include mobile(){
+        margin-left: 6.5rem;
+        margin-right: 6.5rem;
+        grid-template-columns: 1fr;
+        row-gap: 8rem;
+    }
+    .sub_title{
+        margin-bottom: 2rem;
+    }
+    // Full column width (the homepage-wide 60% would wrap this to 3 lines).
+    .sub_heading{
+        width: 100%;
+        font-size: 12rem;
+        margin-bottom: 4.5rem;
+        @include mobile(){
+            font-size: 10rem;
+        }
+    }
+    .section_description{
+        max-width: 66rem;
+        margin: 0;
+        font-size: 2.6rem;
+        line-height: 1.5;
+        @include mobile(){
+            max-width: 100%;
+            font-size: 3.4rem;
+        }
+    }
+    .home_contact_details{
+        display: flex;
+        flex-direction: column;
+        gap: 3.6rem;
+        margin-top: 7rem;
+        font-size: 2.3rem;
+        line-height: 1.3;
+        @include mobile(){
+            font-size: 3.2rem;
+            margin-top: 6rem;
+        }
+    }
+    .home_contact_item{
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+        a{
+            color: inherit;
+        }
+    }
+    .home_contact_label{
+        font-size: 1.5rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: #00000098;
+        @include mobile(){
+            font-size: 2.2rem;
+        }
+    }
+    // Beat `.contact_us .form` (margin-left 8rem, mobile padding) and the
+    // global `.form` fixed width so the form fills its grid column.
+    &.contact_us .form{
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
 }

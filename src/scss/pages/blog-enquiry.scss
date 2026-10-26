@@ -179,6 +179,31 @@
             margin-bottom: .2rem !important;
             font-size: 1.3rem !important;
         }
+        // hover: fields and the button get lighter instead of darker
+        input:not([type="checkbox"]):not([type="radio"]),
+        .klaviyo-phoneinput > div:first-child,
+        button.klaviyo-form-button{
+            transition: background-color .3s ease, border-color .3s ease, color .3s ease !important;
+        }
+        input:not([type="checkbox"]):not([type="radio"]):not([type="tel"]):hover,
+        .klaviyo-phoneinput > div:first-child:hover{
+            background-color: rgba(255, 255, 255, .85) !important;
+            border-color: rgba(0, 0, 0, .2) !important;
+            html.active &{
+                background-color: rgba(255, 255, 255, .14) !important;
+                border-color: rgba(255, 255, 255, .35) !important;
+            }
+        }
+        button.klaviyo-form-button:hover{
+            color: $black_60 !important;
+            background-color: rgba(255, 255, 255, .6) !important;
+            border-color: rgba(0, 0, 0, .2) !important;
+            html.active &{
+                color: rgba(255, 255, 255, .85) !important;
+                background-color: rgba(255, 255, 255, .14) !important;
+                border-color: rgba(255, 255, 255, .35) !important;
+            }
+        }
     }
     > *{
         position: relative;

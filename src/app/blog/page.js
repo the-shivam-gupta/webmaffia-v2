@@ -7,6 +7,7 @@ import JsonLd from "@/components/JsonLd";
 import {
   categorySlug,
   formatBlogDate,
+  getAllBlogCategories,
   getBlog,
   getBlogCategories,
   getStrapiImageUrl,
@@ -47,6 +48,7 @@ export async function generateMetadata({ searchParams }) {
 
 export default async function BlogPage({ searchParams }) {
   const blogs = await getBlog();
+  const allCategories = await getAllBlogCategories();
 
   const { page, category, q } = await searchParams;
   const query = typeof q === "string" ? q.trim() : "";
@@ -95,7 +97,7 @@ export default async function BlogPage({ searchParams }) {
       <div className="blog_listing">
 
         <section className="our_blog">
-          <BlogSearch defaultValue={query} category={activeCategory?.slug} />
+          <BlogSearch defaultValue={query} category={activeCategory?.slug} categories={allCategories} />
           {query ? (
             <div className="blog_filter_bar">
               <div>

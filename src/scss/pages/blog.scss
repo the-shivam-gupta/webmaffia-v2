@@ -110,7 +110,7 @@
 .recommended_blogs{
     display: flex;
     flex-direction: column;
-    gap: 1rem; // items carry 1.2rem padding each, so this keeps the old visual spacing
+    gap: 3rem; // items carry 1.2rem padding each, so this keeps the old visual spacing
     .recommended_title{
         align-self: flex-start;
         font-size: 2rem;
@@ -425,12 +425,13 @@
     text-transform: uppercase;
     text-overflow: ellipsis;
     white-space: nowrap;
-    color: $white;
-    background: rgba(0, 0, 0, .82);
+    color: $black;
+    background: rgba(255, 255, 255, .92);
     -webkit-backdrop-filter: blur(.8rem);
     backdrop-filter: blur(.8rem);
+    border: .1rem solid rgba(255, 255, 255, .9);
     border-radius: 10rem;
-    box-shadow: 0 .6rem 1.8rem rgba(0, 0, 0, .12);
+    box-shadow: 0 .6rem 1.8rem rgba(0, 0, 0, .25);
     transition: background .3s ease, color .3s ease;
     @include mobile(){
         top: 3rem;
@@ -440,8 +441,8 @@
     }
     @media (hover: hover){
         &:hover{
-            color: $black;
-            background: $white;
+            color: $white;
+            background: $black;
         }
     }
 }
@@ -527,22 +528,34 @@
     align-items: center;
     gap: 1.2rem;
     width: 100%;
-    // max-width: 48rem;
-    margin: 0 0 3rem;
-    padding: 0 .8rem 0 1.8rem;
-    background: $white;
-    border: .1rem solid $black_10;
-    border-radius: 10rem;
-    transition: border-color .3s ease, box-shadow .3s ease;
+    max-width: 88rem;
+    margin: 0 auto 3rem;
     @include mobile(){
-        max-width: none;
+        flex-direction: column;
+        align-items: stretch;
         gap: 2rem;
+        max-width: none;
         margin-bottom: 5rem;
-        padding: 0 1.2rem 0 3rem;
     }
-    &:focus-within{
-        border-color: $black;
-        box-shadow: 0 .4rem 1.4rem rgba(0, 0, 0, .08);
+    // the pill holding the search icon, input and button
+    .blog_search_bar{
+        display: flex;
+        flex: 1;
+        align-items: center;
+        gap: 1.2rem;
+        min-width: 0;
+        padding: .6rem .8rem .6rem 1.8rem;
+        background: $white;
+        border: .1rem solid $black_10;
+        border-radius: 2rem;
+        transition: border-color .3s ease, box-shadow .3s ease;
+        @include mobile(){
+            padding: 1.2rem 1.4rem 1.2rem 3rem;
+        }
+        &:focus-within{
+            border-color: $black;
+            box-shadow: 0 .4rem 1.4rem rgba(0, 0, 0, .08);
+        }
     }
     svg{
         flex: none;
@@ -552,15 +565,27 @@
         stroke: $black_60;
         stroke-width: 1.8;
         stroke-linecap: round;
+        stroke-linejoin: round;
         @include mobile(){
             width: 3.6rem;
             height: 3.6rem;
         }
     }
+    .blog_search_field{
+        display: flex;
+        flex: 1;
+        align-items: center;
+        gap: 1.2rem;
+        min-width: 0;
+        @include mobile(){
+            flex: 1 1 100%;
+            gap: 2rem;
+        }
+    }
     input{
         flex: 1;
         min-width: 0;
-        padding: 1.4rem 0;
+        padding: 1.2rem 0;
         font: inherit;
         font-size: 1.6rem;
         color: $black;
@@ -568,7 +593,7 @@
         border: 0;
         outline: none;
         @include mobile(){
-            padding: 2.6rem 0;
+            padding: 2rem 0;
             font-size: 3.4rem;
         }
         &::placeholder{
@@ -578,18 +603,112 @@
             display: none;
         }
     }
+    .blog_search_select{
+        position: relative;
+        flex: none;
+        @include mobile(){
+            flex: none;
+        }
+        .blog_search_select_btn{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            width: 100%;
+            min-width: 19rem;
+            height: 100%;
+            padding: 1.5rem 2rem;
+            font: inherit;
+            font-size: 1.5rem;
+            color: $black;
+            background: $white;
+            border: .1rem solid $black_10;
+            border-radius: 2rem;
+            cursor: pointer;
+            transition: border-color .3s ease;
+            &:hover{
+                border-color: $black;
+            }
+            span{
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+            }
+            svg{
+                width: 1.4rem;
+                height: 1.4rem;
+                stroke: $black;
+                transition: transform .3s ease;
+                @include mobile(){
+                    width: 3rem;
+                    height: 3rem;
+                }
+            }
+            @include mobile(){
+                min-width: 0;
+                padding: 2.4rem 3rem;
+                font-size: 3.2rem;
+            }
+        }
+        &.open .blog_search_select_btn svg{
+            transform: rotate(180deg);
+        }
+        .blog_search_menu{
+            position: absolute;
+            top: calc(100% + 1.2rem);
+            right: 0;
+            z-index: 20;
+            min-width: 22rem;
+            max-height: 32rem;
+            margin: 0;
+            padding: .8rem;
+            overflow-y: auto;
+            list-style: none;
+            background: $white;
+            border: .1rem solid $black_10;
+            border-radius: 1.6rem;
+            box-shadow: 0 1.2rem 3rem rgba(0, 0, 0, .12);
+            @include mobile(){
+                left: 0;
+                right: 0;
+                min-width: 0;
+                padding: 1.2rem;
+                border-radius: 3rem;
+            }
+            li{
+                padding: 1rem 1.4rem;
+                font-size: 1.5rem;
+                color: $black;
+                border-radius: 1rem;
+                cursor: pointer;
+                transition: background-color .2s ease;
+                @include mobile(){
+                    padding: 2rem 2.4rem;
+                    font-size: 3.2rem;
+                    border-radius: 2rem;
+                }
+                &:hover{
+                    background: rgba(0, 0, 0, .06);
+                }
+                &.active{
+                    color: $white;
+                    background: $black;
+                }
+            }
+        }
+    }
     button{
         flex: none;
-        padding: 1rem 2.2rem;
+        padding: 1.1rem 2.4rem;
         font: inherit;
-        font-size: 1.4rem;
+        font-size: 1.5rem;
         cursor: pointer;
         color: $white;
         background: $black;
         border: 0;
-        border-radius: 10rem;
+        border-radius: 2rem;
         @include mobile(){
-            padding: 2rem 4rem;
+            padding: 2rem 4.4rem;
             font-size: 3rem;
         }
     }
