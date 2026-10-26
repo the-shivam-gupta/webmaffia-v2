@@ -137,7 +137,7 @@ const Header = () => {
         </Link>
 
         {/* Desktop-only quick links (hidden below 1025px via CSS) */}
-        <nav className="header_nav" aria-label="Main">
+        {/* <nav className="header_nav" aria-label="Main">
           <Link href="/about">About Us</Link>
           <div className="header_nav_item has_dropdown">
             <Link href="/services">Services</Link>
@@ -152,14 +152,14 @@ const Header = () => {
           <Link href="/case-study">Our Work</Link>
           <Link href="/clients">Our Client</Link>
           <Link href="/blog">Blog</Link>
-        </nav>
+        </nav> */}
 
         <div className="right_menu">
           {/* Language switcher (blog + author pages only) */}
-          <LanguageSwitcher />
+          {/* <LanguageSwitcher /> */}
 
           {/* Menu toggle */}
-          <a href="" className="menu" onClick={openMenu} aria-label="Open menu">
+          {/* <a href="" className="menu" onClick={openMenu} aria-label="Open menu">
             <div>Menu</div>
             <Image
               src="/assets/images/icons/menu.webp"
@@ -168,7 +168,7 @@ const Header = () => {
               width={26}
               height={14}
             />
-          </a>
+          </a> */}
 
           <button type="button">
             <label className="toggle" htmlFor="switch">

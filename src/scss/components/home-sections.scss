@@ -78,6 +78,26 @@
     display: block;
     line-height: 0;
 
+    // Lets the phone form sit above the image (`.banner_media__form` order).
+    @include mobile() {
+        display: flex;
+        flex-direction: column;
+
+        // With the form moved out, the artwork's empty grey card is useless:
+        // crop the picture to the top ~27% so only the head/trophies show
+        // (the card starts at ~24.5% of the image height; 3159x2803 source).
+        &:has(.banner_media__form) picture {
+            display: block;
+            overflow: hidden;
+            aspect-ratio: 3159 / 673;
+
+            img {
+                width: 100%;
+                height: auto;
+            }
+        }
+    }
+
     &--background {
         .detail_banner {
             position: relative;
@@ -175,23 +195,30 @@
             padding-top: 2%;
         }
 
-        // The card in the artwork is narrow on phones, so use tighter side
-        // padding, smaller type and tighter spacing so everything fits.
+        // Phones: the card in the artwork is too narrow for the fields, so
+        // the form drops out of the overlay and becomes a block below the
+        // (cropped) image; `.banner_media` is a flex column on phones.
         @include mobile() {
-            // The phone image is 98% wide and nudged 7rem right (see
-            // .hero_section picture), so move the form with it.
-            left: calc(40% + 7rem);
-            width: 52%;
-            padding: 0 3.5%;
+            position: relative;
+            top: auto;
+            left: auto;
+            width: 90%;
+            height: auto;
+            align-self: center;
+            // Overlaps the cropped image so the figure looks like it is
+            // peeking out from behind the card.
+            margin-top: 0rem;
+            padding: 8% 8%;
             justify-content: flex-start;
-            padding-top: 2.5%;
-            --form-title-size: max(10cqw, 15px);
-            --form-input-size: max(5.2cqw, 9px);
-            --form-btn-size: max(5.6cqw, 9px);
-            --form-row-gap: 5cqw;
-            --form-title-gap: 3cqw;
-            --form-btn-pad-y: 3cqw;
-            --form-btn-pad-x: 8cqw;
+            border-radius: 2rem;
+            background: #e8e8e8;
+            --form-title-size: max(7cqw, 20px);
+            --form-input-size: max(4.2cqw, 14px);
+            --form-btn-size: max(4.2cqw, 14px);
+            --form-row-gap: 6cqw;
+            --form-title-gap: 7cqw;
+            --form-btn-pad-y: 3.4cqw;
+            --form-btn-pad-x: 9cqw;
         }
 
         .formWarpperx,
@@ -284,6 +311,39 @@
 
             input[type="tel"] {
                 min-height: 0 !important;
+            }
+
+            // Country picker contents (flag, dial code, chevron) must not make
+            // the phone row taller than the other fields: match the input's
+            // line box and sit on the same baseline as the number.
+            [role="combobox"] {
+                display: flex !important;
+                align-items: center;
+                line-height: 1.5 !important;
+                font-size: var(--form-input-size) !important;
+                margin: 0 !important;
+
+                * {
+                    min-height: 0 !important;
+                    margin-top: 0 !important;
+                    margin-bottom: 0 !important;
+                    line-height: 1.5 !important;
+                }
+
+                svg,
+                img {
+                    max-height: 1.5em;
+                }
+            }
+
+            // Phone row: pin the picker and number to the bottom edge so the
+            // shared underline sits the same distance below the text as on
+            // the other fields, and no extra space is added above the row.
+            div:has(> [role="combobox"]) {
+                width: 100%;
+                align-items: flex-end !important;
+                min-height: 0 !important;
+                height: auto !important;
             }
 
             div:has(> button.klaviyo-form-button) {
@@ -1902,5 +1962,74 @@ h3, .h2{
         width: 100%;
         margin: 0;
         padding: 0;
+    }
+}
+
+// Team section (below the awards): blank photo placeholders for now.
+.team_section{
+    margin: 0 8rem 13.5rem;
+    // Same side gutter as `.awards` (which keeps 8rem on phones).
+    @include mobile(){
+        margin: 0 8rem 10rem;
+    }
+    .team_grid{
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 4.4rem;
+        margin-top: 6rem;
+        // Phones: a swipeable row of cards that snap into place, with the
+        // next card peeking in from the right edge of the screen.
+        @include mobile(){
+            display: flex;
+            gap: 4rem;
+            margin: 6rem -8rem 0 0;
+            padding-right: 8rem;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scroll-padding-left: 0;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            &::-webkit-scrollbar{
+                display: none;
+            }
+        }
+    }
+    .team_member{
+        @include mobile(){
+            flex: 0 0 72%;
+            scroll-snap-align: start;
+        }
+    }
+    .team_photo{
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        background: #808080;
+        @include mobile(){
+            aspect-ratio: 4 / 5;
+            border-radius: 2rem;
+        }
+    }
+    .team_role{
+        margin-top: 4.6rem;
+        font-size: 1.2rem;
+        letter-spacing: 1.2rem;
+        text-transform: uppercase;
+        @include mobile(){
+            margin-top: 4rem;
+            padding-top: 3rem;
+            border-top: 0.1rem solid $gray_light;
+            font-size: 2.4rem;
+            letter-spacing: 0.8rem;
+        }
+    }
+    .team_name{
+        margin-top: 1.4rem;
+        font-size: 4rem;
+        line-height: 1.2;
+        font-weight: $exlight;
+        text-transform: uppercase;
+        @include mobile(){
+            font-size: 6.4rem;
+        }
     }
 }

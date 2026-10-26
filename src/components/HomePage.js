@@ -231,6 +231,30 @@ function LogoGridSection({ section }) {
   );
 }
 
+// Photos are intentionally blank placeholders for now.
+const TEAM_MEMBERS = [
+  { role: "Co Founder", name: "Veera Roy" },
+  { role: "Co Founder", name: "Prasad Devadiga" },
+  { role: "CTO", name: "Ankit Tomer" },
+];
+
+function TeamSection() {
+  return (
+    <section data-section="team" className="team_section">
+      <SectionHead tagline="Team" title={"The brains\nbehind the\nbreakthroughs."} />
+      <div className="team_grid">
+        {TEAM_MEMBERS.map(({ role, name }) => (
+          <div className="team_member" key={name}>
+            <div className="team_photo" />
+            <div className="team_role">{role}</div>
+            <div className="team_name">{name}</div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function IndustriesSection({ section }) {
   if (!section.cards.length) return null;
 
@@ -489,8 +513,14 @@ export default function HomePage({
             case "projects":
               return <ProjectsSection key={section.key} section={section} />;
             case "clients":
-            case "trophies":
               return <LogoGridSection key={section.key} section={section} />;
+            case "trophies":
+              return (
+                <Fragment key={section.key}>
+                  <LogoGridSection section={section} />
+                  <TeamSection />
+                </Fragment>
+              );
             case "industries":
               return <IndustriesSection key={section.key} section={section} />;
             case "testimonials":
