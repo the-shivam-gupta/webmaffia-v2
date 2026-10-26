@@ -83,18 +83,12 @@
         display: flex;
         flex-direction: column;
 
-        // With the form moved out, the artwork's empty grey card is useless:
-        // crop the picture to the top ~27% so only the head/trophies show
-        // (the card starts at ~24.5% of the image height; 3159x2803 source).
+        // Clip the image on its right so the artwork's grey card can't peek
+        // out past the form's right edge. The picture is nudged right by 7rem
+        // (see `.hero_section picture`) and the form is 90% wide + centred,
+        // so its right edge sits 5% in from the container's edge.
         &:has(.banner_media__form) picture {
-            display: block;
-            overflow: hidden;
-            aspect-ratio: 3159 / 673;
-
-            img {
-                width: 100%;
-                height: auto;
-            }
+            clip-path: inset(0 calc(5% + 7rem) 0 0);
         }
     }
 
@@ -197,7 +191,7 @@
 
         // Phones: the card in the artwork is too narrow for the fields, so
         // the form drops out of the overlay and becomes a block below the
-        // (cropped) image; `.banner_media` is a flex column on phones.
+        // image; `.banner_media` is a flex column on phones.
         @include mobile() {
             position: relative;
             top: auto;
@@ -205,9 +199,11 @@
             width: 90%;
             height: auto;
             align-self: center;
-            // Overlaps the cropped image so the figure looks like it is
-            // peeking out from behind the card.
-            margin-top: 0rem;
+            // The whole image stays in place behind the card (nothing is
+            // cropped); this negative margin is what pulls the card up over
+            // it. It is a % of the width, so the overlap scales with the
+            // image. Tune it: more negative = less of the image visible.
+            margin-top: -63%;
             padding: 8% 8%;
             justify-content: flex-start;
             border-radius: 2rem;
@@ -1975,7 +1971,7 @@ h3, .h2{
     .team_grid{
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 4.4rem;
+        gap: 12.4rem;
         margin-top: 6rem;
         // Phones: a swipeable row of cards that snap into place, with the
         // next card peeking in from the right edge of the screen.
