@@ -444,7 +444,7 @@ function BlogsSection({ section, blogs }) {
 // that page's form styling (labels, inputs, custom select, dark mode).
 function ContactSection() {
   return (
-    <section data-section="contact" className="home_contact contact_us">
+    <section data-section="contact" className="home_contact">
       <div className="home_contact_info">
         <h2 className="sub_title">LET&apos;S TALK</h2>
         <div className="sub_heading">
@@ -471,8 +471,8 @@ function ContactSection() {
         </div>
       </div>
 
-      <div className="form">
-        <KlaviyoFormEmbed />
+      <div className="home_contact_form">
+        <KlaviyoFormEmbed formId="Rq3tfh" />
       </div>
     </section>
   );
