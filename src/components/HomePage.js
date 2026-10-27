@@ -4,47 +4,11 @@ import { Fragment, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay } from "swiper/modules";
+import { Navigation } from "swiper/modules";
 
 import Banner from "@/components/Banner";
 import StatisticsBar from "@/components/StatisticsBar";
 import KlaviyoFormEmbed from "@/components/KlaviyoFormEmbed";
-
-// Where the "Book a 20-min call" button goes (set NEXT_PUBLIC_BOOK_CALL_URL to
-// a calendar link, e.g. Calendly / Cal.com; falls back to the contact page).
-const BOOK_CALL_URL = process.env.NEXT_PUBLIC_BOOK_CALL_URL || "/contact";
-
-const CALENDAR_ICON =
-  '<svg viewBox="0 0 24 24" width="1.1em" height="1.1em" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>';
-
-// Klaviyo renders the form (and its Submit button) asynchronously, outside
-// React, so the call button is added next to Submit by watching the form box
-// and re-adding it whenever Klaviyo re-renders.
-function BookCallButton() {
-  useEffect(() => {
-    const container = document.querySelector(".banner_media__form");
-    if (!container) return undefined;
-
-    const place = () => {
-      const submit = container.querySelector("button.klaviyo-form-button");
-      if (!submit || submit.parentElement.querySelector(".banner_book_call")) {
-        return;
-      }
-      const link = document.createElement("a");
-      link.className = "banner_book_call";
-      link.href = BOOK_CALL_URL;
-      link.innerHTML = `${CALENDAR_ICON}<span>Book a 20-min call</span>`;
-      submit.insertAdjacentElement("afterend", link);
-    };
-
-    place();
-    const observer = new MutationObserver(place);
-    observer.observe(container, { childList: true, subtree: true });
-    return () => observer.disconnect();
-  }, []);
-
-  return null;
-}
 
 // Renders CMS text, turning line breaks into <br />.
 function Lines({ text }) {
@@ -359,9 +323,6 @@ function IndustriesSection({ section }) {
   );
 }
 
-// Time each testimonial stays before the slider advances.
-const TESTIMONIAL_INTERVAL_MS = 4000;
-
 function TestimonialsSection({ section, testimonials }) {
   if (!testimonials.length) return null;
 
@@ -384,42 +345,47 @@ function TestimonialsSection({ section, testimonials }) {
       </div>
 
       <Swiper
-        modules={[Autoplay]}
-        className="testimonial_grid"
-        loop={testimonials.length > 3}
-        speed={700}
-        spaceBetween={40}
-        slidesPerView={1}
-        autoplay={{
-          delay: TESTIMONIAL_INTERVAL_MS,
-          disableOnInteraction: false,
-          pauseOnMouseEnter: true,
+        modules={[Navigation]}
+        loop={testimonials.length > 1}
+        navigation={{
+          nextEl: ".testimonial .swiper-button-next",
+          prevEl: ".testimonial .swiper-button-prev",
         }}
-        breakpoints={{ 541: { slidesPerView: 3 } }}
+        pagination={{ clickable: true }}
+        className="testimonial-swiper testimonial_wrapper"
       >
         {testimonials.map((t) => (
           <SwiperSlide key={t.id}>
-            <figure className="testimonial_card">
-              <blockquote className="testimonial_quote">{t.quote}</blockquote>
-              <figcaption className="testimonial_person">
-                {t.logo ? (
-                  <Image
-                    src={t.logo.src}
-                    alt={t.author}
-                    width={t.logo.w}
-                    height={t.logo.h}
-                    className="testimonial_photo"
-                  />
-                ) : null}
-                <div>
-                  <div className="name">{t.author}</div>
-                  {t.role ? <div className="work">{t.role}</div> : null}
-                </div>
-              </figcaption>
-            </figure>
+            <div className="testimonial_content">
+              <span>{t.speaker} SAID</span> {t.quote}
+            </div>
+            <div className="company">
+              {t.logo ? (
+                <Image
+                  src={t.logo.src}
+                  alt={t.author}
+                  width={t.logo.w}
+                  height={t.logo.h}
+                />
+              ) : null}
+              <div>
+                <div className="name">{t.author}</div>
+                {t.role ? <div className="work">{t.role}</div> : null}
+              </div>
+            </div>
           </SwiperSlide>
         ))}
       </Swiper>
+
+      <div className="slide_cta">
+        <div className="swiper-button-prev cta_text">
+          <span>Previous</span> View
+        </div>
+        <div className="swiper-button-next cta_text">
+          View <span>Next</span>
+        </div>
+      </div>
+      <div className="swiper-pagination" />
     </section>
   );
 }
@@ -524,14 +490,7 @@ export default function HomePage({
     <main className="wrapper home_wrapper opacity_0">
       <div className="ml-setter">
         {bannerData ? (
-          <Banner data={bannerData} mediaOverlay={
-            <>
-              <p className="banner_media__form_title">Lets talk</p>
-              <KlaviyoFormEmbed formId="Rq3tfh" />
-              <BookCallButton />
-            </>
-          }
-          />
+          <Banner data={bannerData} />
         ) : null}
 
         {sections.map((section) => {

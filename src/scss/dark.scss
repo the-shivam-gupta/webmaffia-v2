@@ -860,14 +860,3 @@ html.active .home_contact{
         color: $white;
     }
 }
-
-// Homepage testimonial cards (dark theme)
-html.active .testimonial{
-    .testimonial_card{
-        border-color: rgba($white, 0.15);
-    }
-    .testimonial_quote,
-    .testimonial_person .name{
-        color: $white;
-    }
-}

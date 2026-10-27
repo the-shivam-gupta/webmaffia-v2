@@ -18,28 +18,22 @@ export const metadata = {
   },
 };
 
+const HOME_BANNER_IMAGE = "/assets/images/banner/homepage-banner.svg";
+
 // Returns null when the CMS banner is missing or has no title; HomePage then
 // renders no banner.
 function buildHomeBannerData(rawBanner) {
   if (!rawBanner?.subHeading?.trim()) return null;
 
-  let images;
-  if (rawBanner.desktopImage?.url) {
-    images = {
-      banner: {
-        url: getStrapiImageUrl(rawBanner.desktopImage),
-        alt: rawBanner.desktopImage.alternativeText || "",
-        width: rawBanner.desktopImage.width || 788,
-        height: rawBanner.desktopImage.height || 693,
-      },
-    };
-    if (rawBanner.mobileImage?.url) {
-      images.bannerMobile = {
-        url: getStrapiImageUrl(rawBanner.mobileImage),
-        alt: rawBanner.mobileImage.alternativeText || "",
-      };
-    }
-  }
+  // Static banner art (same on desktop and mobile); the CMS image is ignored.
+  const images = {
+    banner: {
+      url: HOME_BANNER_IMAGE,
+      alt: "",
+      width: 788,
+      height: 693,
+    },
+  };
 
   return {
     imagePosition: rawBanner.imagePosition || "right",
@@ -52,7 +46,7 @@ function buildHomeBannerData(rawBanner) {
     description: rawBanner.description || undefined,
     priority: true,
     ...buildBannerCtas(rawBanner),
-    ...(images ? { images } : {}),
+    images,
   };
 }
 
