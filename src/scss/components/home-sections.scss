@@ -2029,8 +2029,8 @@ h3, .h2{
     }
     .team_grid{
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 12.4rem;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 6rem;
         margin-top: 6rem;
         // Phones: members stacked one after another.
         @include mobile(){
@@ -2060,7 +2060,7 @@ h3, .h2{
     }
     .team_name{
         margin-top: 1.4rem;
-        font-size: 4rem;
+        font-size: 3.2rem;
         line-height: 1.2;
         font-weight: $exlight;
         text-transform: uppercase;

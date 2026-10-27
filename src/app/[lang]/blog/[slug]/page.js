@@ -31,6 +31,10 @@ function BlogTitle({ heading }) {
     ));
 }
 
+// Posts missing from the build-time list (new CMS posts, or a build where the
+// CMS fetch failed) render on demand instead of 404ing.
+export const dynamicParams = true;
+
 // Runs once per locale from the [lang] layout. Only posts that really exist in
 // a locale are prerendered; anything else (e.g. English fallback under /hi/...)
 // renders on demand.

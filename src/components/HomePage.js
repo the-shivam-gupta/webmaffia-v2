@@ -272,6 +272,7 @@ const TEAM_MEMBERS = [
   { role: "Co Founder", name: "Veera Roy" },
   { role: "Co Founder", name: "Prasad Devadiga" },
   { role: "CTO", name: "Ankit Tomer" },
+  { role: "CCO", name: "Prasanna Devadiga" },
 ];
 
 function TeamSection() {
