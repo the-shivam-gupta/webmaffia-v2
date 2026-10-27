@@ -1942,15 +1942,13 @@ h3, .h2{
         .blog_item .blog_para{
             width: auto;
         }
-        // Grayscale until hovered. Touch screens have no hover, so they keep colour.
-        @media (hover: hover){
-            .blog_item_img{
-                filter: grayscale(1);
-                transition: filter 0.4s ease, transform 0.3s ease-in;
-            }
-            .blog_item:hover .blog_item_img{
-                filter: grayscale(0);
-            }
+        // Grayscale until hovered (a tap triggers the hover state on touch screens).
+        .blog_item_img{
+            filter: grayscale(1);
+            transition: filter 0.4s ease, transform 0.3s ease-in;
+        }
+        .blog_item:hover .blog_item_img{
+            filter: grayscale(0);
         }
         .home_blogs_excerpt{
             margin: 0;
