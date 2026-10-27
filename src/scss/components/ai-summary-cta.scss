@@ -1,6 +1,6 @@
 .ai-cta {
   position: fixed;
-  bottom: 112px; /* 40px offset + 56px WhatsApp button + 16px gap */
+  bottom: 112px; /* 40px offset + 56px call button + 16px gap */
   right: 40px;
   z-index: 9999;
   display: flex;
@@ -129,8 +129,8 @@
 
 
 @media (max-width: 767px) {
-  /* WhatsApp + AI buttons share one smaller size on mobile */
-  body .whatsapp-cta.whatsapp-cta {
+  /* Call + AI buttons share one smaller size on mobile */
+  body .call-cta.call-cta {
     width: 44px;
     height: 44px;
     right: 20px;
@@ -144,7 +144,7 @@
 
   .ai-cta {
     right: 20px;
-    bottom: 80px; /* 24px + 44px WhatsApp + 12px gap */
+    bottom: 80px; /* 24px + 44px call button + 12px gap */
   }
 
   .ai-cta__btn {
@@ -182,4 +182,14 @@
 /* dark theme turns every link white (html.active a), keep the pills readable */
 html.active .ai-cta__list a {
   color: #1a1a1a;
+}
+
+/* dark theme: the black call button would vanish on the dark page, so invert it */
+html.active .call-cta {
+  background-color: #ffffff !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+
+  svg {
+    fill: #000000;
+  }
 }

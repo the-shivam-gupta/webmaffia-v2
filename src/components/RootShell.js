@@ -10,6 +10,7 @@ import ThemeInit from "@/components/ThemeInit";
 import ScrollToTop from "@/components/ScrollToTop";
 import KlaviyoScript from "@/components/KlaviyoScript";
 import WhatsAppCTA from "@/components/WhatsAppCTA";
+import CallCTA from "@/components/CallCTA";
 import AISummaryCTA from "@/components/AISummaryCTA";
 import { getCampaigns, getFooter } from "@/lib/strapiPage";
 
@@ -89,7 +90,8 @@ export default async function RootShell({ lang = "en", dir = "ltr", children }) 
           `}
         </Script>
         <KlaviyoScript />
-        <WhatsAppCTA />
+        {/* <WhatsAppCTA /> */}
+        <CallCTA />
         <AISummaryCTA />
       </body>
     </html>
