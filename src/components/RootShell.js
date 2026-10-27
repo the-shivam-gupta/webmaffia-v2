@@ -10,7 +10,7 @@ import ThemeInit from "@/components/ThemeInit";
 import ScrollToTop from "@/components/ScrollToTop";
 import KlaviyoScript from "@/components/KlaviyoScript";
 import WhatsAppCTA from "@/components/WhatsAppCTA";
-import CallCTA from "@/components/CallCTA";
+import ChatCTA from "@/components/ChatCTA";
 import AISummaryCTA from "@/components/AISummaryCTA";
 import { getCampaigns, getFooter } from "@/lib/strapiPage";
 
@@ -91,7 +91,35 @@ export default async function RootShell({ lang = "en", dir = "ltr", children }) 
         </Script>
         <KlaviyoScript />
         {/* <WhatsAppCTA /> */}
-        <CallCTA />
+        <ChatCTA />
+        <Script id="tawk-to" strategy="lazyOnload">
+          {`
+            var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
+            // Hide Tawk's own bubble: ChatCTA is our custom button, and the
+            // bubble stays hidden again whenever the chat window is minimised.
+            // (ai-summary-cta.scss also hides it from the first paint, until a chat is open.)
+            // Park Tawk's (invisible) bubble where ChatCTA sits, so clicks land on ours.
+            Tawk_API.customStyle = {
+              visibility: {
+                desktop: { position: "br", xOffset: 40, yOffset: 40 },
+                mobile: { position: "br", xOffset: 0, yOffset: 0 }
+              }
+            };
+            var root = document.documentElement;
+            Tawk_API.onLoad = function () { Tawk_API.hideWidget(); };
+            Tawk_API.onStatusChange = function () { if (!root.hasAttribute("data-chat-open")) Tawk_API.hideWidget(); };
+            Tawk_API.onChatMaximized = function () { root.setAttribute("data-chat-open", ""); };
+            Tawk_API.onChatMinimized = function () { root.removeAttribute("data-chat-open"); Tawk_API.hideWidget(); };
+            (function () {
+              var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
+              s1.async = true;
+              s1.src = "https://embed.tawk.to/6ae0393695e150346e90af1a/1k5ttuvp8";
+              s1.charset = "UTF-8";
+              s1.setAttribute("crossorigin", "*");
+              s0.parentNode.insertBefore(s1, s0);
+            })();
+          `}
+        </Script>
         <AISummaryCTA />
       </body>
     </html>

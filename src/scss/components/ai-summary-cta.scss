@@ -1,6 +1,6 @@
 .ai-cta {
   position: fixed;
-  bottom: 112px; /* 40px offset + 56px call button + 16px gap */
+  bottom: 112px; /* 40px offset + 56px chat button + 16px gap */
   right: 40px;
   z-index: 9999;
   display: flex;
@@ -129,12 +129,14 @@
 
 
 @media (max-width: 767px) {
-  /* Call + AI buttons share one smaller size on mobile */
-  body .call-cta.call-cta {
+  /* Chat + AI buttons share one smaller size on mobile. Both are centred on the
+     spot where Tawk parks its own close button (0/0 offsets in RootShell.js plus
+     its own margin), so the open chat's chevron lines up with this button. */
+  body .chat-cta.chat-cta {
     width: 44px;
     height: 44px;
-    right: 20px;
-    bottom: 24px;
+    right: 32px;
+    bottom: 28px;
 
     svg {
       width: 26px;
@@ -143,8 +145,8 @@
   }
 
   .ai-cta {
-    right: 20px;
-    bottom: 80px; /* 24px + 44px call button + 12px gap */
+    right: 32px;
+    bottom: 84px; /* 28px + 44px chat button + 12px gap */
   }
 
   .ai-cta__btn {
@@ -184,12 +186,30 @@ html.active .ai-cta__list a {
   color: #1a1a1a;
 }
 
-/* dark theme: the black call button would vanish on the dark page, so invert it */
-html.active .call-cta {
+/* dark theme: the black chat button would vanish on the dark page, so invert it */
+html.active .chat-cta {
   background-color: #ffffff !important;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
 
   svg {
     fill: #000000;
+  }
+}
+
+/* The AI button floats over the open chat window; hide it while chatting. */
+html[data-chat-open] .ai-cta {
+  display: none !important;
+}
+
+/* While the chat is open, Tawk's own close (chevron) button shows in this spot.
+   Ours becomes a transparent click-catcher above it, so only one icon is drawn
+   and the two can't overlap or sit a few pixels apart. */
+html .chat-cta.chat-cta--open {
+  background: transparent !important;
+  box-shadow: none !important;
+  animation: none !important;
+
+  svg {
+    display: none;
   }
 }
