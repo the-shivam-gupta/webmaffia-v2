@@ -853,17 +853,10 @@ h2, .sub_heading{
     }
 }
 
-// Same treatment as .sub_title (light, uppercase, tracked), with the tracking
-// scaled in em so it stays proportionate at heading size.
 .sub_heading{
     font-size: 9.5rem;
-    font-weight: $light;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    line-height: 1.05;
     @include mobile(){
         font-size: 8rem;
-        letter-spacing: 0.03em;
     }
 }
 
