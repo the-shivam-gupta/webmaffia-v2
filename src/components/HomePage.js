@@ -22,7 +22,7 @@ function Lines({ text }) {
     ));
 }
 
-function SectionHead({ tagline, title }) {
+export function SectionHead({ tagline, title }) {
   return (
     <>
       {tagline ? <h2 className="sub_title">{tagline}</h2> : null}
@@ -185,7 +185,7 @@ function CtaText({ button, struckWords = 1 }) {
 }
 
 // Logo grid shared by the "clients" and "trophies" sections.
-function LogoGridSection({ section }) {
+export function LogoGridSection({ section }) {
   if (!section.cards.length) return null;
 
   const isClients = section.type === "clients";

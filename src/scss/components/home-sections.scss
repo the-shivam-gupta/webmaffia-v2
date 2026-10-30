@@ -2059,7 +2059,7 @@ h3, .h2{
     .team_grid{
         display: grid;
         grid-template-columns: repeat(4, 1fr);
-        gap: 6rem;
+        gap: 3rem;
         margin-top: 6rem;
         // Phones: members stacked one after another.
         @include mobile(){
@@ -2069,11 +2069,17 @@ h3, .h2{
         }
     }
     .team_photo{
+        position: relative;
+        overflow: hidden;
         width: 100%;
         aspect-ratio: 1 / 1;
         background: #808080;
+        .team_photo_img{
+            object-fit: cover;
+            filter: grayscale(1);
+        }
         @include mobile(){
-            width: 60%;
+            width: 100%;
         }
     }
     .team_role{
@@ -2095,6 +2101,60 @@ h3, .h2{
         text-transform: uppercase;
         @include mobile(){
             font-size: 6.4rem;
+        }
+    }
+    // Designation on the left, "View Profile" on the right of the same line;
+    // the name sits below at full width so long names never fight the link.
+    .team_meta{
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 2rem;
+        margin-top: 4.6rem;
+        @include mobile(){
+            margin-top: 4rem;
+        }
+        .team_role{
+            margin-top: 0;
+        }
+    }
+    // "View Profile" under the name: an underline draws in from the left on
+    // hover while the arrow after the label nudges to the right.
+    .team_link{
+        display: inline-flex;
+        align-items: center;
+        gap: 1rem;
+        margin-top: 2.4rem;
+        padding-bottom: 0.6rem;
+        color: $black;
+        font-size: 1.8rem;
+        font-weight: $light;
+        letter-spacing: 0.05rem;
+        line-height: 1;
+        background: linear-gradient(currentColor, currentColor) no-repeat 0 100% / 0 0.1rem;
+        transition: background-size 0.4s ease;
+        &::after{
+            content: "\2192";
+            transition: transform 0.3s ease;
+        }
+        &:hover,
+        &:focus-visible{
+            background-size: 100% 0.1rem;
+            &::after{
+                transform: translateX(0.6rem);
+            }
+        }
+        @include mobile(){
+            gap: 2rem;
+            margin-top: 4rem;
+            padding-bottom: 1.2rem;
+            font-size: 3.4rem;
+            &:hover,
+            &:focus-visible{
+                &::after{
+                    transform: translateX(1.2rem);
+                }
+            }
         }
     }
 }
