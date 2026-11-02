@@ -6,8 +6,9 @@ import Script from "next/script";
 import { usePathname } from "next/navigation";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation } from "swiper/modules";
+import GoogleReview from "@/components/GoogleReview";
 
-const Footer = ({ footerData, campaignSlugs = [] }) => {
+const Footer = ({ footerData, campaignSlugs = [], googleReviews = null }) => {
   const pathname = usePathname();
   const slugMatch = pathname?.match(/^\/case-study\/([^/]+)$/);
   const isCampaignPage =
@@ -22,11 +23,15 @@ const Footer = ({ footerData, campaignSlugs = [] }) => {
   const offices = footerData?.offices ?? [];
   const copyright = footerData?.copyright;
 
-  const primaryOffice = offices[0];
-  const secondaryOffices = offices.slice(1);
-
-  const primaryEmail = primaryOffice?.email || null;
-  const primaryPhone = primaryOffice?.phone || null;
+  const officeText = (office) => `${office.city} ${office.address}`;
+  const indiaOffices = offices.filter((o) =>
+    /mumbai|bangaluru|bengaluru/i.test(officeText(o))
+  );
+  const dubaiOffice = offices.find((o) => /dubai/i.test(officeText(o)));
+  // Any other office from the CMS keeps showing as a plain address block.
+  const otherOffices = offices.filter(
+    (o) => !indiaOffices.includes(o) && o !== dubaiOffice
+  );
 
   const copyrightText = copyright?.description || copyright?.brand || null;
 
@@ -98,54 +103,70 @@ const Footer = ({ footerData, campaignSlugs = [] }) => {
                   <em>Certificate No. SG/IAS/IS/202402 | Valid until 11/12/2028</em>
                 </span>
               </a>
+              <GoogleReview data={googleReviews} />
             </div>
 
             <div className="footer_connect_details">
-              {primaryOffice && (
-                <div className="footer_connect_primary">
-                  <a
-                    href={primaryOffice.addressLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="footer_connect_primary_address"
-                  >
-                    {primaryOffice.city} {primaryOffice.address}
-                  </a>
-                  {(primaryEmail || primaryPhone) && (
-                    <div className="footer_connect_primary_contact">
-                      {primaryEmail && (
-                        <a href={`mailto:${primaryEmail}`}>{primaryEmail}</a>
-                      )}
-                      {primaryEmail && primaryPhone ? (
-                        <span aria-hidden="true"> | </span>
-                      ) : null}
-                      {primaryPhone && (
-                        <a href={`tel:${primaryPhone.replace(/\s/g, "")}`}>
-                          {primaryPhone}
-                        </a>
-                      )}
-                    </div>
-                  )}
+              {/* India: Mumbai and Bengaluru under one heading. */}
+              {indiaOffices.length > 0 && (
+                <div className="footer_connect_office footer_connect_region">
+                  <RegionHead label="India" />
+                  <div className="footer_connect_region_items">
+                    {indiaOffices.map((office) => (
+                      <div
+                        className="footer_connect_region_item"
+                        key={office.id || office.city}
+                      >
+                        <address>
+                          <a
+                            href={office.addressLink || mapsSearchUrl(officeText(office))}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {officeLabel(office)}
+                          </a>
+                        </address>
+                        <OfficeContact email={office.email} phone={office.phone} />
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
 
-              {secondaryOffices.length > 0 && (
-                <div className="footer_connect_offices">
-                  {secondaryOffices.map((office) => (
-                    <div className="footer_connect_office" key={office.id || office.city}>
-                      <address>
-                        <a
-                          href={office.addressLink}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          {office.city} {office.address}
-                        </a>
-                      </address>
-                    </div>
-                  ))}
+              {/* UAE: "Dubai :" before the address. */}
+              {dubaiOffice && (
+                <div className="footer_connect_office footer_connect_usa footer_connect_dubai">
+                  <address>
+                    <RegionHead label="Dubai" />
+                    <a
+                      href={dubaiOffice.addressLink || mapsSearchUrl(officeText(dubaiOffice))}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {dubaiOffice.address}
+                    </a>
+                  </address>
+                  <OfficeContact email={dubaiOffice.email} phone={dubaiOffice.phone} />
                 </div>
               )}
+
+              {otherOffices.map((office) => (
+                <div
+                  className="footer_connect_office footer_connect_usa"
+                  key={office.id || office.city}
+                >
+                  <address>
+                    <a
+                      href={office.addressLink || mapsSearchUrl(officeText(office))}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {office.city} {office.address}
+                    </a>
+                  </address>
+                  <OfficeContact email={office.email} phone={office.phone} />
+                </div>
+              ))}
             </div>
 
             <Script
@@ -221,6 +242,36 @@ const Footer = ({ footerData, campaignSlugs = [] }) => {
     </footer>
   );
 };
+
+// Fallback for offices that have no map link set in the CMS.
+const mapsSearchUrl = (address) =>
+  `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
+
+// "Mumbai (India) 403 A Wing..." -> "Mumbai 403 A Wing..." (the country is the
+// heading). The CMS splits the text oddly, so join it first, then drop "(India)".
+const officeLabel = (office) =>
+  `${office.city ?? ""} ${office.address ?? ""}`
+    .replace(/s*(s*Indias*)/i, "")
+    .replace(/s+/g, " ")
+    .trim();
+
+const OfficeContact = ({ email, phone }) =>
+  email || phone ? (
+    <div className="footer_connect_office_contact">
+      {email && <a href={`mailto:${email}`}>{email}</a>}
+      {email && phone ? <span aria-hidden="true"> | </span> : null}
+      {phone && <a href={`tel:${phone.replace(/[^d+]/g, "")}`}>{phone}</a>}
+    </div>
+  ) : null;
+
+const RegionHead = ({ label }) => (
+  <div className="footer_connect_region_head">
+    <span className="footer_connect_usa_label">{label}</span>
+    <span className="footer_connect_usa_colon" aria-hidden="true">
+      :
+    </span>
+  </div>
+);
 
 export default Footer;
 

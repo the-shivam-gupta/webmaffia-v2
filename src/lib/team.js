@@ -9,6 +9,7 @@ export const TEAM_LEADERS = [
   {
     role: "Co-founder",
     name: "Prasad Devadiga",
+    photo: "https://cms.webmaffia.com/uploads/prasad_a18e67b0e2.webp",
     linkedin: "https://www.linkedin.com/in/prasad-devadiga-68752927",
   },
   {
@@ -30,7 +31,12 @@ export const TEAM_MEMBERS = [
   { role: "Tech Lead", name: "Javed" },
   { role: "Account Lead", name: "Aswin" },
   { role: "SEO", name: "Cincy" },
-  { role: "SEO", name: "Aniket" },
+  {
+    role: "SEO",
+    name: "Aniket",
+    photo: "https://cms.webmaffia.com/uploads/Aniket_fd043ae42f.webp",
+    linkedin: "https://www.linkedin.com/in/aniketanandapatil/",
+  },
   { role: "Tech", name: "Shivam" },
   { role: "Account", name: "Smith" },
   { role: "Design", name: "Manasi" },

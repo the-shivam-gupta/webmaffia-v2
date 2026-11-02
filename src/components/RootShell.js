@@ -12,6 +12,7 @@ import KlaviyoScript from "@/components/KlaviyoScript";
 import WhatsAppCTA from "@/components/WhatsAppCTA";
 import AISummaryCTA from "@/components/AISummaryCTA";
 import { getCampaigns, getFooter } from "@/lib/strapiPage";
+import { getGoogleReviews } from "@/lib/googleReviews";
 
 const albertSans = Albert_Sans({
   variable: "--font-albert-sans",
@@ -34,6 +35,7 @@ export const siteMetadata = {
 
 export default async function RootShell({ lang = "en", dir = "ltr", children }) {
   const footerData = await getFooter();
+  const googleReviews = await getGoogleReviews();
 
   let campaignSlugs = [];
   try {
@@ -75,7 +77,11 @@ export default async function RootShell({ lang = "en", dir = "ltr", children }) 
         <ScrollToTop />
         <Header />
         {children}
-        <Footer footerData={footerData} campaignSlugs={campaignSlugs} />
+        <Footer
+          footerData={footerData}
+          campaignSlugs={campaignSlugs}
+          googleReviews={googleReviews}
+        />
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-T2G85GJLPP"
           strategy="afterInteractive"

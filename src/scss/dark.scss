@@ -358,6 +358,10 @@ html{
                 }
             }
         }
+        // Award hover caption: the hovered card turns white in dark mode.
+        .our_work .work_box .awards_work .awards_detail{
+            color: $black;
+        }
         .toggle{
           svg{
             path{
@@ -390,6 +394,13 @@ html{
             background: rgba(255, 255, 255, 0.4);
         }
         .services_grid{
+            // `multiply` (light theme, hides the artwork's white backdrop)
+            // multiplies against the black page here. Chrome ignores that
+            // for the page background, but iOS Safari applies it and the
+            // illustrations turn black, so draw them normally in dark mode.
+            .services_item_img{
+                mix-blend-mode: normal;
+            }
             .services_item_label,
             .services_item_heading{
                 color: $white;
@@ -630,14 +641,20 @@ html{
             .footer_connect_primary_address,
             .footer_connect_primary_contact,
             .footer_connect_primary_contact a,
+            .footer_connect_office_contact,
+            .footer_connect_office_contact a,
             .footer_connect_office address,
             .footer_connect_office address a,
+            .footer_connect_usa_label,
+            .footer_connect_usa_colon,
             .footer_copyright {
                 color: $black_60;
             }
 
-            .footer_connect_office + .footer_connect_office {
-                border-left-color: rgba(0, 0, 0, 0.2);
+            .footer_connect_usa,
+            .footer_connect_primary,
+            .footer_connect_office {
+                border-bottom-color: rgba(0, 0, 0, 0.15);
             }
 
             .footer_links .link {
@@ -680,6 +697,10 @@ html{
                 // the base invert(1) from footer.scss to restore the
                 // badge/text's natural (dark) colors instead of inverting.
                 filter: none;
+                .footer_google_review_logo,
+                .footer_google_review_stars{
+                    filter: none;
+                }
             }
             .footer_google_source_wrap{
                 .footer_google_source_light{
@@ -859,4 +880,70 @@ html.active .home_contact{
     .home_contact_item a{
         color: $white;
     }
+    .home_contact_item .home_contact_icon{
+        border-color: rgba($white, 0.3);
+    }
 }
+
+// Team section text (dark theme)
+html.active .team_section{
+    .team_role,
+    .team_name,
+    .team_link{
+        color: $white;
+    }
+}
+
+html.active .home_wrapper .features_all{
+    color: $white;
+}
+
+html.active .hero_section picture:not(.detail_banner) img{
+    filter: invert(1);
+}
+
+// Homepage testimonial prev / next (dark theme)
+html.active .testimonial .slide_cta{
+    .swiper-button-prev,
+    .swiper-button-next{
+        color: rgba($white, 0.55);
+        span{
+            color: inherit;
+        }
+        &:hover,
+        &:focus-visible{
+            color: $white;
+        }
+    }
+}
+
+// Homepage blog cards: no hover shadow (same as webmaffia-us)
+html.active .home_blogs .other_blogs .blog_item{
+    @media (hover: hover){
+        &:hover{
+            box-shadow: none;
+        }
+    }
+}
+
+// Homepage contact form button (dark theme): white outline pill that fills
+// white with a dark label on hover.
+html.active .home_contact_form form button.klaviyo-form-button{
+    background: transparent !important;
+    color: $white !important;
+    -webkit-text-fill-color: $white !important;
+    border: vw(1) solid rgba($white, 0.5) !important;
+    box-shadow: none !important;
+    &:hover,
+    &:focus-visible{
+        background: $white !important;
+        color: $black !important;
+        -webkit-text-fill-color: $black !important;
+        border-color: $white !important;
+    }
+    * {
+        color: inherit !important;
+        -webkit-text-fill-color: inherit !important;
+    }
+}
+

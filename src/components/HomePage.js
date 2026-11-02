@@ -7,7 +7,9 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 
 import Banner from "@/components/Banner";
+import TeamLinkedIn from "@/components/TeamLinkedIn";
 import StatisticsBar from "@/components/StatisticsBar";
+import { TEAM_LEADERS } from "@/lib/team";
 import KlaviyoFormEmbed from "@/components/KlaviyoFormEmbed";
 
 // Renders CMS text, turning line breaks into <br />.
@@ -161,7 +163,7 @@ function ProjectsSection({ section }) {
 
       {section.button ? (
         <div className="features_more">
-          <Link href={section.button.href} className="link features_all">
+          <Link href={section.button.href} className="features_all">
             {section.button.title}
           </Link>
         </div>
@@ -185,6 +187,29 @@ function CtaText({ button, struckWords = 1 }) {
 }
 
 // Logo grid shared by the "clients" and "trophies" sections.
+// Hover caption for an award: first line is the eyebrow (level / year), the
+// rest is the award name and category. Hidden until the card is hovered.
+function AwardDetails({ text }) {
+  const lines = String(text ?? "")
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
+  if (!lines.length) return null;
+
+  const [eyebrow, ...rest] = lines;
+
+  return (
+    <div className="awards_detail" aria-hidden="true">
+      <span className="awards_detail_eyebrow">{eyebrow}</span>
+      {rest.map((line, index) => (
+        <span className="awards_detail_line" key={index}>
+          {line}
+        </span>
+      ))}
+    </div>
+  );
+}
+
 export function LogoGridSection({ section }) {
   if (!section.cards.length) return null;
 
@@ -211,13 +236,14 @@ export function LogoGridSection({ section }) {
               />
             </Link>
           ) : (
-            <div className="awards_work" key={card.id}>
+            <div className="awards_work" key={card.id} tabIndex={0}>
               <Image
                 src={card.image.url}
                 alt={card.image.alt}
-                width={127}
-                height={88}
+                width={card.image.width}
+                height={card.image.height}
               />
+              <AwardDetails text={card.details || card.label} />
             </div>
           )
         )}
@@ -231,24 +257,29 @@ export function LogoGridSection({ section }) {
   );
 }
 
-// Photos are intentionally blank placeholders for now.
-const TEAM_MEMBERS = [
-  { role: "Co Founder", name: "Veera Roy" },
-  { role: "Co Founder", name: "Prasad Devadiga" },
-  { role: "CTO", name: "Ankit Tomer" },
-  { role: "CCO", name: "Prasanna Devadiga" },
-];
-
 function TeamSection() {
   return (
     <section data-section="team" className="team_section">
       <SectionHead tagline="Team" title="The brains behind the breakthroughs." />
       <div className="team_grid">
-        {TEAM_MEMBERS.map(({ role, name }) => (
+        {TEAM_LEADERS.map(({ role, name, linkedin, photo }) => (
           <div className="team_member" key={name}>
-            <div className="team_photo" />
-            <div className="team_role">{role}</div>
+            <div className="team_photo">
+              {photo ? (
+                <Image
+                  src={photo}
+                  alt={name}
+                  fill
+                  sizes="(max-width: 540px) 90vw, 25vw"
+                  className="team_photo_img"
+                />
+              ) : null}
+            </div>
+            <div className="team_meta">
+              <div className="team_role">{role}</div>
+            </div>
             <div className="team_name">{name}</div>
+            <TeamLinkedIn href={linkedin} name={name} />
           </div>
         ))}
       </div>
@@ -371,6 +402,7 @@ function TestimonialsSection({ section, testimonials }) {
               <div>
                 <div className="name">{t.author}</div>
                 {t.role ? <div className="work">{t.role}</div> : null}
+                {t.company ? <div className="work">{t.company}</div> : null}
               </div>
             </div>
           </SwiperSlide>
@@ -441,8 +473,7 @@ function BlogsSection({ section, blogs }) {
   );
 }
 
-// "Let's talk" — same Klaviyo form as /contact. The `contact_us` class pulls in
-// that page's form styling (labels, inputs, custom select, dark mode).
+// "Let's talk" — the same Klaviyo form as the header menu.
 function ContactSection() {
   return (
     <section data-section="contact" className="home_contact">
@@ -458,11 +489,41 @@ function ContactSection() {
         </p>
         <div className="home_contact_details">
           <div className="home_contact_item">
-            <span className="home_contact_label">EMAIL</span>
-            <a href="mailto:veera@webmaffia.com">veera@webmaffia.com</a>
+            <span className="home_contact_icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false">
+                <rect
+                  x="3"
+                  y="5"
+                  width="18"
+                  height="14"
+                  rx="2"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                />
+                <path
+                  d="M3.5 7l8.5 6 8.5-6"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </span>
+            <a href="mailto:veera@webmaffia.com" className="home_contact_link">
+              veera@webmaffia.com
+            </a>
           </div>
           <div className="home_contact_item">
-            <span className="home_contact_label">INDIA · UAE</span>
+            <span className="home_contact_icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false">
+                <path
+                  d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25c1.1.37 2.3.57 3.6.57a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1C10.6 21 3 13.4 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.6a1 1 0 0 1-.25 1L6.6 10.8z"
+                  fill="currentColor"
+                />
+              </svg>
+            </span>
             <span>
               <a href="tel:+919867625909">+91 98676 25909</a>
               {" · "}
@@ -473,7 +534,7 @@ function ContactSection() {
       </div>
 
       <div className="home_contact_form">
-        <KlaviyoFormEmbed formId="Rq3tfh" />
+        <KlaviyoFormEmbed />
       </div>
     </section>
   );
