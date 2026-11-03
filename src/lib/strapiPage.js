@@ -1162,3 +1162,68 @@ export async function getAllBlogCategories(locale = DEFAULT_LOCALE) {
         (a, b) => b.count - a.count || a.title.localeCompare(b.title)
     );
 }
+
+const INDUSTRY_SECTIONS = [
+    "statistics-bar",
+    "approach",
+    "problems-we-solve",
+    "our-services",
+    "types-and-features",
+    "process",
+    "what-you-receive",
+    "band",
+    "results",
+    "fa-qs",
+];
+
+const INDUSTRY_POPULATE = [
+    "populate[banner][populate]=*",
+    "populate[seo][populate]=*",
+    ...INDUSTRY_SECTIONS.map(
+        (name) => `populate[sections][on][services.${name}][populate]=*`
+    ),
+].join("&");
+
+async function fetchIndustriesRaw() {
+    const strapiBaseUrl = getStrapiApiBaseUrl();
+    if (!strapiBaseUrl) {
+        throw new Error("STRAPI_API_URL is not configured");
+    }
+
+    const response = await fetch(
+        `${strapiBaseUrl}/api/industries?${INDUSTRY_POPULATE}&pagination[pageSize]=100`,
+        {
+            headers: {
+                Authorization: `Bearer ${STRAPI_TOKEN}`,
+                "Content-Type": "application/json",
+            },
+            next: { revalidate: 60 },
+            signal: AbortSignal.timeout(STRAPI_FETCH_TIMEOUT_MS),
+        }
+    );
+
+    if (!response.ok) {
+        const errorBody = await response.text().catch(() => "");
+        throw new Error(
+            `Failed to fetch industries (${response.status})${errorBody ? `: ${errorBody.slice(0, 200)}` : ""}`
+        );
+    }
+
+    const data = await response.json();
+    return data.data ?? [];
+}
+
+/** Industry detail pages from Strapi collection `industries` (keyed by `slug`). */
+export async function getIndustries() {
+    try {
+        return await fetchIndustriesRaw();
+    } catch (error) {
+        console.error("Failed to fetch industries:", error);
+        return [];
+    }
+}
+
+export async function getIndustryBySlug(slug) {
+    const entries = await getIndustries();
+    return entries.find((entry) => entry.slug === slug) ?? null;
+}

@@ -39,6 +39,11 @@ const nextConfig = {
         permanent: true,
       },
       {
+        source: "/services/real-estate-website-design-development",
+        destination: "/industry/real-estate-website-design-development",
+        permanent: true,
+      },
+      {
         source: "/campaigns/:slug",
         destination: "/case-study/:slug",
         permanent: true,

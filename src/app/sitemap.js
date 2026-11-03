@@ -7,6 +7,7 @@ import {
   getBlogsByLocale,
   getCampaigns,
   getCaseStudies,
+  getIndustries,
 } from "@/lib/strapiPage";
 import { DEFAULT_LOCALE, LOCALES, localizePath } from "@/lib/i18n";
 
@@ -61,13 +62,14 @@ async function safeFetch(label, fn) {
 }
 
 export default async function sitemap() {
-  const [blogsByLocale, authors, caseStudies, campaigns, services, locationPaths] = await Promise.all([
+  const [blogsByLocale, authors, caseStudies, campaigns, services, locationPaths, industries] = await Promise.all([
     safeFetch("blogs", getBlogsByLocale),
     safeFetch("authors", getAuthors),
     safeFetch("case studies", getCaseStudies),
     safeFetch("campaigns", getCampaigns),
     safeFetch("services", getAllServiceEntries),
     safeFetch("service locations", getAllServiceLocationPaths),
+    safeFetch("industries", getIndustries),
   ]);
 
   // safeFetch falls back to [] on failure; normalise to a locale map.
@@ -88,6 +90,9 @@ export default async function sitemap() {
         changeFrequency: "daily",
         languages: hreflangMap(blogLocales, "/blog"),
       })
+    ),
+    ...industries.map((item) =>
+      entry(`/industry/${item.slug}`, { priority: 0.8, changeFrequency: "monthly" })
     ),
     ...servicePages.map((path) =>
       entry(path, { priority: 0.8, changeFrequency: "monthly" })
