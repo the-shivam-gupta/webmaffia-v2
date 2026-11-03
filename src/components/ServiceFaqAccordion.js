@@ -8,7 +8,7 @@ import { useCallback, useState } from "react";
  * answer } by serviceContent.js) as a click-to-expand accordion, matching
  * the toggle/measure pattern CareerAccordion.js uses for career openings.
  */
-export default function ServiceFaqAccordion({ heading, items }) {
+export default function ServiceFaqAccordion({ tagline, heading, items }) {
   const [activeId, setActiveId] = useState(null);
   const [heights, setHeights] = useState({});
 
@@ -27,6 +27,7 @@ export default function ServiceFaqAccordion({ heading, items }) {
 
   return (
     <div className="service_faqs">
+      {tagline ? <p className="faq_tagline">{tagline}</p> : null}
       {heading ? <h2 className="h2">{heading}</h2> : null}
       <div>
         {items.map((item) => {

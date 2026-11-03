@@ -4,7 +4,9 @@ import Link from "next/link";
 import Banner from "@/components/Banner";
 import BlogListItem from "@/components/BlogListItem";
 import JsonLd from "@/components/JsonLd";
-import ServiceFaqAccordion from "@/components/ServiceFaqAccordion";
+import ContactSection from "@/components/ContactSection";
+import ServiceTeamFaq from "@/components/ServiceTeamFaq";
+import StatisticsBar from "@/components/StatisticsBar";
 import { buildBreadcrumbSchema, buildFaqSchema } from "@/lib/schema";
 import { getLatestBlogItems, getLatestWorkItems } from "@/lib/case-study-helpers";
 
@@ -212,7 +214,7 @@ function renderSectionBody(section) {
     case "blogs":
       return <BlogsSection section={section} />;
     case "faqs":
-      return <ServiceFaqAccordion heading={section.heading} items={section.items} />;
+      return <ServiceTeamFaq tagline={section.tagline} heading={section.heading} items={section.items} />;
     case "features":
     default:
       return <FeaturesSection section={section} />;
@@ -259,45 +261,47 @@ function LatestWorkSection({ latestWork }) {
   );
 }
 
-function OtherServicesSection({ otherServices }) {
-  if (!otherServices?.items?.length) return null;
-
-  // Exactly the blog sidebar's "Services that we cater" box
-  // (.aside_title/.service_text, blog-detail.scss) — same narrow vertical
-  // list, just fed from the CMS otherServices data instead of a hardcoded
-  // array.
+// Last fold of every service page: the homepage "Let's talk" block with
+// service-specific copy and without the email / phone rows.
+function ServiceContact() {
   return (
-    <div className="other_services">
-      <div className="aside_title">{otherServices.heading}</div>
-      <div className="other_services_list">
-        {otherServices.items.map((item, index) => (
-          <Link
-            href={item.href}
-            className="other_services_item"
-            data-service={String(index + 1).padStart(2, "0")}
-            key={item.href}
-          >
-            {item.title}
-          </Link>
-        ))}
-      </div>
-    </div>
+    <ContactSection
+      heading={
+        <>
+          Your brand deserves a <br />
+          website as exceptional <br />
+          as you are.
+        </>
+      }
+      description="Let’s build it together!"
+      showDetails={false}
+    />
   );
 }
 
-function FaqsWithOtherServices({ section, otherServices }) {
-  const hasOtherServices = Boolean(otherServices?.items?.length);
+function OtherServicesSection({ otherServices }) {
+  if (!otherServices?.items?.length) return null;
 
+  // Wrapping row of pill buttons below the FAQ: numbered badge and service name.
   return (
-    <div className={`faqs_with_other_services${hasOtherServices ? "" : " faqs_with_other_services--solo"}`}>
-      <div className="faqs_col">
-        <ServiceFaqAccordion heading={section.heading} items={section.items} />
+    <div className="other_services_row">
+      <div className="other_services_row_head">
+        <h2 className="other_services_row_title">{otherServices.heading}</h2>
       </div>
-      {hasOtherServices && (
-        <div className="other_services_col">
-          <OtherServicesSection otherServices={otherServices} />
-        </div>
-      )}
+      <div className="other_services_row_list">
+        {otherServices.items.map((item, index) => (
+          <Link
+            href={item.href}
+            className="other_services_row_item"
+            key={item.href}
+          >
+            <span className="other_services_row_num">
+              {String(index + 1).padStart(2, "0")}
+            </span>
+            <span className="other_services_row_name">{item.title}</span>
+          </Link>
+        ))}
+      </div>
     </div>
   );
 }
@@ -366,6 +370,7 @@ export default async function ServiceDetailPage({ config, breadcrumbs }) {
     imagePosition: "right",
     priority: true,
     cta: hero.cta,
+    secondaryCta: hero.secondaryCta,
     subheading: {
       enabled: true,
       text: hero.subtitle,
@@ -419,10 +424,18 @@ export default async function ServiceDetailPage({ config, breadcrumbs }) {
                 const showLatestWorkAfter = section.type === "features" && !insertedLatestWork;
                 if (showLatestWorkAfter) insertedLatestWork = true;
 
-                // "Other services" sits beside the first FAQ section rather
-                // than as its own row — see FaqsWithOtherServices.
-                const pairOtherServicesHere = section.type === "faqs" && !insertedOtherServices;
-                if (pairOtherServicesHere) insertedOtherServices = true;
+                // "Other services" gets its own horizontal row right below
+                // the first FAQ section.
+                const showOtherServicesAfter = section.type === "faqs" && !insertedOtherServices;
+                if (showOtherServicesAfter) insertedOtherServices = true;
+
+                // The statistics bar renders its own <section> (same markup as
+                // the homepage), so it skips the generic wrapper below.
+                if (section.type === "statistics") {
+                  return (
+                    <StatisticsBar key={section.dataSection} stats={section.stats} />
+                  );
+                }
 
                 return (
                   <Fragment key={section.dataSection}>
@@ -430,12 +443,13 @@ export default async function ServiceDetailPage({ config, breadcrumbs }) {
                       data-section={section.dataSection}
                       className={SECTION_CLASS_NAMES[section.type] ?? "service_features"}
                     >
-                      {pairOtherServicesHere ? (
-                        <FaqsWithOtherServices section={section} otherServices={otherServices} />
-                      ) : (
-                        renderSectionBody(section)
-                      )}
+                      {renderSectionBody(section)}
                     </section>
+                    {showOtherServicesAfter && otherServices?.items?.length > 0 && (
+                      <section data-section="other_services">
+                        <OtherServicesSection otherServices={otherServices} />
+                      </section>
+                    )}
                     {showLatestWorkAfter && <LatestWorkSection latestWork={latestWork} />}
                   </Fragment>
                 );
@@ -448,6 +462,7 @@ export default async function ServiceDetailPage({ config, breadcrumbs }) {
                   <OtherServicesSection otherServices={otherServices} />
                 </section>
               )}
+              <ServiceContact />
             </div>
           );
         })()}
@@ -463,6 +478,7 @@ export default async function ServiceDetailPage({ config, breadcrumbs }) {
                 <OtherServicesSection otherServices={otherServices} />
               </section>
             )}
+            <ServiceContact />
           </>
         )}
       </div>

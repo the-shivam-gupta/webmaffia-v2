@@ -246,6 +246,8 @@
             }
             @include mobile(){
                 width: 100%;
+                font-size: 4.2rem;
+                line-height: 1.25;
             }
         }
         .blog_para{

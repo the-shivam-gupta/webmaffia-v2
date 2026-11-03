@@ -92,7 +92,7 @@ export default async function sitemap() {
       })
     ),
     ...industries.map((item) =>
-      entry(`/industry/${item.slug}`, { priority: 0.8, changeFrequency: "monthly" })
+      entry(`/${item.slug}`, { priority: 0.8, changeFrequency: "monthly" })
     ),
     ...servicePages.map((path) =>
       entry(path, { priority: 0.8, changeFrequency: "monthly" })

@@ -799,23 +799,11 @@ html{
             }
         }
         .industries_cell{
-            background: $black;
-            box-shadow: inset -1px -1px 0 rgba(255,255,255,0.18);
-            // Tiles sit on black here, so logos start inverted (visible as
-            // light marks) and flip back to their real colors on the
-            // white hover fill.
+            // Open layout (no tile): logos sit directly on the black page, so
+            // they start inverted to read as light marks.
             .industries_icon{
                 filter: invert(1);
             }
-            // &:hover{
-            //     background: $white;
-            //     .industries_name{
-            //         color: $black;
-            //     }
-            //     .industries_icon{
-            //         filter: none;
-            //     }
-            // }
         }
         .tools_pill{
             border-color: rgba(255,255,255,0.2);
@@ -947,3 +935,32 @@ html.active .home_contact_form form button.klaviyo-form-button{
     }
 }
 
+
+// Service detail FAQ (team-style accordion), dark theme.
+html.active .service_team_faq,
+html.active .team_faq{
+    .team_faq_question{
+        color: $white;
+    }
+    .team_faq_item{
+        border-color: rgba($white, 0.18);
+    }
+    .team_faq_answer_inner p,
+    .team_faq_rich li{
+        color: rgba($white, 0.8);
+    }
+    .team_faq_rich a{
+        color: $white;
+    }
+}
+
+// "Our Other Services" (dark theme): white names, dim numbers.
+html.active .other_services_row_item{
+    color: $white;
+    .other_services_row_num{
+        color: rgba($white, 0.3);
+    }
+    &:hover .other_services_row_num{
+        color: $white;
+    }
+}

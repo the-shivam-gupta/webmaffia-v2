@@ -151,6 +151,7 @@ const Header = () => {
           </div>
           <Link href="/case-study">Our Work</Link>
           <Link href="/clients">Our Client</Link>
+          <Link href="/team">Team</Link>
           <Link href="/blog">Blog</Link>
         </nav>
 
@@ -312,18 +313,24 @@ const Header = () => {
             </div>
 
             <div className="menu_link" data-number="05">
+              <Link href="/team" onClick={() => setMenuOpen(false)}>
+                Team
+              </Link>
+            </div>
+
+            <div className="menu_link" data-number="06">
               <Link href="/blog" onClick={() => setMenuOpen(false)}>
                 Blog
               </Link>
             </div>
 
-            <div className="menu_link" data-number="06">
+            <div className="menu_link" data-number="07">
               <Link href="/career" onClick={() => setMenuOpen(false)}>
                 Career
               </Link>
             </div>
 
-            <div className="menu_link" data-number="07">
+            <div className="menu_link" data-number="08">
               <Link href="/contact" onClick={() => setMenuOpen(false)}>
                 Contact
               </Link>

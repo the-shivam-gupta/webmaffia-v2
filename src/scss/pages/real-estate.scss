@@ -1,4 +1,4 @@
-// /services/real-estate-website-design-development
+// /real-estate
 // Light editorial layout on a warm off-white page. Scoped under .re_page so
 // nothing leaks into the CMS-driven service pages. Header/footer are global.
 
@@ -94,6 +94,30 @@
         @include mobile(){
             font-size: 3rem;
             margin-bottom: 3rem;
+        }
+    }
+    .re_crumbs{
+        margin-bottom: 2.4rem;
+        font-size: 1.6rem;
+        color: var(--re-muted);
+        @include mobile(){
+            font-size: 2.8rem;
+            margin-bottom: 3rem;
+        }
+        a{
+            color: inherit;
+            text-decoration: none;
+            &:hover{
+                text-decoration: underline;
+            }
+        }
+    }
+    .re_updated{
+        margin-top: 2.4rem;
+        font-size: 1.6rem;
+        color: var(--re-muted);
+        @include mobile(){
+            font-size: 2.8rem;
         }
     }
     .re_icon{

@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 import {
-  buildBannerCta,
+  buildBannerCtas,
   getServicesTech,
   getServiceTechBySlug,
   getStrapiImageUrl,
@@ -91,7 +91,8 @@ export function buildServiceHero(banner) {
     imageWidth: banner.desktopImage?.width,
     imageHeight: banner.desktopImage?.height,
     mobileImage: banner.mobileImage ? getStrapiImageUrl(banner.mobileImage) : undefined,
-    cta: buildBannerCta(banner),
+    // { cta, secondaryCta } from the banner's button + secondaryButton
+    ...buildBannerCtas(banner),
   };
 }
 
@@ -116,6 +117,55 @@ function parseFaqItems(html) {
       const end = index + 1 < matches.length ? matches[index + 1].index : html.length;
       const answer = html.slice(start, end).trim();
       return question ? { id: `faq-${index}`, question, answer } : null;
+    })
+    .filter(Boolean);
+}
+
+const escapeHtml = (text) =>
+  text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+function inlineMarkdown(text) {
+  return escapeHtml(text)
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+|\/[^)\s]*)\)/g, '<a href="$2">$1</a>')
+    .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+    .replace(/(^|[^*])\*([^*\n]+)\*/g, "$1<em>$2</em>");
+}
+
+/**
+ * Converts a CMS FAQ answer to HTML. Answers written in the Strapi rich-text
+ * (markdown) editor become paragraphs, lists, bold/italic and links; answers
+ * that already contain HTML tags are used as-is.
+ */
+function answerToHtml(answer) {
+  const text = String(answer ?? "").replace(/\r\n?/g, "\n").trim();
+  if (!text) return "";
+  if (/<[a-z][\s\S]*>/i.test(text)) return text;
+
+  return text
+    .split(/\n{2,}/)
+    .map((block) => {
+      const lines = block.split("\n").map((line) => line.trim()).filter(Boolean);
+      if (lines.every((line) => /^[-*]\s+/.test(line))) {
+        return `<ul>${lines.map((line) => `<li>${inlineMarkdown(line.replace(/^[-*]\s+/, ""))}</li>`).join("")}</ul>`;
+      }
+      if (lines.every((line) => /^\d+[.)]\s+/.test(line))) {
+        return `<ol>${lines.map((line) => `<li>${inlineMarkdown(line.replace(/^\d+[.)]\s+/, ""))}</li>`).join("")}</ol>`;
+      }
+      return `<p>${lines.map(inlineMarkdown).join("<br>")}</p>`;
+    })
+    .join("");
+}
+
+/**
+ * Maps the `services-tech.fa-qs` `faqs` repeatable ({ question, answer })
+ * onto accordion items.
+ */
+function buildFaqItems(faqs) {
+  return (faqs ?? [])
+    .map((faq, index) => {
+      const question = faq.question?.trim();
+      const answer = answerToHtml(faq.answer);
+      return question && answer ? { id: `faq-${index}`, question, answer } : null;
     })
     .filter(Boolean);
 }
@@ -246,6 +296,31 @@ export function buildServiceSections(cmsSections) {
         return;
       }
 
+      case "services.statistics-bar": {
+        const stats = (section.statisticsBar ?? [])
+          .map((stat) => ({
+            id: stat.id,
+            value: stat.value?.trim() || "",
+            label: stat.label?.trim() || "",
+            icon: stat.icon?.url
+              ? {
+                  url: getStrapiImageUrl(stat.icon),
+                  alt: stat.icon.alternativeText || stat.label?.trim() || "",
+                  width: stat.icon.width || 100,
+                  height: stat.icon.height || 100,
+                }
+              : null,
+          }))
+          .filter((stat) => stat.value || stat.icon || stat.label);
+        if (!stats.length) return;
+        merged.push({
+          type: "statistics",
+          dataSection: `service_statistics_${index}`,
+          stats,
+        });
+        return;
+      }
+
       case "services-tech.introduction": {
         if (!section.description?.trim()) return;
         merged.push({
@@ -334,12 +409,20 @@ export function buildServiceSections(cmsSections) {
       }
 
       case "services-tech.fa-qs": {
-        const items = parseFaqItems(section.description);
+        // Current CMS shape: tagline + title + `faqs` repeatable. Older entries
+        // used a heading + HTML `description` blob split on <h3>.
+        const items = section.faqs?.length
+          ? buildFaqItems(section.faqs)
+          : parseFaqItems(section.description);
         if (!items.length) return;
         merged.push({
           type: "faqs",
           dataSection: `service_faqs_${index}`,
-          heading: section.heading?.trim() || "Frequently Asked Questions",
+          tagline: section.tagline?.trim() || "",
+          heading:
+            section.title?.trim() ||
+            section.heading?.trim() ||
+            "Frequently Asked Questions",
           items,
         });
         return;

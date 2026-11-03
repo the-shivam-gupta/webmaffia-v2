@@ -73,7 +73,7 @@ function cmsImage(asset, fallbackWidth, fallbackHeight) {
 
 export default function IndustryDetailPage({ industry }) {
   const { banner, sections = [] } = industry;
-  const pagePath = `/industry/${industry.slug}`;
+  const pagePath = `/${industry.slug}`;
   const find = (name) => sections.find((s) => s.__component === `services.${name}`);
   const findAll = (name) => sections.filter((s) => s.__component === `services.${name}`);
 
@@ -125,6 +125,9 @@ export default function IndustryDetailPage({ industry }) {
           {banner && (
             <section className="re_hero" aria-labelledby="re-h1">
               <div className="re_hero_copy">
+                <nav className="re_crumbs" aria-label="Breadcrumb">
+                  <Link href="/">Home</Link> / {industry.title}
+                </nav>
                 {banner.tagLine && <Label>{banner.tagLine}</Label>}
                 <h1 id="re-h1">{banner.heading}</h1>
                 {banner.description && <p>{banner.description}</p>}
@@ -147,6 +150,7 @@ export default function IndustryDetailPage({ industry }) {
                     {...heroImage}
                     alt={heroImage.alt || banner.heading || ""}
                     priority
+                    fetchPriority="high"
                     sizes="(max-width: 1024px) 100vw, 45vw"
                   />
                 </figure>
@@ -343,7 +347,6 @@ export default function IndustryDetailPage({ industry }) {
               <ServiceFaqAccordion heading={faq.title} items={faqItems} />
             </section>
           )}
-
         </div>
       </div>
     </main>

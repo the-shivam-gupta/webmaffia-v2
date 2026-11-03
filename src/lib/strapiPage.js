@@ -848,6 +848,7 @@ export async function getServicesPage() {
 
 const SERVICES_TECH_POPULATE = [
     "populate[banner][populate]=*",
+    "populate[sections][on][services.statistics-bar][populate][statisticsBar][populate]=*",
     "populate[sections][on][services-tech.features][populate][designFeature][populate]=*",
     "populate[sections][on][services-tech.technology][populate][Items][populate][icon][populate]=*",
     "populate[sections][on][services-tech.introduction][populate]=*",

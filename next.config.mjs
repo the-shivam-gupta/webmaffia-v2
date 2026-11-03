@@ -40,7 +40,12 @@ const nextConfig = {
       },
       {
         source: "/services/real-estate-website-design-development",
-        destination: "/industry/real-estate-website-design-development",
+        destination: "/real-estate",
+        permanent: true,
+      },
+      {
+        source: "/real-estate-website-design-development",
+        destination: "/real-estate",
         permanent: true,
       },
       {
