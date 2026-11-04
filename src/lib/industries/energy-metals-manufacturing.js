@@ -33,10 +33,10 @@ export const energyMetalsManufacturing = {
       "href": "/case-study"
     },
     "image": {
-      "src": "/assets/images/real-estate/modern-villa.png",
+      "src": "/assets/images/industry/Energy%20Metals.jpg",
       "alt": "",
-      "width": 1672,
-      "height": 941
+      "width": 1080,
+      "height": 608
     }
   },
   "stats": [
@@ -65,10 +65,10 @@ export const energyMetalsManufacturing = {
       "Because one team runs strategy, website, search, social and content, your plants, people and products are presented consistently to buyers, dealers, investors and talent."
     ],
     "image": {
-      "src": "/assets/images/real-estate/laptop-scenary.png",
+      "src": "/assets/images/industry/Energy%20Metals%202.jpg",
       "alt": "",
-      "width": 1408,
-      "height": 768
+      "width": 1080,
+      "height": 589
     }
   },
   "problems": {

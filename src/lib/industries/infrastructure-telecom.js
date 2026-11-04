@@ -27,12 +27,11 @@ export const infrastructureTelecom = {
     lead: "One team covers all eight services, built for tenders, investors and long B2B sales cycles.",
     primary: { text: "Get a plan", href: "/contact" },
     secondary: { text: "View Our Work", href: "/case-study" },
-    // Same image as /real-estate.
     image: {
-      src: "/assets/images/real-estate/modern-villa.png",
+      src: "/assets/images/industry/Infrastructure.jpg",
       alt: "",
-      width: 1672,
-      height: 941,
+      width: 1080,
+      height: 608,
     },
   },
 
@@ -50,12 +49,11 @@ export const infrastructureTelecom = {
       "Infrastructure and telecom companies sell large, complex, long-cycle work to many decision makers. We create websites and content that make capability easy to verify: completed projects, safety records, certifications, leadership and a clear route to a conversation.",
       "Because one team plans the story, builds the website, makes it findable and runs the channels, investors, clients, vendors and talent all meet the same credible brand.",
     ],
-    // Same image as /real-estate.
     image: {
-      src: "/assets/images/real-estate/laptop-scenary.png",
+      src: "/assets/images/industry/Infrastructure%202.jpg",
       alt: "",
-      width: 1408,
-      height: 768,
+      width: 1080,
+      height: 589,
     },
   },
 

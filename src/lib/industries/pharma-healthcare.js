@@ -27,12 +27,11 @@ export const pharmaHealthcare = {
     lead: "One team covers all eight services, with medical and legal review built into every step.",
     primary: { text: "Get a plan", href: "/contact" },
     secondary: { text: "View Our Work", href: "/case-study" },
-    // Same image as /real-estate.
     image: {
-      src: "/assets/images/real-estate/modern-villa.png",
+      src: "/assets/images/industry/Pharma.jpg",
       alt: "",
-      width: 1672,
-      height: 941,
+      width: 1080,
+      height: 608,
     },
   },
 
@@ -50,12 +49,11 @@ export const pharmaHealthcare = {
       "Patients, doctors, regulators and partners all judge a healthcare brand by how clear, accurate and responsible it is online. We create websites and content that inform first, make expertise easy to verify, and guide people to the right next step: booking an appointment, finding a product or contacting medical information.",
       "Because one team runs strategy, website, search, social and content, every claim goes through the same review process and every channel says the same thing.",
     ],
-    // Same image as /real-estate.
     image: {
-      src: "/assets/images/real-estate/laptop-scenary.png",
+      src: "/assets/images/industry/Pharma%202.jpg",
       alt: "",
-      width: 1408,
-      height: 768,
+      width: 1080,
+      height: 589,
     },
   },
 

@@ -33,10 +33,10 @@ export const bfsiFintech = {
       "href": "/case-study"
     },
     "image": {
-      "src": "/assets/images/real-estate/modern-villa.png",
+      "src": "/assets/images/industry/BFSI%20Finetech.jpg",
       "alt": "",
-      "width": 1672,
-      "height": 941
+      "width": 1080,
+      "height": 608
     }
   },
   "stats": [
@@ -65,10 +65,10 @@ export const bfsiFintech = {
       "Because one team runs strategy, website, search, apps, social and content, every message goes through the same compliance review and every channel feels like one brand."
     ],
     "image": {
-      "src": "/assets/images/real-estate/laptop-scenary.png",
+      "src": "/assets/images/industry/BFSI%20Finetech%202.jpg",
       "alt": "",
-      "width": 1408,
-      "height": 768
+      "width": 1080,
+      "height": 589
     }
   },
   "problems": {

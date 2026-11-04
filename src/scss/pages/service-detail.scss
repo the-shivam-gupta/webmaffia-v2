@@ -436,6 +436,19 @@
             &:hover img{
                 filter: grayscale(0);
             }
+            // Tools with no logo in the CMS show their name in the same chip.
+            .tool_name{
+                padding: 0 1rem;
+                font-size: 1.4rem;
+                font-weight: 500;
+                line-height: 1.2;
+                text-align: center;
+                color: $black;
+                overflow-wrap: anywhere;
+                @include mobile(){
+                    font-size: 2.6rem;
+                }
+            }
         }
     }
 }

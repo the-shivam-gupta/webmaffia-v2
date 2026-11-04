@@ -33,10 +33,10 @@ export const consumerLifestyle = {
       "href": "/case-study"
     },
     "image": {
-      "src": "/assets/images/real-estate/modern-villa.png",
+      "src": "/assets/images/industry/Consumer%20Lifestyle.jpg",
       "alt": "",
-      "width": 1672,
-      "height": 941
+      "width": 1080,
+      "height": 608
     }
   },
   "stats": [
@@ -65,10 +65,10 @@ export const consumerLifestyle = {
       "Because one team runs strategy, website, search, social, creators and content, your brand feels the same on Instagram, Google, your store and your app."
     ],
     "image": {
-      "src": "/assets/images/real-estate/laptop-scenary.png",
+      "src": "/assets/images/industry/Consumer%20Lifestyle%202.jpg",
       "alt": "",
-      "width": 1408,
-      "height": 768
+      "width": 1080,
+      "height": 589
     }
   },
   "problems": {

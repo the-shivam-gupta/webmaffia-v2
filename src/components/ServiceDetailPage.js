@@ -180,13 +180,17 @@ function ToolsSection({ section }) {
             <div className="tools_img">
               {item.icons.map((icon, iconIndex) => (
                 <div key={`${item.title}-${iconIndex}-${icon.url}`}>
-                  <Image
-                    src={icon.url}
-                    title={icon.title}
-                    alt={icon.alt}
-                    width={icon.width ?? 110}
-                    height={icon.height ?? 110}
-                  />
+                  {icon.url ? (
+                    <Image
+                      src={icon.url}
+                      title={icon.title}
+                      alt={icon.alt}
+                      width={icon.width ?? 110}
+                      height={icon.height ?? 110}
+                    />
+                  ) : (
+                    <span className="tool_name">{icon.title}</span>
+                  )}
                 </div>
               ))}
             </div>
