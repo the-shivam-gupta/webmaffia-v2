@@ -1,5 +1,7 @@
 import { notFound, permanentRedirect } from "next/navigation";
 import IndustryDetailPage from "@/components/IndustryDetailPage";
+import StaticIndustryPage from "@/components/StaticIndustryPage";
+import { getStaticIndustry, STATIC_INDUSTRY_SLUGS } from "@/lib/industries";
 import { SITE_URL } from "@/lib/schema";
 import {
   getAllServiceLocationPaths,
@@ -14,7 +16,8 @@ import {
 
 /**
  * Top-level single-segment pages:
- *   - /<industry-slug>  CMS-driven industry pages (Strapi `industries`)
+ *   - /<industry-slug>  industry pages: static content (src/lib/industries)
+ *     first, otherwise the CMS entry from Strapi `industries`
  *   - /<service>-in-<city>  legacy city-variant service URLs, kept only as a
  *     permanent redirect to /services/<service>-in-<city> so old indexed/shared
  *     links keep working.
@@ -30,31 +33,77 @@ export async function generateStaticParams() {
     getAllServiceLocationPaths(),
   ]);
 
+  const industrySlugs = new Set([
+    ...STATIC_INDUSTRY_SLUGS,
+    ...industries.filter((item) => item.slug).map((item) => item.slug),
+  ]);
+
   return [
-    ...industries.filter((item) => item.slug).map((item) => ({ lang: item.slug })),
+    ...[...industrySlugs].map((slug) => ({ lang: slug })),
     ...paths.map(({ serviceLocation }) => ({ lang: serviceLocation })),
   ];
 }
 
+// Keep Vercel preview deployments out of search results.
+const previewRobots =
+  process.env.VERCEL_ENV === "preview"
+    ? { robots: { index: false, follow: false } }
+    : {};
+
 export async function generateMetadata({ params }) {
   const { lang: slug } = await params;
+  const url = `${SITE_URL}/${slug}`;
+
+  const staticPage = getStaticIndustry(slug);
+  if (staticPage) {
+    return {
+      title: staticPage.seo.title,
+      description: staticPage.seo.description,
+      alternates: { canonical: url },
+      robots: {
+        index: true,
+        follow: true,
+        "max-snippet": -1,
+        "max-image-preview": "large",
+        "max-video-preview": -1,
+      },
+      openGraph: {
+        type: "website",
+        locale: "en_IN",
+        siteName: "Webmaffia",
+        url,
+        title: staticPage.seo.title,
+        description: staticPage.seo.description,
+        images: [
+          {
+            url: `${SITE_URL}${staticPage.hero.image.src}`,
+            width: staticPage.hero.image.width,
+            height: staticPage.hero.image.height,
+          },
+        ],
+      },
+      twitter: { card: "summary_large_image" },
+      ...previewRobots,
+    };
+  }
+
   const industry = await getIndustryBySlug(slug);
   if (!industry) return {};
 
   const seo = getSeoFields(industry.seo);
   const title = seo.title ?? `${industry.title} | Webmaffia`;
-  const url = seo.canonical ?? `${SITE_URL}/${slug}`;
+  const canonical = seo.canonical ?? url;
   const heroImage = industry.banner?.desktopImage;
 
   return {
     title,
     description: seo.description,
     keywords: seo.keywords,
-    alternates: { canonical: url },
+    alternates: { canonical },
     openGraph: {
       type: "website",
       locale: "en_IN",
-      url,
+      url: canonical,
       title,
       description: seo.description,
       ...(heroImage?.url
@@ -70,15 +119,17 @@ export async function generateMetadata({ params }) {
         : {}),
     },
     twitter: { card: "summary_large_image" },
-    // Keep Vercel preview deployments out of search results.
-    ...(process.env.VERCEL_ENV === "preview"
-      ? { robots: { index: false, follow: false } }
-      : {}),
+    ...previewRobots,
   };
 }
 
 export default async function TopLevelSlugPage({ params }) {
   const { lang: slug } = await params;
+
+  const staticPage = getStaticIndustry(slug);
+  if (staticPage) {
+    return <StaticIndustryPage page={staticPage} />;
+  }
 
   const industry = await getIndustryBySlug(slug);
   if (industry) {

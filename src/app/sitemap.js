@@ -9,6 +9,7 @@ import {
   getCaseStudies,
   getIndustries,
 } from "@/lib/strapiPage";
+import { STATIC_INDUSTRY_SLUGS } from "@/lib/industries";
 import { DEFAULT_LOCALE, LOCALES, localizePath } from "@/lib/i18n";
 
 const SITE_URL = "https://www.webmaffia.com";
@@ -91,8 +92,11 @@ export default async function sitemap() {
         languages: hreflangMap(blogLocales, "/blog"),
       })
     ),
-    ...industries.map((item) =>
-      entry(`/${item.slug}`, { priority: 0.8, changeFrequency: "monthly" })
+    // Static industry pages plus any Strapi ones, each URL once.
+    ...[
+      ...new Set([...STATIC_INDUSTRY_SLUGS, ...industries.map((item) => item.slug)]),
+    ].map((slug) =>
+      entry(`/${slug}`, { priority: 0.8, changeFrequency: "monthly" })
     ),
     ...servicePages.map((path) =>
       entry(path, { priority: 0.8, changeFrequency: "monthly" })

@@ -964,3 +964,16 @@ html.active .other_services_row_item{
         color: $white;
     }
 }
+
+// Homepage-style FAQ accordion (industry pages), dark theme.
+html.active .home_faqs{
+    .home_faqs_question{
+        color: $white;
+    }
+    .home_faqs_item{
+        border-color: rgba($white, 0.18);
+    }
+    .home_faqs_answer_inner p{
+        color: rgba($white, 0.8);
+    }
+}

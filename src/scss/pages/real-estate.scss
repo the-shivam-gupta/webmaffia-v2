@@ -12,11 +12,12 @@
     padding: 0 8rem 8rem;
     background: var(--re-bg);
     color: var(--re-ink);
+    // Side padding on tablet / mobile matches the rest of the site (6.5rem).
     @include tablet(){
-        padding: 0 4rem 6rem;
+        padding: 0 6.5rem 6rem;
     }
     @include mobile(){
-        padding: 0 3rem 8rem;
+        padding: 0 6.5rem 8rem;
     }
 
     html.active &{
@@ -421,11 +422,27 @@
             gap: 6rem;
         }
     }
+    // Four per row, any number of rows (e.g. the 8 service cards). Dividers and
+    // padding are per column, so the first card of every row starts flush left
+    // and rows are separated by a row gap.
     .re_cols4{
         grid-template-columns: repeat(4, 1fr);
+        gap: 9rem 0;
+        article, > div{
+            &:nth-child(4n+1){
+                padding-left: 0;
+                border-left: 0;
+            }
+        }
         @include tablet(){
             grid-template-columns: 1fr 1fr;
-            gap: 5rem 0;
+            gap: 7rem 0;
+            article, > div{
+                &:nth-child(2n+1){
+                    padding-left: 0;
+                    border-left: 0;
+                }
+            }
         }
         @include mobile(){
             grid-template-columns: 1fr;
@@ -651,6 +668,103 @@
                 font-size: 3rem;
             }
         }
+    }
+
+    // ---------- faq (homepage accordion: HomeFaq / .home_faqs) ----------
+    // The page already pads its sides, so the FAQ drops its own side margin and
+    // takes the same section spacing as .re_block.
+    .re_faq{
+        margin-bottom: 13rem;
+        @include mobile(){
+            margin-bottom: 22rem;
+        }
+        .home_faqs{
+            margin-left: 0;
+            margin-right: 0;
+            // .re_page restyles every h2 (size, spacing, margins), which flattened
+            // the FAQ's subtitle. Restore the homepage (.sub_title / .sub_heading)
+            // look from webmaffia-us; colour follows the page's light/dark ink.
+            .sub_title{
+                width: 100%;
+                max-width: none;
+                margin: 0 0 vw(20) vw(10);
+                font-size: vw(18);
+                font-weight: $light;
+                line-height: 1;
+                letter-spacing: vw(10);
+                text-transform: none;
+                color: var(--re-ink);
+                @include mobile(){
+                    margin: 0 0 vw-mobile(8) vw(10);
+                    font-size: vw-mobile(12);
+                }
+            }
+            // Same size / weight as the "Explore other industries" title
+            // (.other_services_row_title).
+            .sub_heading{
+                width: 100%;
+                max-width: none;
+                margin: 0 0 vw(15);
+                font-size: 6.4rem;
+                font-weight: $exlight;
+                line-height: 1.15;
+                letter-spacing: 0;
+                color: var(--re-ink);
+                @include mobile(){
+                    margin-bottom: vw-mobile(20);
+                    font-size: 8rem;
+                    line-height: 1.1;
+                }
+            }
+            // .re_page's paragraph reset (padding: 0, its own font size) removed the
+            // answer's bottom padding, so the text sat on the divider. Restore the
+            // homepage FAQ spacing and sizes.
+            .home_faqs_question{
+                padding: vw(28) 0;
+                @include mobile(){
+                    padding: vw-mobile(20) 0;
+                }
+            }
+            .home_faqs_answer_inner p{
+                padding-bottom: vw(36);
+                font-size: vw(21);
+                font-weight: 300;
+                line-height: 1.6;
+                @include mobile(){
+                    padding-bottom: vw-mobile(22);
+                    font-size: vw-mobile(14);
+                }
+            }
+        }
+    }
+
+    // ---------- explore other industries ----------
+    // Reuses the service pages' ".other_services_row" look. .re_page restyles every
+    // h2 and span, so the title / number are restored here.
+    .re_others{
+        .other_services_row_title{
+            max-width: 12em;
+            font-size: 6.4rem;
+            font-weight: $exlight;
+            line-height: 1.15;
+            letter-spacing: 0;
+            @include mobile(){
+                font-size: 8rem;
+                line-height: 1.1;
+            }
+        }
+        .other_services_row_num{
+            color: $cfcfcf;
+        }
+        .other_services_row_item:hover .other_services_row_num{
+            color: var(--re-ink);
+        }
+    }
+    html.active .re_page .re_others .other_services_row_num{
+        color: rgba($white, 0.3);
+    }
+    html.active .re_page .re_others .other_services_row_item:hover .other_services_row_num{
+        color: $white;
     }
 
     // ---------- final CTA ----------
