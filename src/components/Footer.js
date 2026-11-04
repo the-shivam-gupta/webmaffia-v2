@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation } from "swiper/modules";
 import GoogleReview from "@/components/GoogleReview";
+import { LEGAL_LINKS } from "@/lib/legal";
 
 const Footer = ({ footerData, campaignSlugs = [], googleReviews = null }) => {
   const pathname = usePathname();
@@ -235,6 +236,14 @@ const Footer = ({ footerData, campaignSlugs = [], googleReviews = null }) => {
           height={210}
         />
       </Link>
+
+      <ul className="footer_legal_links">
+        {LEGAL_LINKS.map(({ href, label }) => (
+          <li key={href}>
+            <Link href={href}>{label}</Link>
+          </li>
+        ))}
+      </ul>
 
       {copyrightText && (
         <div className="footer_copyright">{copyrightText}</div>

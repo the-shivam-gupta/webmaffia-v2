@@ -1,0 +1,97 @@
+// /privacy-policy and /terms-and-conditions: a title and one readable column.
+// Global h1 / p sizes are homepage-scale, so they are set explicitly here.
+.legal_page{
+    max-width: 70%;
+    margin: 0 auto 8rem;
+    padding: 1rem 4rem 0;
+    @include mobile(){
+        max-width: none;
+        padding: 14rem 6.5rem 0;
+        margin-bottom: 6rem;
+    }
+
+    .legal_hero{
+        padding-bottom: 4rem;
+        margin-bottom: 4rem;
+        border-bottom: 0.1rem solid rgba(0, 0, 0, 0.15);
+        h1{
+            width: auto;
+            margin: 0 0 2.4rem;
+            font-size: 6.4rem;
+            line-height: 1.1;
+            @include mobile(){
+                font-size: 8rem;
+            }
+        }
+    }
+    .legal_intro{
+        margin: 0 0 2rem;
+        font-size: 2rem;
+        line-height: 1.6;
+        color: $black_80;
+        @include mobile(){
+            font-size: 4rem;
+        }
+    }
+    .legal_meta{
+        font-size: 1.6rem;
+        color: $black_60;
+        @include mobile(){
+            font-size: 3.4rem;
+        }
+        a{
+            color: inherit;
+            text-decoration: underline;
+        }
+    }
+
+    .legal_section{
+        margin-bottom: 4rem;
+        scroll-margin-top: 12rem;
+        @include mobile(){
+            margin-bottom: 6rem;
+        }
+        h2{
+            width: auto;
+            margin: 0 0 1.6rem;
+            font-size: 4rem;
+            line-height: 1.2;
+            @include mobile(){
+                font-size: 5.2rem;
+            }
+        }
+        p, li{
+            font-size: 1.8rem;
+            line-height: 1.7;
+            font-weight: 400;
+            color: $black_80;
+            @include mobile(){
+                font-size: 3.8rem;
+            }
+        }
+        p{
+            width: auto;
+            margin: 0 0 1.4rem;
+        }
+        ul{
+            margin: 0 0 1.4rem;
+            padding-left: 2.4rem;
+            list-style: disc;
+        }
+        li{
+            margin-bottom: 0.8rem;
+        }
+    }
+
+    .legal_related{
+        width: auto;
+        font-size: 1.8rem;
+        @include mobile(){
+            font-size: 3.8rem;
+        }
+        a{
+            font-weight: 600;
+            text-decoration: underline;
+        }
+    }
+}

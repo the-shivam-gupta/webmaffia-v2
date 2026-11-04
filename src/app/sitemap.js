@@ -25,6 +25,8 @@ const STATIC_PAGES = [
   { path: "/contact", priority: 0.8, changeFrequency: "monthly" },
   { path: "/awards", priority: 0.8, changeFrequency: "monthly" },
   { path: "/clients", priority: 0.8, changeFrequency: "monthly" },
+  { path: "/privacy-policy", priority: 0.3, changeFrequency: "yearly" },
+  { path: "/terms-and-conditions", priority: 0.3, changeFrequency: "yearly" },
 ];
 
 function toUrl(path) {

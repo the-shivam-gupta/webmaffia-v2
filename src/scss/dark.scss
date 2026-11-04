@@ -657,6 +657,18 @@ html{
                 border-bottom-color: rgba(0, 0, 0, 0.15);
             }
 
+            .footer_legal_links a {
+                color: $black_60;
+
+                &::after {
+                    background: $black_60;
+                }
+
+                &:hover {
+                    color: $black;
+                }
+            }
+
             .footer_links .link {
                 &::after {
                     background: $black_60;
@@ -975,5 +987,20 @@ html.active .home_faqs{
     }
     .home_faqs_answer_inner p{
         color: rgba($white, 0.8);
+    }
+}
+
+// Legal pages (/privacy-policy, /terms-and-conditions), dark theme.
+html.active .legal_page{
+    .legal_hero{
+        border-bottom-color: rgba(255, 255, 255, 0.15);
+    }
+    .legal_intro,
+    .legal_section p,
+    .legal_section li{
+        color: $white_80;
+    }
+    .legal_meta{
+        color: $white_60;
     }
 }

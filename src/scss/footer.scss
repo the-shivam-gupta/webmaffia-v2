@@ -1231,10 +1231,72 @@ footer {
     }
   }
 
+  .footer_legal_links {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    gap: vw(40);
+    margin: vw(50) 0 0;
+    padding: 0;
+    list-style: none;
+
+    a {
+      position: relative;
+      display: inline-block;
+      color: #717171;
+      font-family: "Albert Sans", sans-serif;
+      font-size: vw(19);
+      font-weight: 400;
+      line-height: 1.4;
+      transition: color 0.3s ease;
+
+      &::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: vw(1);
+        background: $white;
+        transform: scaleX(0);
+        transform-origin: bottom right;
+        transition: transform 0.3s ease-in;
+      }
+
+      &:hover {
+        color: $white;
+
+        &::after {
+          transform: scaleX(1);
+          transform-origin: bottom left;
+        }
+      }
+    }
+
+    @include tablet() {
+      gap: vw(50);
+      margin-top: vw(40);
+
+      a {
+        font-size: vw(30);
+      }
+    }
+
+    @include mobile() {
+      gap: vw-mobile(20);
+      margin-top: vw-mobile(20);
+
+      a {
+        font-size: vw-mobile(8.8);
+      }
+    }
+  }
+
   .footer_copyright {
     position: relative;
     z-index: 2;
-    margin-top: vw(60);
+    margin-top: vw(24);
     text-align: center;
     color: #717171;
     font-family: "Albert Sans", sans-serif;
