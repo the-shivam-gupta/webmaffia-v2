@@ -218,7 +218,7 @@ function renderSectionBody(section) {
     case "blogs":
       return <BlogsSection section={section} />;
     case "faqs":
-      return <ServiceTeamFaq tagline={section.tagline} heading={section.heading} items={section.items} />;
+      return <ServiceTeamFaq tagline={section.tagline || "FAQ"} heading="Got questions? We’ve got answers." items={section.items} />;
     case "features":
     default:
       return <FeaturesSection section={section} />;
