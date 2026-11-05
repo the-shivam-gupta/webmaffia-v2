@@ -138,7 +138,14 @@ const Header = () => {
 
         {/* Desktop-only quick links (hidden below 1025px via CSS) */}
         <nav className="header_nav" aria-label="Main">
-          <Link href="/about">About Us</Link>
+          <div className="header_nav_item has_dropdown">
+            <Link href="/about">About Us</Link>
+            <ul className="header_nav_dropdown">
+              <li>
+                <Link href="/team">Team</Link>
+              </li>
+            </ul>
+          </div>
           <div className="header_nav_item has_dropdown">
             <Link href="/services">Services</Link>
             <ul className="header_nav_dropdown">
@@ -151,7 +158,6 @@ const Header = () => {
           </div>
           <Link href="/case-study">Our Work</Link>
           <Link href="/clients">Our Client</Link>
-          <Link href="/team">Team</Link>
           <Link href="/blog">Blog</Link>
         </nav>
 
