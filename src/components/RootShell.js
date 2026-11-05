@@ -48,10 +48,6 @@ export default async function RootShell({ lang = "en", dir = "ltr", children }) 
   return (
     <html lang={lang} dir={dir} className={albertSans.variable} suppressHydrationWarning>
       <head>
-        <meta
-          httpEquiv="Content-Security-Policy"
-          content="upgrade-insecure-requests"
-        />
         {/* Google Tag Manager */}
         <Script id="gtm-script" strategy="beforeInteractive">
           {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
