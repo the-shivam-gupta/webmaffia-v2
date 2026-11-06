@@ -433,7 +433,7 @@ footer {
     gap: vw(22.3);
     width: fit-content;
     max-width: 100%;
-    margin-top: vw(22.3);
+    margin: vw(22.3) 0;
     padding: vw(16) vw(26);
     border: vw(1) solid rgba(0, 0, 0, 0.18);
     border-radius: vw(14.9);
@@ -538,6 +538,7 @@ footer {
     }
 
     .footer_google_review_count {
+      display: none;
       color: #0009;
       font-size: vw(13);
       line-height: 1.2;
@@ -823,10 +824,13 @@ footer {
     }
   }
 
+  // Full-width row under the footer columns (not inside the connect column).
   .footer_connect_details {
-    margin-top: vw(60);
+    position: relative;
+    z-index: 2;
+    margin-top: vw(70);
     width: 100%;
-    max-width: vw(560);
+    max-width: 100%;
 
     @include tablet() {
       margin-top: vw(35);
@@ -957,19 +961,9 @@ footer {
 
   .footer_connect_usa_label {
     color: rgba(255, 255, 255, 0.6);
-    font-size: 1.3em;
+    font-size: 1.4em;
     line-height: 1.2;
     letter-spacing: 0.02em;
-  }
-
-  .footer_connect_usa_colon {
-    color: rgba(255, 255, 255, 0.6);
-    font-size: 1.3em;
-    margin-left: vw(-4);
-
-    @include mobile() {
-      margin-left: vw-mobile(-4);
-    }
   }
 
   // India block: "India :" heading, then the Mumbai and Bengaluru addresses
@@ -1045,16 +1039,22 @@ footer {
     }
   }
 
-  // Desktop: lay the offices out side by side (USA | India | Dubai) so they
+  // Desktop: lay the offices out side by side in one row so they
   // fill the wide column instead of stacking in a narrow strip. Each block
   // gets a top rule instead of the stacked bottom divider.
   @media (min-width: 770px) {
     .footer_connect_details {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      column-gap: vw(48);
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      column-gap: vw(40);
       align-items: start;
-      max-width: vw(1000);
+      // Fill the connect column (nav + services columns sit beside it).
+      max-width: 100%;
+
+      // Keep "India - Bengaluru :" on one line so the colon stays beside it.
+      .footer_connect_region_head {
+        white-space: nowrap;
+      }
 
       > .footer_connect_office {
         margin-bottom: 0;

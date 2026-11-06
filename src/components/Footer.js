@@ -28,19 +28,17 @@ const Footer = ({ footerData, campaignSlugs = [], googleReviews = null }) => {
   const indiaOffices = offices.filter((o) =>
     /mumbai|Bengaluru|bengaluru/i.test(officeText(o))
   );
-  const dubaiOffice = offices.find((o) => /dubai/i.test(officeText(o)));
-  // Follow the CMS order: each block sits where its first office appears.
-  // Offices that aren't India/Dubai show as plain address blocks.
-  const blocks = [];
-  offices.forEach((o) => {
-    if (indiaOffices.includes(o)) {
-      if (!blocks.some((b) => b.type === "india")) blocks.push({ type: "india" });
-    } else if (o === dubaiOffice) {
-      blocks.push({ type: "dubai" });
-    } else {
-      blocks.push({ type: "other", office: o });
-    }
-  });
+  // Follow the CMS order. Every office is its own block with its own title
+  // ("India - Mumbai", "India - Bengaluru", "USA", "Dubai"), side by side.
+  const blocks = offices.map((o) => ({
+    office: o,
+    label: indiaOffices.includes(o)
+      ? `India - ${officeCity(o)}`
+      : /dubai/i.test(officeText(o))
+        ? "Dubai"
+        : o.city || null,
+    address: indiaOffices.includes(o) ? officeAddress(o) : o.address,
+  }));
 
   const copyrightText = copyright?.description || copyright?.brand || null;
 
@@ -132,77 +130,6 @@ const Footer = ({ footerData, campaignSlugs = [], googleReviews = null }) => {
               />
             </div>
 
-            <div className="footer_connect_details">
-              {/* India: Mumbai and Bengaluru under one heading. */}
-              {blocks.map((block) => {
-                if (block.type === "india") return (
-                <div key="india" className="footer_connect_office footer_connect_region">
-                  <RegionHead label="India" />
-                  <div className="footer_connect_region_items">
-                    {indiaOffices.map((office) => (
-                      <div
-                        className="footer_connect_region_item"
-                        key={office.id || office.city}
-                      >
-                        <address>
-                          {officeCity(office) && (
-                            <span className="footer_connect_region_city">
-                              {officeCity(office)}
-                            </span>
-                          )}
-                          <a
-                            href={office.addressLink || mapsSearchUrl(officeText(office))}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            {officeAddress(office)}
-                          </a>
-                        </address>
-                        <OfficeContact email={office.email} phone={office.phone} />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                );
-
-                if (block.type === "dubai") return (
-                <div key="dubai" className="footer_connect_office footer_connect_usa footer_connect_dubai">
-                  <address>
-                    <RegionHead label="Dubai" />
-                    <a
-                      href={dubaiOffice.addressLink || mapsSearchUrl(officeText(dubaiOffice))}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {dubaiOffice.address}
-                    </a>
-                  </address>
-                  <OfficeContact email={dubaiOffice.email} phone={dubaiOffice.phone} />
-                </div>
-                );
-
-                const office = block.office;
-                return (
-                <div
-                  className="footer_connect_office footer_connect_usa"
-                  key={office.id || office.city}
-                >
-                  <address>
-                    {office.city ? <RegionHead label={office.city} /> : null}
-                    <a
-                      href={office.addressLink || mapsSearchUrl(officeText(office))}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {office.address}
-                    </a>
-                  </address>
-                  <OfficeContact email={office.email} phone={office.phone} />
-                </div>
-                );
-              })}
-            </div>
-
           </div>
         </div>
 
@@ -234,6 +161,27 @@ const Footer = ({ footerData, campaignSlugs = [], googleReviews = null }) => {
             </ul>
           </div>
         </div>
+      </div>
+
+      <div className="footer_connect_details">
+        {blocks.map(({ office, label, address }) => (
+          <div
+            className="footer_connect_office footer_connect_usa"
+            key={office.id || office.city}
+          >
+            <address>
+              {label ? <RegionHead label={label} /> : null}
+              <a
+                href={office.addressLink || mapsSearchUrl(officeText(office))}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {address}
+              </a>
+            </address>
+            <OfficeContact email={office.email} phone={office.phone} />
+          </div>
+        ))}
       </div>
 
       {/* <div className="footer_logo_divider" aria-hidden="true" /> */}
@@ -303,9 +251,6 @@ const OfficeContact = ({ email, phone }) =>
 const RegionHead = ({ label }) => (
   <div className="footer_connect_region_head">
     <span className="footer_connect_usa_label">{label}</span>
-    <span className="footer_connect_usa_colon" aria-hidden="true">
-      :
-    </span>
   </div>
 );
 
