@@ -5,13 +5,14 @@ import StatisticsBar from "@/components/StatisticsBar";
 import TeamFaq from "@/components/TeamFaq";
 import TeamLinkedIn from "@/components/TeamLinkedIn";
 import { LogoGridSection, SectionHead } from "@/components/HomePage";
-import { getHome } from "@/lib/strapiPage";
+import { getHome, getMediaUrlsByIds } from "@/lib/strapiPage";
 import { buildSections } from "@/lib/homeSections";
 import { buildBreadcrumbSchema } from "@/lib/schema";
 import {
   TEAM_FAQS,
   TEAM_LEADERS,
   TEAM_MEMBERS,
+  TEAM_PHOTO_IDS,
   TEAM_POD,
 } from "@/lib/team";
 
@@ -28,6 +29,14 @@ export const metadata = {
     canonical: "https://www.webmaffia.com/team",
   },
 };
+
+const LIFE_PHOTOS = [
+  "https://cms.webmaffia.com/uploads/Mask_group_1_34793bd1cc.png",
+  "https://cms.webmaffia.com/uploads/remiong_554071e59d.png",
+  "https://cms.webmaffia.com/uploads/Rectangle_5_48ac7a5ac6.png",
+  "https://cms.webmaffia.com/uploads/Mask_group_2_1_18102e28b3.png",
+  "https://cms.webmaffia.com/uploads/Mask_group_1_b94b82b771.png",
+];
 
 // Banner artwork is the testimonial illustration; the copy is the team page's own.
 function buildTeamBannerData() {
@@ -78,6 +87,14 @@ export default async function TeamPage() {
   const statistics = sections.find((section) => section.type === "statistics");
   const trophies = sections.find((section) => section.type === "trophies");
 
+  // Photos come from the Strapi media library by file id, so replacing a file
+  // there updates the page. Falls back to the stored `photo` URL.
+  const photoUrls = await getMediaUrlsByIds(Object.values(TEAM_PHOTO_IDS));
+  const people = [...TEAM_LEADERS, ...TEAM_MEMBERS].map((member) => ({
+    ...member,
+    photo: photoUrls[TEAM_PHOTO_IDS[member.name]] || member.photo,
+  }));
+
   return (
     <main className="wrapper home_wrapper team_page">
       <JsonLd data={BREADCRUMB_SCHEMA} />
@@ -93,7 +110,7 @@ export default async function TeamPage() {
         <section data-section="team" className="team_section">
           <SectionHead tagline="Team" title={"The people who\nrun the family"} />
           <div className="team_grid">
-            {[...TEAM_LEADERS, ...TEAM_MEMBERS].map((member) => (
+            {people.map((member) => (
               <TeamMember key={member.name} {...member} />
             ))}
           </div>
@@ -132,13 +149,21 @@ export default async function TeamPage() {
             tagline="Life at Webmaffia"
             title={"Serious about the work.\nNot about ourselves."}
           />
-          {/* Blank placeholders until the office photos are ready. */}
           <div className="team_life_grid">
-            <div className="team_life_photo team_life_photo--large" />
-            <div className="team_life_photo" />
-            <div className="team_life_photo" />
-            <div className="team_life_photo" />
-            <div className="team_life_photo" />
+            {LIFE_PHOTOS.map((src, index) => (
+              <div
+                key={src}
+                className={`team_life_photo${index === 0 ? " team_life_photo--large" : ""}`}
+              >
+                <Image
+                  src={src}
+                  alt="Life at Webmaffia"
+                  fill
+                  sizes={index === 0 ? "(max-width: 540px) 90vw, 50vw" : "(max-width: 540px) 45vw, 25vw"}
+                  className="team_life_img"
+                />
+              </div>
+            ))}
           </div>
         </section>
 

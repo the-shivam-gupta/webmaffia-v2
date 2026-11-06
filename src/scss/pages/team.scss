@@ -90,7 +90,12 @@
         }
     }
     .team_life_photo{
+        position: relative;
+        overflow: hidden;
         aspect-ratio: 1 / 1;
+    }
+    .team_life_img{
+        object-fit: cover;
     }
     .team_life_photo--large{
         grid-row: span 2;

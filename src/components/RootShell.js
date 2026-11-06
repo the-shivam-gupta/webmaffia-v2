@@ -52,8 +52,11 @@ export default async function RootShell({ lang = "en", dir = "ltr", children }) 
           httpEquiv="Content-Security-Policy"
           content="upgrade-insecure-requests"
         />
-        {/* Google Tag Manager */}
-        <Script id="gtm-script" strategy="beforeInteractive">
+      </head>
+      <body>
+        {/* Google Tag Manager. afterInteractive: an inline beforeInteractive
+            script makes React warn that the script tag is never executed. */}
+        <Script id="gtm-script" strategy="afterInteractive">
           {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
             new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
             j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
@@ -61,8 +64,6 @@ export default async function RootShell({ lang = "en", dir = "ltr", children }) 
             })(window,document,'script','dataLayer','GTM-TC56DRFT');`}
         </Script>
         {/* End Google Tag Manager */}
-      </head>
-      <body>
         {/* Google Tag Manager (noscript) */}
         <noscript>
           <iframe

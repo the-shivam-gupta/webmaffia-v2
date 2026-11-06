@@ -317,6 +317,49 @@ export async function getAuthors() {
     }
 }
 
+/**
+ * Current URLs for Strapi media-library files, as `{ [fileId]: url }`.
+ * Replacing a file in the media library keeps its id but changes its URL, so
+ * looking it up by id keeps the site in step. Returns `{}` on any failure so
+ * callers fall back to their stored URLs.
+ */
+export async function getMediaUrlsByIds(ids) {
+    const unique = [...new Set((ids ?? []).filter(Boolean))];
+    if (unique.length === 0) return {};
+
+    try {
+        const strapiBaseUrl = getStrapiApiBaseUrl();
+        if (!strapiBaseUrl) return {};
+
+        const query = unique
+            .map((id, i) => `filters[id][$in][${i}]=${encodeURIComponent(id)}`)
+            .join("&");
+        const response = await fetch(
+            `${strapiBaseUrl}/api/upload/files?${query}&pagination[pageSize]=100`,
+            {
+                headers: { Authorization: `Bearer ${STRAPI_TOKEN}` },
+                next: { revalidate: 60 },
+                signal: AbortSignal.timeout(STRAPI_FETCH_TIMEOUT_MS),
+            }
+        );
+        if (!response.ok) {
+            throw new Error(`Failed to fetch media files (${response.status})`);
+        }
+
+        const files = await response.json();
+        const urls = {};
+        for (const file of Array.isArray(files) ? files : []) {
+            if (file?.id && file.url) {
+                urls[file.id] = normalizeStrapiAssetUrl(file.url);
+            }
+        }
+        return urls;
+    } catch (error) {
+        console.error("Failed to fetch team photos:", error);
+        return {};
+    }
+}
+
 export async function getAuthorBySlug(slug) {
     const authors = await getAuthors();
     return authors.find((author) => author.slug === slug) ?? null;

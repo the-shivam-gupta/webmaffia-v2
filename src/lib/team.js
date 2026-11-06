@@ -1,3 +1,22 @@
+// Strapi media-library file ids, by person. The /team page looks each id up
+// in Strapi for its current URL, so replacing the file in Strapi's media
+// library updates the photo (the `photo` URLs below are only the fallback).
+// A person added later just needs their file id added here.
+export const TEAM_PHOTO_IDS = {
+  "Veera Roy": 538,
+  "Prasad Devadiga": 552,
+  "Ankit Tomer": 549,
+  "Prasanna Devadiga": 537,
+  Jitesh: 636,
+  Javed: 638,
+  Aswin: 634,
+  Cincy: 633,
+  Aniket: 553,
+  Shivam: 632,
+  Smit: 637,
+  Manasi: 635,
+};
+
 // `photo` is optional; people without one show a blank placeholder tile.
 export const TEAM_LEADERS = [
   {
@@ -27,19 +46,46 @@ export const TEAM_LEADERS = [
 ];
 
 export const TEAM_MEMBERS = [
-  { role: "Art Director", name: "Jitesh" },
-  { role: "Tech Lead", name: "Javed" },
-  { role: "Account Lead", name: "Aswin" },
-  { role: "SEO", name: "Cincy" },
+  {
+    role: "Art Director",
+    name: "Jitesh",
+    photo: "https://cms.webmaffia.com/uploads/Jitesh_853cb8c6e8.png",
+  },
+  {
+    role: "Tech Lead",
+    name: "Javed",
+    photo: "https://cms.webmaffia.com/uploads/Javed_0abd8c6e0f.png",
+  },
+  {
+    role: "Account Lead",
+    name: "Aswin",
+    photo: "https://cms.webmaffia.com/uploads/Ashwin_a4baa5b12a.png",
+  },
+  {
+    role: "SEO",
+    name: "Cincy",
+    photo: "https://cms.webmaffia.com/uploads/Cincy_760bd5d44f.png",
+  },
   {
     role: "SEO",
     name: "Aniket",
     photo: "https://cms.webmaffia.com/uploads/Aniket_fd043ae42f.webp",
-    linkedin: "https://www.linkedin.com/in/aniketanandapatil/",
   },
-  { role: "Tech", name: "Shivam" },
-  { role: "Account", name: "Smith" },
-  { role: "Design", name: "Manasi" },
+  {
+    role: "Tech",
+    name: "Shivam",
+    photo: "https://cms.webmaffia.com/uploads/Shivam_024fede05f.png",
+  },
+  {
+    role: "Account Manager",
+    name: "Smit",
+    photo: "https://cms.webmaffia.com/uploads/Smit_53613184a7.png",
+  },
+  {
+    role: "Design",
+    name: "Manasi",
+    photo: "https://cms.webmaffia.com/uploads/Manasi_5bd25044fc.png",
+  },
 ];
 
 export const TEAM_POD = [

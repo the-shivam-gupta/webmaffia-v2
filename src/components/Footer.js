@@ -29,10 +29,18 @@ const Footer = ({ footerData, campaignSlugs = [], googleReviews = null }) => {
     /mumbai|bangaluru|bengaluru/i.test(officeText(o))
   );
   const dubaiOffice = offices.find((o) => /dubai/i.test(officeText(o)));
-  // Any other office from the CMS keeps showing as a plain address block.
-  const otherOffices = offices.filter(
-    (o) => !indiaOffices.includes(o) && o !== dubaiOffice
-  );
+  // Follow the CMS order: each block sits where its first office appears.
+  // Offices that aren't India/Dubai show as plain address blocks.
+  const blocks = [];
+  offices.forEach((o) => {
+    if (indiaOffices.includes(o)) {
+      if (!blocks.some((b) => b.type === "india")) blocks.push({ type: "india" });
+    } else if (o === dubaiOffice) {
+      blocks.push({ type: "dubai" });
+    } else {
+      blocks.push({ type: "other", office: o });
+    }
+  });
 
   const copyrightText = copyright?.description || copyright?.brand || null;
 
@@ -78,8 +86,6 @@ const Footer = ({ footerData, campaignSlugs = [], googleReviews = null }) => {
               )}
             </div>
 
-            {/* <div className="footer_connect_divider" aria-hidden="true" /> */}
-
             <div className="footer_pixtop_logo">
               <Image src="/assets/images/pixtop-logo.svg" alt="Pixtop Logo" width={100} height={50} />
               <p>PIXTOP MEDIA SOLUTIONS PVT LTD</p>
@@ -107,69 +113,6 @@ const Footer = ({ footerData, campaignSlugs = [], googleReviews = null }) => {
               <GoogleReview data={googleReviews} />
             </div>
 
-            <div className="footer_connect_details">
-              {/* India: Mumbai and Bengaluru under one heading. */}
-              {indiaOffices.length > 0 && (
-                <div className="footer_connect_office footer_connect_region">
-                  <RegionHead label="India" />
-                  <div className="footer_connect_region_items">
-                    {indiaOffices.map((office) => (
-                      <div
-                        className="footer_connect_region_item"
-                        key={office.id || office.city}
-                      >
-                        <address>
-                          <a
-                            href={office.addressLink || mapsSearchUrl(officeText(office))}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            {officeLabel(office)}
-                          </a>
-                        </address>
-                        <OfficeContact email={office.email} phone={office.phone} />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* UAE: "Dubai :" before the address. */}
-              {dubaiOffice && (
-                <div className="footer_connect_office footer_connect_usa footer_connect_dubai">
-                  <address>
-                    <RegionHead label="Dubai" />
-                    <a
-                      href={dubaiOffice.addressLink || mapsSearchUrl(officeText(dubaiOffice))}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {dubaiOffice.address}
-                    </a>
-                  </address>
-                  <OfficeContact email={dubaiOffice.email} phone={dubaiOffice.phone} />
-                </div>
-              )}
-
-              {otherOffices.map((office) => (
-                <div
-                  className="footer_connect_office footer_connect_usa"
-                  key={office.id || office.city}
-                >
-                  <address>
-                    <a
-                      href={office.addressLink || mapsSearchUrl(officeText(office))}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {office.city} {office.address}
-                    </a>
-                  </address>
-                  <OfficeContact email={office.email} phone={office.phone} />
-                </div>
-              ))}
-            </div>
-
             <Script
               src="https://news.google.com/swg/js/v1/publisher.js"
               strategy="lazyOnload"
@@ -188,6 +131,78 @@ const Footer = ({ footerData, campaignSlugs = [], googleReviews = null }) => {
                 data-theme="dark"
               />
             </div>
+
+            <div className="footer_connect_details">
+              {/* India: Mumbai and Bengaluru under one heading. */}
+              {blocks.map((block) => {
+                if (block.type === "india") return (
+                <div key="india" className="footer_connect_office footer_connect_region">
+                  <RegionHead label="India" />
+                  <div className="footer_connect_region_items">
+                    {indiaOffices.map((office) => (
+                      <div
+                        className="footer_connect_region_item"
+                        key={office.id || office.city}
+                      >
+                        <address>
+                          {officeCity(office) && (
+                            <span className="footer_connect_region_city">
+                              {officeCity(office)}
+                            </span>
+                          )}
+                          <a
+                            href={office.addressLink || mapsSearchUrl(officeText(office))}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {officeAddress(office)}
+                          </a>
+                        </address>
+                        <OfficeContact email={office.email} phone={office.phone} />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                );
+
+                if (block.type === "dubai") return (
+                <div key="dubai" className="footer_connect_office footer_connect_usa footer_connect_dubai">
+                  <address>
+                    <RegionHead label="Dubai" />
+                    <a
+                      href={dubaiOffice.addressLink || mapsSearchUrl(officeText(dubaiOffice))}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {dubaiOffice.address}
+                    </a>
+                  </address>
+                  <OfficeContact email={dubaiOffice.email} phone={dubaiOffice.phone} />
+                </div>
+                );
+
+                const office = block.office;
+                return (
+                <div
+                  className="footer_connect_office footer_connect_usa"
+                  key={office.id || office.city}
+                >
+                  <address>
+                    {office.city ? <RegionHead label={office.city} /> : null}
+                    <a
+                      href={office.addressLink || mapsSearchUrl(officeText(office))}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {office.address}
+                    </a>
+                  </address>
+                  <OfficeContact email={office.email} phone={office.phone} />
+                </div>
+                );
+              })}
+            </div>
+
           </div>
         </div>
 
@@ -260,15 +275,27 @@ const mapsSearchUrl = (address) =>
 // heading). The CMS splits the text oddly, so join it first, then drop "(India)".
 const officeLabel = (office) =>
   `${office.city ?? ""} ${office.address ?? ""}`
-    .replace(/s*(s*Indias*)/i, "")
-    .replace(/s+/g, " ")
+    .replace(/\s*\(\s*India\s*\)/i, "")
+    .replace(/\s+/g, " ")
     .trim();
+
+// Short city tag shown above each address inside the India group.
+const officeCity = (office) => {
+  const m = `${office.city ?? ""} ${office.address ?? ""}`.match(
+    /mumbai|bangaluru|bengaluru/i
+  );
+  if (!m) return null;
+  return /mumbai/i.test(m[0]) ? "Mumbai" : "Bengaluru";
+};
+
+// The address line without the leading city name (the tag already says it).
+const officeAddress = (office) =>
+  officeLabel(office).replace(/^(mumbai|bangaluru|bengaluru)\s*/i, "");
 
 const OfficeContact = ({ email, phone }) =>
   email || phone ? (
     <div className="footer_connect_office_contact">
       {email && <a href={`mailto:${email}`}>{email}</a>}
-      {email && phone ? <span aria-hidden="true"> | </span> : null}
       {phone && <a href={`tel:${phone.replace(/[^d+]/g, "")}`}>{phone}</a>}
     </div>
   ) : null;

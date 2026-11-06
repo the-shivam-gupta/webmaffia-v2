@@ -804,13 +804,18 @@ footer {
     }
   }
 
+  // "Add to Preferred Sources" sits right under the Google review badge.
   .footer_google_source_wrap {
     position: relative;
     z-index: 2;
-    margin-top: 5rem;
+    margin-top: vw(22);
 
     @include tablet() {
-      margin-top: 4rem;
+      margin-top: vw(22);
+    }
+
+    @include mobile() {
+      margin-top: vw-mobile(14);
     }
 
     .footer_google_source_dark {
@@ -909,19 +914,20 @@ footer {
     }
   }
 
+  // Email on one line, phone on the line below (no "|" separator).
   .footer_connect_primary_contact,
   .footer_connect_office_contact {
     display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: vw(4) vw(10);
+    flex-direction: column;
+    align-items: flex-start;
+    gap: vw(4);
 
     @include tablet() {
-      gap: vw(8) vw(20);
+      gap: vw(8);
     }
 
     @include mobile() {
-      gap: vw-mobile(6) vw-mobile(12);
+      gap: vw-mobile(4);
     }
   }
 
@@ -989,11 +995,38 @@ footer {
     }
   }
 
+  // Each India office is told apart by the small city tag above its address.
   .footer_connect_region_item + .footer_connect_region_item {
-    margin-top: vw(42);
+    margin-top: vw(28);
 
     @include mobile() {
       margin-top: vw-mobile(20);
+    }
+  }
+
+  .footer_connect_region_city {
+    display: inline-block;
+    margin-bottom: vw(8);
+    padding: vw(3) vw(12);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 999px;
+    color: rgba(255, 255, 255, 0.9);
+    font-family: "Albert Sans", sans-serif;
+    font-size: vw(13);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    line-height: 1.4;
+    text-transform: uppercase;
+
+    @include tablet() {
+      font-size: vw(20);
+      padding: vw(4) vw(16);
+    }
+
+    @include mobile() {
+      margin-bottom: vw-mobile(8);
+      padding: vw-mobile(2) vw-mobile(10);
+      font-size: vw-mobile(10);
     }
   }
 
@@ -1009,6 +1042,26 @@ footer {
 
     @include mobile() {
       margin-top: vw-mobile(12);
+    }
+  }
+
+  // Desktop: lay the offices out side by side (USA | India | Dubai) so they
+  // fill the wide column instead of stacking in a narrow strip. Each block
+  // gets a top rule instead of the stacked bottom divider.
+  @media (min-width: 770px) {
+    .footer_connect_details {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      column-gap: vw(48);
+      align-items: start;
+      max-width: vw(1000);
+
+      > .footer_connect_office {
+        margin-bottom: 0;
+        padding: vw(24) 0 0;
+        border-bottom: 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.15);
+      }
     }
   }
 
