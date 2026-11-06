@@ -4,7 +4,9 @@ import { t } from "@/lib/dictionaries";
 import { localizePath } from "@/lib/i18n";
 import { formatBlogDate, getBlogCategories, getStrapiImageUrl } from "@/lib/strapiPage";
 
-export default function BlogListItem({ post, lang = "en" }) {
+// `TitleTag` is the heading level of the card title: h2 on the blog list and
+// author pages, h3 where the card sits under a section heading (service pages).
+export default function BlogListItem({ post, lang = "en", TitleTag = "h2" }) {
   const href = localizePath(lang, `/blog/${post.slug}`);
   const imageUrl = getStrapiImageUrl(post.image);
   const category = getBlogCategories(post)[0];
@@ -32,7 +34,7 @@ export default function BlogListItem({ post, lang = "en" }) {
       ) : null}
       <div>
         <Link href={href}>
-          <div className="h5 blog_item_title">{post.heading}</div>
+          <TitleTag className="h5 blog_item_title h3_plain">{post.heading}</TitleTag>
           {post.excerpt ? <p>{post.excerpt}</p> : null}
           <div className="blog_para">
             <div className="blogs_date">

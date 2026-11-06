@@ -194,7 +194,7 @@ function buildAwardItems(awardsList) {
 
 /**
  * Maps the industries-we-serve `lists` repeatable onto
- * `{ title, logo: { url, alt, width, height } | null }` tiles. The CMS entry
+ * `{ title, href, logo: { url, alt, width, height } | null }` tiles. The CMS entry
  * now carries an `icons` repeatable of `{ logo }` media (same shape as
  * tools-we-use), so the first icon is used as the tile's logo; a legacy
  * single `logo` is still honoured. Entries with a title but no icon yet are
@@ -207,8 +207,19 @@ function buildLogoTitleItems(lists) {
       if (!title) return null;
 
       const media = item.logo ?? item.icons?.find((entry) => entry.logo)?.logo;
+      // Page the tile links to: the CMS `url` set on the icon entry (or on the
+      // tile itself), e.g. "/real-estate". Empty means the tile is not a link.
+      const rawUrl = (
+        item.url ?? item.icons?.find((entry) => entry.url?.trim())?.url ?? ""
+      ).trim();
+      const href = !rawUrl
+        ? null
+        : /^(https?:|mailto:|tel:|\/)/i.test(rawUrl)
+          ? rawUrl
+          : `/${rawUrl}`;
       return {
         title,
+        href,
         logo: media
           ? {
               url: getStrapiImageUrl(media),

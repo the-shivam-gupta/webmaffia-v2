@@ -1,6 +1,28 @@
 .service_detail{
     margin-bottom: 2.5rem;
+    // Eyebrow: "OUR SERVICES / Page name". The site-wide .sub_title tracking
+    // (10px) is far too wide for a long breadcrumb, so it is tightened here,
+    // the whole line is uppercase, and the page name reads a step lighter.
     .sub_title{
+        font-size: vw(17);
+        letter-spacing: 0.2em;
+        line-height: 1.6;
+        text-transform: uppercase;
+        margin-left: 0;
+        margin-bottom: vw(26);
+        @include mobile(){
+            font-size: vw-mobile(11);
+            letter-spacing: 0.14em;
+            line-height: 1.7;
+            margin-bottom: vw-mobile(16);
+        }
+        .sub_title_sep{
+            margin: 0 0.35em;
+            opacity: 0.5;
+        }
+        .sub_title_current{
+            opacity: 0.65;
+        }
         a{
             position: relative;
             display: inline-block;
@@ -340,7 +362,7 @@
     .industries_grid{
         margin-top: 8rem;
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(3, 1fr);
         gap: 10rem 4rem;
         @include mobile(){
             grid-template-columns: repeat(2, 1fr);
@@ -355,6 +377,60 @@
         gap: 3.2rem;
         @include mobile(){
             gap: 3.6rem;
+        }
+    }
+    // Linked tile (industry page). It has to read as clickable without a
+    // hover: an arrow after the label and a faint underline are always shown;
+    // on hover the whole card area lifts slightly, the underline
+    // firms up and the arrow nudges right.
+    a.industries_cell{
+        // A small card around the icon and label: the whole card (padding
+        // included) is the link and the hover area. The negative margin equals
+        // the padding, so the icon and label still line up with the heading.
+        --card-pad-y: 2.4rem;
+        --card-pad-x: 3rem;
+        color: inherit;
+        text-decoration: none;
+        cursor: pointer;
+        justify-self: start;
+        align-self: start;
+        width: fit-content;
+        max-width: calc(100% + var(--card-pad-x) * 2);
+        padding: var(--card-pad-y) var(--card-pad-x);
+        margin: calc(var(--card-pad-y) * -1) calc(var(--card-pad-x) * -1);
+        transition: transform .35s cubic-bezier(.2, .7, .2, 1);
+        @include mobile(){
+            --card-pad-y: 3rem;
+            --card-pad-x: 2.4rem;
+        }
+        .industries_name{
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            width: fit-content;
+            text-decoration: underline;
+            text-decoration-color: color-mix(in srgb, currentColor 30%, transparent);
+            text-underline-offset: .6rem;
+            transition: text-decoration-color .3s ease;
+            @include mobile(){
+                gap: 1.4rem;
+            }
+        }
+        .industries_arrow{
+            flex: none;
+            width: 1.4em;
+            height: .7em;
+            transition: transform .3s ease;
+        }
+        &:hover,
+        &:focus-visible{
+            transform: translateY(-.4rem);
+            .industries_name{
+                text-decoration-color: currentColor;
+            }
+            .industries_arrow{
+                transform: translateX(.6rem);
+            }
         }
     }
     .industries_icon{
@@ -787,8 +863,13 @@ html.active .service_blogs .other_blogs .blog_item{
         margin-top: vw-mobile(56);
     }
     .statistics_grid{
-        grid-template-columns: repeat(auto-fit, minmax(vw(220), 1fr));
+        // One row of equal columns, like the homepage bar, whatever the count.
+        grid-template-columns: none;
+        grid-auto-flow: column;
+        grid-auto-columns: minmax(0, 1fr);
         @include mobile(){
+            grid-auto-flow: row;
+            grid-auto-columns: auto;
             grid-template-columns: repeat(2, 1fr);
         }
     }

@@ -71,6 +71,21 @@ function ServicesSection({ section }) {
             {card.button ? (
               <Link href={card.button.href} className="link services_item_link">
                 {card.button.title}
+                <svg
+                  className="services_item_arrow"
+                  viewBox="0 0 24 12"
+                  aria-hidden="true"
+                  focusable="false"
+                >
+                  <path
+                    d="M0 6H22.5M17 0.8L22.7 6L17 11.2"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.2"
+                    strokeLinejoin="miter"
+                    strokeLinecap="butt"
+                  />
+                </svg>
               </Link>
             ) : null}
           </article>
@@ -233,6 +248,7 @@ export function LogoGridSection({ section }) {
                 alt={card.image.alt}
                 width={127}
                 height={88}
+                style={card.scale ? { transform: `scale(${card.scale})` } : undefined}
               />
             </Link>
           ) : (
@@ -242,6 +258,7 @@ export function LogoGridSection({ section }) {
                 alt={card.image.alt}
                 width={card.image.width}
                 height={card.image.height}
+                style={card.scale ? { transform: `scale(${card.scale})` } : undefined}
               />
               <AwardDetails text={card.details || card.label} />
             </div>
@@ -311,9 +328,7 @@ function IndustriesSection({ section }) {
                   <span className="home_industries_cta_label">
                     {card.button.title}
                   </span>
-                  <i className="home_industries_arrow" aria-hidden="true">
-                    &rarr;
-                  </i>
+                  <i className="home_industries_arrow" aria-hidden="true" />
                 </span>
               ) : null}
             </>
@@ -378,6 +393,9 @@ function TestimonialsSection({ section, testimonials }) {
       <Swiper
         modules={[Navigation]}
         loop={testimonials.length > 1}
+        // The slider takes the height of the visible testimonial, so a short
+        // quote doesn't leave a gap above the Previous / Next controls.
+        autoHeight
         navigation={{
           nextEl: ".testimonial .swiper-button-next",
           prevEl: ".testimonial .swiper-button-prev",
@@ -449,7 +467,7 @@ function BlogsSection({ section, blogs }) {
             </Link>
             <div>
               <Link href={post.href}>
-                <div className="h5 blog_item_title">{post.title}</div>
+                <h3 className="h5 blog_item_title h3_plain">{post.title}</h3>
                 {post.excerpt ? (
                   <p className="home_blogs_excerpt">{post.excerpt}</p>
                 ) : null}

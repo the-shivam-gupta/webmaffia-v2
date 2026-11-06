@@ -92,7 +92,7 @@ export default function ContactPage() {
                   </div>
                 </div>
                 <div className="country_region">
-                  <div className="region_text">Bangaluru</div>
+                  <div className="region_text">Bengaluru</div>
                   <address>
                     <a
                       href="https://maps.app.goo.gl/iPvLshVht1xP6hT1A"

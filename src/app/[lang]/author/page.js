@@ -37,7 +37,8 @@ export default async function AuthorsPage({ params }) {
     const { lang } = await params;
     if (!isLocale(lang)) notFound();
 
-    const authors = await getAuthors();
+    // Authors with no published articles are not listed.
+    const authors = (await getAuthors()).filter((author) => author.blogs.length > 0);
 
     const breadcrumbSchema = buildBreadcrumbSchema([
         { name: t(lang, "breadcrumb.home"), path: "/" },

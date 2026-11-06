@@ -31,7 +31,7 @@ function FeaturesSection({ section }) {
             className="feature_box"
             key={`${section.dataSection}-${feature.number}-${index}`}
           >
-            <h2
+            <h3
               className={
                 feature.influencerTitle
                   ? "feature_title influencer_title"
@@ -40,7 +40,7 @@ function FeaturesSection({ section }) {
               data-sf-number={feature.number}
             >
               {feature.title}
-            </h2>
+            </h3>
             {Array.isArray(feature.description) ? (
               feature.description.map((para, i) => <p key={i}>{para}</p>)
             ) : (
@@ -135,7 +135,7 @@ function BlogsSection({ section }) {
       <h2 className="h2">{section.heading}</h2>
       <div className="other_blogs">
         {section.posts.map((post) => (
-          <BlogListItem post={post} key={post.slug} />
+          <BlogListItem post={post} key={post.slug} TitleTag="h3" />
         ))}
       </div>
     </>
@@ -150,20 +150,53 @@ function IndustriesSection({ section }) {
     <>
       {section.heading ? <h2 className="h2">{section.heading}</h2> : null}
       <div className="industries_grid">
-        {section.items.map((item, index) => (
-          <div className="industries_cell" key={`${item.title}-${index}`}>
-            {item.logo ? (
-              <Image
-                className="industries_icon"
-                src={item.logo.url}
-                alt={item.logo.alt}
-                width={item.logo.width ?? 110}
-                height={item.logo.height ?? 135}
-              />
-            ) : null}
-            <h3 className="industries_name">{item.title}</h3>
-          </div>
-        ))}
+        {section.items.map((item, index) => {
+          const content = (
+            <>
+              {item.logo ? (
+                <Image
+                  className="industries_icon"
+                  src={item.logo.url}
+                  alt={item.logo.alt}
+                  width={item.logo.width ?? 110}
+                  height={item.logo.height ?? 135}
+                />
+              ) : null}
+              <h3 className="industries_name">
+                {item.title}
+                {item.href ? (
+                  <svg
+                    className="industries_arrow"
+                    viewBox="0 0 24 12"
+                    aria-hidden="true"
+                    focusable="false"
+                  >
+                    <path
+                      d="M0 6H22.5M17 0.8L22.7 6L17 11.2"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.2"
+                      strokeLinejoin="miter"
+                      strokeLinecap="butt"
+                    />
+                  </svg>
+                ) : null}
+              </h3>
+            </>
+          );
+          const key = `${item.title}-${index}`;
+
+          // A tile links to its industry page when the CMS gives it a url.
+          return item.href ? (
+            <Link href={item.href} className="industries_cell" key={key}>
+              {content}
+            </Link>
+          ) : (
+            <div className="industries_cell" key={key}>
+              {content}
+            </div>
+          );
+        })}
       </div>
     </>
   );
@@ -247,7 +280,7 @@ function LatestWorkSection({ latestWork }) {
         {latestWork.map((item) => (
           <div className="service_item" key={item.name}>
             <Link href={item.url || "#"} className="service_img">
-              <Image src={item.image} alt="" width={821} height={601} />
+              <Image src={item.image} alt={item.name || "Webmaffia project"} width={821} height={601} />
             </Link>
             <Link href={item.url || "#"}>
               <h3 className="service_name">{item.name}</h3>
@@ -302,7 +335,7 @@ function OtherServicesSection({ otherServices }) {
             <span className="other_services_row_num">
               {String(index + 1).padStart(2, "0")}
             </span>
-            <span className="other_services_row_name">{item.title}</span>
+            <h3 className="other_services_row_name h3_plain">{item.title}</h3>
           </Link>
         ))}
       </div>
@@ -328,7 +361,7 @@ function TechnologyBlock({ technologies }) {
                 <Image
                   src={icon.src}
                   title={icon.title}
-                  alt=""
+                  alt={icon.title || group.label || "Technology icon"}
                   width={75}
                   height={75}
                 />
@@ -387,13 +420,13 @@ export default async function ServiceDetailPage({ config, breadcrumbs }) {
     images: {
       banner: {
         url: hero.image,
-        alt: "",
+        alt: hero.imageAlt || hero.title || "",
         width: hero.imageWidth ?? 871,
         height: hero.imageHeight ?? 767,
       },
       bannerMobile: {
         url: hero.mobileImage || "/assets/images/hero-mobile.webp",
-        alt: "",
+        alt: hero.imageAlt || hero.title || "",
       },
     },
   };

@@ -91,7 +91,22 @@ const TOOL_ICONS = {
   "waveaccessibility": "/assets/images/tools/generic-eye.svg",
   "browserstack": "/assets/images/tools/generic-mobile.svg",
   "vercel": "/assets/images/tools/vercel.svg",
-  "aws": "/assets/images/tools/amazonwebservices.svg"
+  "aws": "/assets/images/tools/amazonwebservices.svg",
+  // Content marketing tools.
+  "ahrefs": "/assets/images/tools/generic-link.svg",
+  "semrush": "/assets/images/tools/semrush.svg",
+  "answerthepublic": "/assets/images/tools/generic-chat.svg",
+  "googlesearchconsole": "/assets/images/tools/googlesearchconsole.svg",
+  "surferseo": "/assets/images/tools/generic-trend.svg",
+  "clearscope": "/assets/images/tools/generic-target.svg",
+  "frase": "/assets/images/tools/generic-sparkle.svg",
+  "grammarly": "/assets/images/tools/grammarly.svg",
+  "googleanalytics4": "/assets/images/tools/googleanalytics.svg",
+  "lookerstudio": "/assets/images/tools/looker.svg",
+  "schemavalidator": "/assets/images/tools/generic-check.svg",
+  // Website design: Performance & Quality.
+  "lighthouse": "/assets/images/tools/lighthouse.svg",
+  "pagespeedinsights": "/assets/images/tools/pagespeedinsights.svg"
 };
 
 export default TOOL_ICONS;

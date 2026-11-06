@@ -63,9 +63,11 @@ export default function ContactSection({
                   />
                 </svg>
               </span>
-              <span>
+              <span className="home_contact_phones">
                 <a href="tel:+919867625909">+91 98676 25909</a>
-                {" · "}
+                <span className="home_contact_sep" aria-hidden="true">
+                  {" · "}
+                </span>
                 <a href="tel:+971562722998">+971 56 272 2998</a>
               </span>
             </div>

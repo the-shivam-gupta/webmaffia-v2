@@ -242,11 +242,21 @@ html{
                 }
             }
         }
+        .blog_search_row .blog_page_title{
+            color: $white;
+        }
+        // Underline of "Read more" and the other `.link` text links: the
+        // light-mode grey line vanishes on black, so it turns white.
+        .link::after{
+            background: rgba($white, 0.6);
+        }
+        // No card shadow / tint on hover (the image zooms instead), same as
+        // the homepage blog cards.
         .other_blogs .blog_item{
             @media (hover: hover){
                 &:hover{
-                    background-color: rgba(255, 255, 255, .07);
-                    box-shadow: inset 0 .1rem 0 rgba(255, 255, 255, .1), 0 2rem 4rem -1rem rgba(0, 0, 0, .8);
+                    background-color: transparent;
+                    box-shadow: none;
                 }
             }
         }

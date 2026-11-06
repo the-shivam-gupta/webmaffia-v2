@@ -1,4 +1,5 @@
-import { getServiceTechBySlug } from "@/lib/strapiPage";
+import { getHome, getServiceTechBySlug } from "@/lib/strapiPage";
+import { buildSections } from "@/lib/homeSections";
 import { buildServiceHero, buildServiceSections } from "@/lib/serviceContent";
 import digitalStrategy from "@/lib/services/digital-strategy";
 import websiteDesign from "@/lib/services/website-design-development-services";
@@ -53,9 +54,10 @@ export function getStaticService(slug) {
  * statistics icons are borrowed from the CMS statistics bar in the same order.
  */
 export async function getStaticServiceConfig(service) {
-  const [cms, seo] = await Promise.all([
+  const [cms, seo, home] = await Promise.all([
     getServiceTechBySlug(service.slug),
     getServiceTechBySlug(SHARED_SECTIONS_SOURCE),
+    getHome(),
   ]);
   const seoTools = buildServiceSections(seo?.sections).find((s) => s.type === "tools");
   const iconByTitle = new Map(
@@ -67,14 +69,23 @@ export async function getStaticServiceConfig(service) {
     (s) => s.type === "industries"
   );
   const cmsHero = buildServiceHero(cms?.banner);
+  // Same statistics bar as the homepage (14+ years, 175+ brands, 03 offices,
+  // 30+ awards, ISO badge), read from the home CMS entry. The service's own
+  // static stats are only a fallback if the home entry cannot be loaded.
+  const homeStats = buildSections(home?.sections).find(
+    (s) => s.type === "statistics"
+  )?.stats;
+
   const cmsStats =
     buildServiceSections(cms?.sections).find((s) => s.type === "statistics")?.stats ?? [];
 
-  const stats = service.stats.map((stat, i) => ({
-    id: `stat-${i}`,
-    ...stat,
-    icon: cmsStats[i]?.icon ?? null,
-  }));
+  const stats = homeStats?.length
+    ? homeStats
+    : service.stats.map((stat, i) => ({
+        id: `stat-${i}`,
+        ...stat,
+        icon: cmsStats[i]?.icon ?? null,
+      }));
 
   const sections = [
     { type: "statistics", dataSection: "service_statistics_0", stats },

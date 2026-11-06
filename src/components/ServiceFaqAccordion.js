@@ -46,7 +46,7 @@ export default function ServiceFaqAccordion({ tagline, heading, items }) {
               role="button"
               tabIndex={0}
             >
-              <div className="accord_title">
+              <h3 className="accord_title faq_title_reset">
                 {item.question}{" "}
                 <span>
                   <Image
@@ -56,7 +56,7 @@ export default function ServiceFaqAccordion({ tagline, heading, items }) {
                     height={14}
                   />
                 </span>
-              </div>
+              </h3>
               <div
                 className="accord_container"
                 style={

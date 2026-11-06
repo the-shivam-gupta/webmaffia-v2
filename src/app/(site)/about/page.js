@@ -3,6 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import Banner from "@/components/Banner";
 import JsonLd from "@/components/JsonLd";
+import TeamFaq from "@/components/TeamFaq";
+import { ABOUT_FAQS } from "@/lib/aboutFaqs";
 import { buildBannerCta, getAboutUs, getStrapiImageUrl } from "@/lib/strapiPage";
 import {
   buildBreadcrumbSchema,
@@ -172,13 +174,22 @@ export default async function AboutPage() {
                 </Link>
               ))}
             </div>
+            <div className="about_cta">
+              <Link href="/services" className="cta_text">
+                Next up <span>Services</span>
+              </Link>
+            </div>
           </section>
-          <div className="about_cta">
-            <Link href="/services" className="cta_text">
-              Next up <span>Services</span>
-            </Link>
-          </div>
         </div>
+
+        {/* Static for now (moved from /team); same markup and styles. */}
+        <section data-section="faq" className="team_faq">
+          <div className="team_faq_head">
+            <h2 className="sub_title">FAQ</h2>
+            <div className="sub_heading">About Webmaffia</div>
+          </div>
+          <TeamFaq items={ABOUT_FAQS} />
+        </section>
       </div>
     </main>
   );

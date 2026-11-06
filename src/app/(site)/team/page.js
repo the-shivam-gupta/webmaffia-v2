@@ -2,14 +2,12 @@ import Image from "next/image";
 import Banner from "@/components/Banner";
 import JsonLd from "@/components/JsonLd";
 import StatisticsBar from "@/components/StatisticsBar";
-import TeamFaq from "@/components/TeamFaq";
 import TeamLinkedIn from "@/components/TeamLinkedIn";
 import { LogoGridSection, SectionHead } from "@/components/HomePage";
 import { getHome, getMediaUrlsByIds } from "@/lib/strapiPage";
 import { buildSections } from "@/lib/homeSections";
 import { buildBreadcrumbSchema } from "@/lib/schema";
 import {
-  TEAM_FAQS,
   TEAM_LEADERS,
   TEAM_MEMBERS,
   TEAM_PHOTO_IDS,
@@ -165,14 +163,6 @@ export default async function TeamPage() {
               </div>
             ))}
           </div>
-        </section>
-
-        <section data-section="faq" className="team_faq">
-          <div className="team_faq_head">
-            <h2 className="sub_title">FAQ</h2>
-            <div className="sub_heading">About the Webmaffia team</div>
-          </div>
-          <TeamFaq items={TEAM_FAQS} />
         </section>
       </div>
     </main>

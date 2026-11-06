@@ -128,12 +128,21 @@ export default async function BlogPage({ params, searchParams }) {
       <div className="blog_listing">
 
         <section className="our_blog">
-          <BlogSearch
-            defaultValue={query}
-            category={activeCategory?.slug}
-            categories={allCategories}
-            lang={lang}
-          />
+          <div className="blog_search_row">
+            {/* The page's h1 while unfiltered; with a search / category the
+                filter bar below carries the h1, so this stays a plain div. */}
+            {isFiltered ? (
+              <div className="blog_page_title">Blogs</div>
+            ) : (
+              <h1 className="blog_page_title">Blogs</h1>
+            )}
+            <BlogSearch
+              defaultValue={query}
+              category={activeCategory?.slug}
+              categories={allCategories}
+              lang={lang}
+            />
+          </div>
           {query ? (
             <div className="blog_filter_bar">
               <div>

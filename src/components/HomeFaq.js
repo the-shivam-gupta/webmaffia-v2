@@ -23,16 +23,18 @@ export default function HomeFaq({ tagline, title, items }) {
               className={`home_faqs_item${isOpen ? " is_open" : ""}`}
               key={faq.id}
             >
-              <button
-                type="button"
-                className="home_faqs_question"
-                aria-expanded={isOpen}
-                aria-controls={`home-faq-${faq.id}`}
-                onClick={() => setOpenIndex(isOpen ? null : index)}
-              >
-                <span>{faq.question}</span>
-                <span className="home_faqs_icon" aria-hidden="true" />
-              </button>
+              <h3 className="faq_heading">
+                <button
+                  type="button"
+                  className="home_faqs_question"
+                  aria-expanded={isOpen}
+                  aria-controls={`home-faq-${faq.id}`}
+                  onClick={() => setOpenIndex(isOpen ? null : index)}
+                >
+                  <span>{faq.question}</span>
+                  <span className="home_faqs_icon" aria-hidden="true" />
+                </button>
+              </h3>
               <div
                 id={`home-faq-${faq.id}`}
                 className="home_faqs_answer"

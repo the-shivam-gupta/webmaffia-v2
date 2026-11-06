@@ -24,16 +24,18 @@ export default function ServiceTeamFaq({ tagline, heading, items }) {
               className={`team_faq_item${isOpen ? " is_open" : ""}`}
               key={faq.id}
             >
-              <button
-                type="button"
-                className="team_faq_question"
-                aria-expanded={isOpen}
-                aria-controls={`service-faq-${faq.id}`}
-                onClick={() => setOpenIndex(isOpen ? null : index)}
-              >
-                <span>{faq.question}</span>
-                <span className="team_faq_icon" aria-hidden="true" />
-              </button>
+              <h3 className="faq_heading">
+                <button
+                  type="button"
+                  className="team_faq_question"
+                  aria-expanded={isOpen}
+                  aria-controls={`service-faq-${faq.id}`}
+                  onClick={() => setOpenIndex(isOpen ? null : index)}
+                >
+                  <span>{faq.question}</span>
+                  <span className="team_faq_icon" aria-hidden="true" />
+                </button>
+              </h3>
               <div
                 id={`service-faq-${faq.id}`}
                 className="team_faq_answer"

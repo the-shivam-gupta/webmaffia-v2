@@ -66,17 +66,38 @@
         .work_box{
             width: 100%;
             max-width: 80%;
-            margin: 5rem 0 18rem;
+            margin: 5rem 0 0;
             border-right: 0.2rem solid $gray_light;
             border-bottom: 0.2rem solid $gray_light;
             // gap: 6rem;
-            @include mobile(){
-                margin-bottom: 8rem;
-            }
         }
     }
 }
 
+// "Next up Services": sits right under the awards grid, left-aligned with it
+// (same placement as the homepage's .services_more).
 .about_cta{
-    text-align: center;
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 6rem;
+    @include mobile(){
+        margin-top: 4rem;
+    }
+}
+
+// Space between the awards block and the FAQ fold that follows it (/about
+// only; the /awards page reuses the .about_award class for other content).
+.about_wrapper .about_award{
+    margin-bottom: 18rem;
+    @include mobile(){
+        margin-bottom: 12rem;
+    }
+}
+
+// FAQ is the last fold of the page: room before the footer.
+.about_wrapper .team_faq{
+    margin-bottom: 12rem;
+    @include mobile(){
+        margin-bottom: 8rem;
+    }
 }

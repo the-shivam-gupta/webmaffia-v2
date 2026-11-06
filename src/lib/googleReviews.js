@@ -6,7 +6,7 @@ export const GOOGLE_READ_REVIEWS_URL = `https://search.google.com/local/reviews?
 
 // Shown until GOOGLE_PLACES_API_KEY is set (taken from the design reference;
 // update them, or set the key so the live numbers replace them).
-export const GOOGLE_REVIEWS_FALLBACK = { rating: 4.3, count: "120+" };
+export const GOOGLE_REVIEWS_FALLBACK = { rating: 4.3, count: "46+" };
 
 // Rating and review count from the Places API (New).
 // Needs GOOGLE_PLACES_API_KEY (Places API enabled); returns null without it

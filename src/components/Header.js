@@ -157,7 +157,7 @@ const Header = () => {
             </ul>
           </div>
           <Link href="/case-study">Our Work</Link>
-          <Link href="/clients">Our Client</Link>
+          <Link href="/clients">Our Clients</Link>
           <Link href="/blog">Blog</Link>
         </nav>
 
@@ -314,7 +314,7 @@ const Header = () => {
 
             <div className="menu_link" data-number="04">
               <Link href="/clients" onClick={() => setMenuOpen(false)}>
-                Our Client
+                Our Clients
               </Link>
             </div>
 
@@ -364,7 +364,7 @@ const Header = () => {
               </div>
 
               <div className="country_region">
-                  <div className="region_text">Bangaluru</div>
+                  <div className="region_text">Bengaluru</div>
                   <address>
                     <a
                       href="https://maps.app.goo.gl/iPvLshVht1xP6hT1A"

@@ -217,7 +217,7 @@ export default function BlogDetailPage({
                 ) : null}
                 <div>
                   <Link href={post.href}>
-                    <div className="h5 blog_item_title">{post.title}</div>
+                    <h2 className="h5 blog_item_title h3_plain">{post.title}</h2>
                     {post.excerpt ? <p>{post.excerpt}</p> : null}
                     <div className="blog_para">
                       <div className="blogs_date">

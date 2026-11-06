@@ -26,7 +26,7 @@ const Footer = ({ footerData, campaignSlugs = [], googleReviews = null }) => {
 
   const officeText = (office) => `${office.city} ${office.address}`;
   const indiaOffices = offices.filter((o) =>
-    /mumbai|bangaluru|bengaluru/i.test(officeText(o))
+    /mumbai|Bengaluru|bengaluru/i.test(officeText(o))
   );
   const dubaiOffice = offices.find((o) => /dubai/i.test(officeText(o)));
   // Follow the CMS order: each block sits where its first office appears.
@@ -282,7 +282,7 @@ const officeLabel = (office) =>
 // Short city tag shown above each address inside the India group.
 const officeCity = (office) => {
   const m = `${office.city ?? ""} ${office.address ?? ""}`.match(
-    /mumbai|bangaluru|bengaluru/i
+    /mumbai|Bengaluru|bengaluru/i
   );
   if (!m) return null;
   return /mumbai/i.test(m[0]) ? "Mumbai" : "Bengaluru";
@@ -290,7 +290,7 @@ const officeCity = (office) => {
 
 // The address line without the leading city name (the tag already says it).
 const officeAddress = (office) =>
-  officeLabel(office).replace(/^(mumbai|bangaluru|bengaluru)\s*/i, "");
+  officeLabel(office).replace(/^(mumbai|Bengaluru|bengaluru)\s*/i, "");
 
 const OfficeContact = ({ email, phone }) =>
   email || phone ? (

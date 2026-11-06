@@ -163,6 +163,9 @@ function buildSections(rawSections) {
                   awardPlaceholderDetails(card.label) ||
                   "",
                 image: mapMedia(card.image, card.label),
+                // Optional CMS `scale`: a positive number enlarges the logo
+                // (1.5 = 150%); empty or invalid leaves it unscaled.
+                scale: Number(card.scale) > 0 ? Number(card.scale) : null,
               }))
               .filter((card) => card.image),
           };
@@ -206,7 +209,7 @@ function mapBlogCard(post) {
   };
 }
 
-// "Mumbai (India)" -> "Mumbai", "Bangaluru Brigade" -> "Bangaluru"
+// "Mumbai (India)" -> "Mumbai", "Bengaluru Brigade" -> "Bengaluru"
 function buildOfficeLocations(offices) {
   return (offices ?? [])
     .map((office) => office.city?.trim().split(/\s+/)[0])

@@ -133,7 +133,14 @@ export default function Banner({
           {subheading.link ? (
             <>
               <Link href={subheading.link}>{subheading.text}</Link>
-              {subheading.current ? <> / {subheading.current}</> : null}
+              {subheading.current ? (
+                <>
+                  <span className="sub_title_sep" aria-hidden="true">
+                    {" / "}
+                  </span>
+                  <span className="sub_title_current">{subheading.current}</span>
+                </>
+              ) : null}
             </>
           ) : (
             subheading.text

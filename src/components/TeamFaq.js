@@ -17,16 +17,18 @@ export default function TeamFaq({ items }) {
             className={`team_faq_item${isOpen ? " is_open" : ""}`}
             key={faq.question}
           >
-            <button
-              type="button"
-              className="team_faq_question"
-              aria-expanded={isOpen}
-              aria-controls={`team-faq-${index}`}
-              onClick={() => setOpenIndex(isOpen ? null : index)}
-            >
-              <span>{faq.question}</span>
-              <span className="team_faq_icon" aria-hidden="true" />
-            </button>
+            <h3 className="faq_heading">
+              <button
+                type="button"
+                className="team_faq_question"
+                aria-expanded={isOpen}
+                aria-controls={`team-faq-${index}`}
+                onClick={() => setOpenIndex(isOpen ? null : index)}
+              >
+                <span>{faq.question}</span>
+                <span className="team_faq_icon" aria-hidden="true" />
+              </button>
+            </h3>
             <div
               id={`team-faq-${index}`}
               className="team_faq_answer"
