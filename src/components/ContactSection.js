@@ -50,8 +50,8 @@ export default function ContactSection({
                   />
                 </svg>
               </span>
-              <a href="mailto:veera@webmaffia.com" className="home_contact_link">
-                veera@webmaffia.com
+              <a href="mailto:hello@webmaffia.com" className="home_contact_link">
+                hello@webmaffia.com
               </a>
             </div>
             <div className="home_contact_item">
@@ -64,11 +64,17 @@ export default function ContactSection({
                 </svg>
               </span>
               <span className="home_contact_phones">
-                <a href="tel:+919867625909">+91 98676 25909</a>
+                <span className="home_contact_phone">
+                  <a href="tel:+919867625909">+91 98676 25909</a>
+                  <span className="home_contact_city">Mumbai</span>
+                </span>
                 <span className="home_contact_sep" aria-hidden="true">
                   {" · "}
                 </span>
-                <a href="tel:+971562722998">+971 56 272 2998</a>
+                <span className="home_contact_phone">
+                  <a href="tel:+971562722998">+971 56 272 2998</a>
+                  <span className="home_contact_city">Dubai</span>
+                </span>
               </span>
             </div>
           </div>

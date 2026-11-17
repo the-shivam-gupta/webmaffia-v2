@@ -433,7 +433,7 @@
             // cropped); this negative margin is what pulls the card up over
             // it. It is a % of the width, so the overlap scales with the
             // image. Tune it: more negative = less of the image visible.
-            margin-top: -63%;
+            margin-top: -67%;
             padding: 8% 8%;
             justify-content: flex-start;
             border-radius: vw-mobile(8);
@@ -447,6 +447,31 @@
             --form-btn-pad-x: 9cqw;
         }
 
+        // Loading skeleton: Klaviyo injects the form late, so until its mount
+        // point has content the card shows pulsing placeholder fields instead
+        // of sitting empty. It disappears by itself once the form renders.
+        &:has(.formWarpperx > div:empty)::after {
+            content: "";
+            display: block;
+            flex: none;
+            width: 100%;
+            // 3 fields (5cqw tall, one row gap apart) + the Submit pill.
+            height: calc(3 * (5cqw + var(--form-row-gap)) + 13cqw);
+            background:
+                linear-gradient(#d2d2d2, #d2d2d2) 0 0 / 100% 5cqw no-repeat,
+                linear-gradient(#d2d2d2, #d2d2d2) 0 calc(5cqw + var(--form-row-gap)) / 100% 5cqw no-repeat,
+                linear-gradient(#d2d2d2, #d2d2d2) 0 calc(2 * (5cqw + var(--form-row-gap))) / 100% 5cqw no-repeat,
+                linear-gradient(#bdbdbd, #bdbdbd) 0 100% / 36cqw 13cqw no-repeat;
+            border-radius: 2cqw;
+            animation: banner_form_skeleton 1.4s ease-in-out infinite;
+            @media (prefers-reduced-motion: reduce) {
+                animation: none;
+            }
+            @include mobile() {
+                height: calc(3 * (5cqw + var(--form-row-gap)) + 13cqw + 9cqw);
+            }
+        }
+
         @include klaviyo_underline_form;
 
         // "Book a 20-min call" sits beside Submit (added by BookCallButton in
@@ -458,6 +483,10 @@
             gap: 0 3cqw;
             width: 100% !important;
             min-width: 0 !important;
+            // Phones: the link wraps under Submit, so give it more room.
+            @include mobile(){
+                gap: vw-mobile(30);
+            }
         }
 
         .banner_book_call {
@@ -465,8 +494,6 @@
             align-items: center;
             gap: 0.6em;
             margin: 5cqw 0 0;
-            padding: 0 0 0.3em;
-            border-bottom: vw(1) solid #000;
             color: #000 !important;
             font-size: max(4.1cqw, 14px);
             font-weight: 400;
@@ -497,6 +524,31 @@
         z-index: 1;
         background: rgba($black, 0.4);
         pointer-events: none;
+    }
+}
+
+// Pulse for the banner form's loading skeleton (see `&__form::after`).
+@keyframes banner_form_skeleton {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.45; }
+}
+
+// Service pages shift/resize their hero picture (`.service_detail picture`),
+// but the enquiry form is positioned over the banner box, not the picture, so
+// the artwork's grey card slid out from under the form. When a form is
+// present, the picture uses the same geometry as the home banner.
+.service_detail .banner_media:has(.banner_media__form) picture {
+    margin-top: 0;
+    right: 0;
+    @include mobile() {
+        margin-top: 0;
+        right: vw-mobile(-28);
+    }
+    img {
+        width: vw(868);
+        @include mobile() {
+            width: 100%;
+        }
     }
 }
 
@@ -2383,16 +2435,42 @@ h3, .h2{
             }
         }
     }
-    // Phones: the two numbers stack, one under the other, instead of wrapping
-    // mid-number beside a "·".
+    // Phones: each number is its own block — number on top, its city small and
+    // muted underneath. The blocks sit side by side (wrapping as whole blocks,
+    // never mid-number) and stack on phones. The "·" separator isn't needed.
     .home_contact_phones{
-        @include mobile(){
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        gap: 2rem 4rem;
+        // The "·" separator becomes a thin vertical divider between the blocks
+        // (text hidden, line drawn in the current text colour so it follows
+        // the light / dark theme).
+        .home_contact_sep{
+            align-self: stretch;
+            flex: none;
+            width: .1rem;
+            font-size: 0;
+            background: currentColor;
+            opacity: .25;
+        }
+        .home_contact_phone{
             display: flex;
             flex-direction: column;
-            gap: vw-mobile(8);
-            a{
-                white-space: nowrap;
-            }
+            gap: .5rem;
+            white-space: nowrap;
+        }
+        .home_contact_city{
+            font-size: .62em;
+            line-height: 1;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+            opacity: .55;
+        }
+        @include mobile(){
+            flex-direction: column;
+            gap: vw-mobile(16);
+            // stacked, so no vertical divider
             .home_contact_sep{
                 display: none;
             }

@@ -48,6 +48,14 @@ export default async function RootShell({ lang = "en", dir = "ltr", children }) 
   return (
     <html lang={lang} dir={dir} className={albertSans.variable} suppressHydrationWarning>
       <head>
+        {/* Klaviyo builds its API address from the page's protocol, so on a
+            plain-http page (localhost) its calls go to http://a.klaviyo.com,
+            which redirects and breaks the CORS preflight (form submit hangs).
+            Upgrading insecure requests makes them https from the start. */}
+        <meta
+          httpEquiv="Content-Security-Policy"
+          content="upgrade-insecure-requests"
+        />
         {/* Google Tag Manager */}
         <Script id="gtm-script" strategy="beforeInteractive">
           {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':

@@ -7,6 +7,11 @@ import JsonLd from "@/components/JsonLd";
 import ContactSection from "@/components/ContactSection";
 import ServiceTeamFaq from "@/components/ServiceTeamFaq";
 import StatisticsBar from "@/components/StatisticsBar";
+import KlaviyoFormEmbed from "@/components/KlaviyoFormEmbed";
+import BookCallButton from "@/components/BookCallButton";
+import ServiceWorkSlider from "@/components/ServiceWorkSlider";
+import { TestimonialsSection } from "@/components/HomePage";
+import { getTestimonials } from "@/lib/strapiPage";
 import { buildBreadcrumbSchema, buildFaqSchema } from "@/lib/schema";
 import { getLatestBlogItems, getLatestWorkItems } from "@/lib/case-study-helpers";
 
@@ -276,19 +281,7 @@ function LatestWorkSection({ latestWork }) {
   return (
     <section data-section="services_work" className="services_work">
       <h2 className="h2">Latest work</h2>
-      <div className="workspace">
-        {latestWork.map((item) => (
-          <div className="service_item" key={item.name}>
-            <Link href={item.url || "#"} className="service_img">
-              <Image src={item.image} alt={item.name || "Webmaffia project"} width={821} height={601} />
-            </Link>
-            <Link href={item.url || "#"}>
-              <h3 className="service_name">{item.name}</h3>
-              <div className="service_type">{item.type}</div>
-            </Link>
-          </div>
-        ))}
-      </div>
+      <ServiceWorkSlider items={latestWork} />
       <div className="cta_work">
         <Link href="/case-study" className="cta_text">
           View All <span>Work</span>
@@ -343,6 +336,14 @@ function OtherServicesSection({ otherServices }) {
   );
 }
 
+// Same testimonials slider as the homepage, placed above the blog section.
+const TESTIMONIAL_HEAD = {
+  tagline: "Word on the street",
+  title: "Don't take our\nword for it",
+  description:
+    "Approvals, compliance, investors, dealers, plant heads. We've sat in those meetings, so your project moves faster.",
+};
+
 function TechnologyBlock({ technologies }) {
   if (!technologies) return null;
 
@@ -376,7 +377,14 @@ function TechnologyBlock({ technologies }) {
 
 export default async function ServiceDetailPage({ config, breadcrumbs }) {
   const { hero, sections, workCategories, otherServices, latestWork: fallbackLatestWork } = config;
-  const dynamicLatestWork = await getLatestWorkItems(2, workCategories ?? []);
+  const testimonials = await getTestimonials();
+  // Every relevant project (not just two) — they go in a slider.
+  const dynamicLatestWork = await getLatestWorkItems(
+    Infinity,
+    workCategories ?? [],
+    undefined,
+    true
+  );
   const latestWork = dynamicLatestWork.length > 0 ? dynamicLatestWork : fallbackLatestWork;
 
   // "blogs" sections only carry category tags from the CMS — resolve the
@@ -417,16 +425,18 @@ export default async function ServiceDetailPage({ config, breadcrumbs }) {
     title: {
       line1: hero.title,
     },
+    // Same artwork as the home banner (it has the card the enquiry form sits
+    // on), on every service page — a static asset, not the CMS banner image.
     images: {
       banner: {
-        url: hero.image,
-        alt: hero.imageAlt || hero.title || "",
-        width: hero.imageWidth ?? 871,
-        height: hero.imageHeight ?? 767,
+        url: "/assets/images/home-banner-form.png",
+        alt: "",
+        width: 3159,
+        height: 2803,
       },
       bannerMobile: {
-        url: hero.mobileImage || "/assets/images/hero-mobile.webp",
-        alt: hero.imageAlt || hero.title || "",
+        url: "/assets/images/home-banner-form.png",
+        alt: "",
       },
     },
   };
@@ -438,7 +448,17 @@ export default async function ServiceDetailPage({ config, breadcrumbs }) {
       )}
       {faqItems.length > 0 && <JsonLd data={buildFaqSchema(faqItems)} />}
       <div className="ml-setter service_detail">
-        <Banner data={bannerData} className={heroClass}>
+        <Banner
+          data={bannerData}
+          className={heroClass}
+          mediaOverlay={
+            <>
+              <p className="banner_media__form_title">Let&apos;s Connect</p>
+              <KlaviyoFormEmbed formId="Rq3tfh" />
+              <BookCallButton />
+            </>
+          }
+        >
           {descriptions.map((text, i) => (
             <p key={i}>{text}</p>
           ))}
@@ -454,6 +474,7 @@ export default async function ServiceDetailPage({ config, breadcrumbs }) {
           const hasFaqs = resolvedSections.some((s) => s.type === "faqs");
           let insertedLatestWork = false;
           let insertedOtherServices = false;
+          const hasBlogs = resolvedSections.some((s) => s.type === "blogs");
 
           return (
             <div className="services_parent">
@@ -476,6 +497,12 @@ export default async function ServiceDetailPage({ config, breadcrumbs }) {
 
                 return (
                   <Fragment key={section.dataSection}>
+                    {section.type === "blogs" && (
+                      <TestimonialsSection
+                        section={TESTIMONIAL_HEAD}
+                        testimonials={testimonials}
+                      />
+                    )}
                     <section
                       data-section={section.dataSection}
                       className={SECTION_CLASS_NAMES[section.type] ?? "service_features"}
@@ -499,6 +526,12 @@ export default async function ServiceDetailPage({ config, breadcrumbs }) {
                   <OtherServicesSection otherServices={otherServices} />
                 </section>
               )}
+              {!hasBlogs && (
+                <TestimonialsSection
+                  section={TESTIMONIAL_HEAD}
+                  testimonials={testimonials}
+                />
+              )}
               <ServiceContact />
             </div>
           );
@@ -515,6 +548,10 @@ export default async function ServiceDetailPage({ config, breadcrumbs }) {
                 <OtherServicesSection otherServices={otherServices} />
               </section>
             )}
+            <TestimonialsSection
+              section={TESTIMONIAL_HEAD}
+              testimonials={testimonials}
+            />
             <ServiceContact />
           </>
         )}

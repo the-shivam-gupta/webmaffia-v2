@@ -369,7 +369,7 @@ function IndustriesSection({ section }) {
   );
 }
 
-function TestimonialsSection({ section, testimonials }) {
+export function TestimonialsSection({ section, testimonials }) {
   if (!testimonials.length) return null;
 
   return (

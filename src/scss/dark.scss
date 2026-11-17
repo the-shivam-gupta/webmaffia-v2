@@ -881,6 +881,16 @@ html.active .banner_media__form_title{
     color: $black !important;
 }
 
+// Desktop: the banner artwork is inverted in dark mode, so the card drawn inside
+// it turns dark. Cover it with a light grey card (same as on phones) so the
+// form keeps its black text, black Submit pill and dark underlines.
+@media (min-width: 541px) {
+    html.active .banner_media__form{
+        background: #e8e8e8;
+        border-radius: vw(24);
+    }
+}
+
 html.active .home_contact{
     .home_contact_label{
         color: rgba(255,255,255,0.6);
