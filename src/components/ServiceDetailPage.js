@@ -7,8 +7,6 @@ import JsonLd from "@/components/JsonLd";
 import ContactSection from "@/components/ContactSection";
 import ServiceTeamFaq from "@/components/ServiceTeamFaq";
 import StatisticsBar from "@/components/StatisticsBar";
-import KlaviyoFormEmbed from "@/components/KlaviyoFormEmbed";
-import BookCallButton from "@/components/BookCallButton";
 import ServiceWorkSlider from "@/components/ServiceWorkSlider";
 import { TestimonialsSection } from "@/components/HomePage";
 import { getTestimonials } from "@/lib/strapiPage";
@@ -425,18 +423,16 @@ export default async function ServiceDetailPage({ config, breadcrumbs }) {
     title: {
       line1: hero.title,
     },
-    // Same artwork as the home banner (it has the card the enquiry form sits
-    // on), on every service page — a static asset, not the CMS banner image.
     images: {
       banner: {
-        url: "/assets/images/home-banner-form.png",
-        alt: "",
-        width: 3159,
-        height: 2803,
+        url: hero.image,
+        alt: hero.imageAlt || hero.title || "",
+        width: hero.imageWidth ?? 871,
+        height: hero.imageHeight ?? 767,
       },
       bannerMobile: {
-        url: "/assets/images/home-banner-form.png",
-        alt: "",
+        url: hero.mobileImage || "/assets/images/hero-mobile.webp",
+        alt: hero.imageAlt || hero.title || "",
       },
     },
   };
@@ -448,17 +444,7 @@ export default async function ServiceDetailPage({ config, breadcrumbs }) {
       )}
       {faqItems.length > 0 && <JsonLd data={buildFaqSchema(faqItems)} />}
       <div className="ml-setter service_detail">
-        <Banner
-          data={bannerData}
-          className={heroClass}
-          mediaOverlay={
-            <>
-              <p className="banner_media__form_title">Let&apos;s Connect</p>
-              <KlaviyoFormEmbed formId="Rq3tfh" />
-              <BookCallButton />
-            </>
-          }
-        >
+        <Banner data={bannerData} className={heroClass}>
           {descriptions.map((text, i) => (
             <p key={i}>{text}</p>
           ))}
