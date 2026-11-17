@@ -52,10 +52,15 @@ export default async function RootShell({ lang = "en", dir = "ltr", children }) 
             plain-http page (localhost) its calls go to http://a.klaviyo.com,
             which redirects and breaks the CORS preflight (form submit hangs).
             Upgrading insecure requests makes them https from the start. */}
-        <meta
-          httpEquiv="Content-Security-Policy"
-          content="upgrade-insecure-requests"
-        />
+        {/* Dev only: on a plain-http production host (e.g. IP:3000) this would
+            upgrade /_next/image requests to https and break every image
+            (ERR_SSL_PROTOCOL_ERROR). */}
+        {process.env.NODE_ENV === "development" && (
+          <meta
+            httpEquiv="Content-Security-Policy"
+            content="upgrade-insecure-requests"
+          />
+        )}
         {/* Google Tag Manager */}
         <Script id="gtm-script" strategy="beforeInteractive">
           {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
