@@ -18,6 +18,13 @@ const nextConfig = {
   },
   async redirects() {
     return [
+      // Canonical host: redirect non-www to www.
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "webmaffia.com" }],
+        destination: "https://www.webmaffia.com/:path*",
+        permanent: true,
+      },
       {
         source: "/work",
         destination: "/case-study",
