@@ -215,27 +215,6 @@ const SERVICE_SECTIONS = [
     ),
     href: "/services/content-marketing-strategy",
   },
-  {
-    imageFirst: true,
-    title: (
-      <>
-        App Store <br />
-        Optimization
-      </>
-    ),
-    img: { src: "/assets/images/number/7.webp", alt: "App Store Optimization" },
-    slides: ["Backlinks", "On-Page"],
-    body: (
-      <>
-        Want to Dominate App Stores? Our app store <br />
-        optimization services will ensure that among hundreds <br />
-        of apps your users are able to find your app in your <br />
-        targeted App Store. Want to improve your play store <br />
-        rankings? Partner With us.
-      </>
-    ),
-    href: "/services/app-store-optimization",
-  },
 ];
 
 function ServiceSection({ imageFirst, title, img, slides, body, href }) {

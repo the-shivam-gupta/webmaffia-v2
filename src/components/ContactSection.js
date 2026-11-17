@@ -5,18 +5,8 @@ import KlaviyoFormEmbed from "@/components/KlaviyoFormEmbed";
 // their own heading / description and can hide the email + phone rows.
 export default function ContactSection({
   tagline = "LET'S TALK",
-  heading = (
-    <>
-      Let&apos;s make <br />
-      you an offer.
-    </>
-  ),
-  description = (
-    <>
-      Tell us what you&apos;re building. Within 2 business days,
-      we&apos;ll come back with a plan you&apos;ll find very hard to refuse.
-    </>
-  ),
+  heading = "Your brand deserves solutions as exceptional as you are.",
+  description = "Let’s make it happen!",
   showDetails = true,
 }) {
   return (
@@ -68,8 +58,13 @@ export default function ContactSection({
                   <a href="tel:+919867625909">+91 98676 25909</a>
                   <span className="home_contact_city">Mumbai</span>
                 </span>
-                <span className="home_contact_sep" aria-hidden="true">
-                  {" · "}
+                <span className="home_contact_phone">
+                  <a href="tel:+919867625909">+91 98676 25909</a>
+                  <span className="home_contact_city">Bengaluru</span>
+                </span>
+                <span className="home_contact_phone">
+                  <a href="tel:+18669849786">+1 (866) 984-9786</a>
+                  <span className="home_contact_city">USA</span>
                 </span>
                 <span className="home_contact_phone">
                   <a href="tel:+971562722998">+971 56 272 2998</a>

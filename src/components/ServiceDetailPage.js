@@ -289,26 +289,27 @@ function LatestWorkSection({ latestWork }) {
   );
 }
 
-// Last fold of every service page: the homepage "Let's talk" block with
-// service-specific copy and without the email / phone rows.
+// Last fold of every service page: the same "Let's talk" block as the
+// homepage (shared copy), without the email / phone rows.
 function ServiceContact() {
-  return (
-    <ContactSection
-      heading={
-        <>
-          Your brand deserves a <br />
-          website as exceptional <br />
-          as you are.
-        </>
-      }
-      description="Let’s build it together!"
-      showDetails={false}
-    />
-  );
+  return <ContactSection showDetails={false} />;
 }
 
-function OtherServicesSection({ otherServices }) {
-  if (!otherServices?.items?.length) return null;
+// These two services are not offered in the "other services" list (same two
+// that were removed from the header Services menu).
+const HIDDEN_OTHER_SERVICES = [
+  "/services/app-store-optimization",
+  "/services/influencer-marketing",
+];
+
+function OtherServicesSection({ otherServices: allOtherServices }) {
+  const otherServices = {
+    ...allOtherServices,
+    items: (allOtherServices?.items ?? []).filter(
+      (item) => !HIDDEN_OTHER_SERVICES.includes(item.href)
+    ),
+  };
+  if (!otherServices.items.length) return null;
 
   // Wrapping row of pill buttons below the FAQ: numbered badge and service name.
   return (
