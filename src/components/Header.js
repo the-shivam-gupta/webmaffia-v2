@@ -15,8 +15,6 @@ const SERVICE_LINKS = [
   { href: "/services/ai-powered-solutions-services", label: "AI-Powered Solutions" },
   { href: "/services/social-media-marketing-strategy", label: "Social Media" },
   { href: "/services/content-marketing-strategy", label: "Content Marketing" },
-  { href: "/services/app-store-optimization", label: "App Store Optimization" },
-  { href: "/services/influencer-marketing", label: "Influencer Marketing" },
 ];
 
 const Header = () => {
@@ -257,8 +255,6 @@ const Header = () => {
                     { href: "/services/ai-powered-solutions-services", label: "AI-Powered Solutions" },
                     { href: "/services/social-media-marketing-strategy", label: "Social Media" },
                     { href: "/services/content-marketing-strategy", label: "Content Marketing" },
-                    { href: "/services/app-store-optimization", label: "App Store Optimization" },
-                    { href: "/services/influencer-marketing", label: "Influencer Marketing" },
                   ].map(({ href, label }) => (
                     <li key={href}>
                       <Link href={href} onClick={() => setMenuOpen(false)}>

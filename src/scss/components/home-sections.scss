@@ -2395,7 +2395,7 @@ h3, .h2{
     }
     .home_contact_item{
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         gap: vw(24);
         @include mobile(){
             gap: vw-mobile(16);
@@ -2436,29 +2436,25 @@ h3, .h2{
         }
     }
     // Phones: each number is its own block — number on top, its city small and
-    // muted underneath. The blocks sit side by side (wrapping as whole blocks,
-    // never mid-number) and stack on phones. The "·" separator isn't needed.
+    // muted underneath. Four blocks in a 2 x 2 grid (never breaking mid-number),
+    // with a thin vertical divider before each right-hand block (drawn in the
+    // current text colour so it follows the light / dark theme). One column on
+    // phones, with no divider.
     .home_contact_phones{
-        display: flex;
-        flex-wrap: wrap;
-        align-items: flex-start;
-        gap: 2rem 4rem;
-        // The "·" separator becomes a thin vertical divider between the blocks
-        // (text hidden, line drawn in the current text colour so it follows
-        // the light / dark theme).
-        .home_contact_sep{
-            align-self: stretch;
-            flex: none;
-            width: .1rem;
-            font-size: 0;
-            background: currentColor;
-            opacity: .25;
-        }
+        display: grid;
+        grid-template-columns: repeat(2, auto);
+        justify-content: start;
+        align-items: start;
+        gap: 4rem 4rem;
         .home_contact_phone{
             display: flex;
             flex-direction: column;
             gap: .5rem;
             white-space: nowrap;
+            &:nth-child(even){
+                padding-left: 4rem;
+                border-left: .1rem solid rgba(128, 128, 128, .35);
+            }
         }
         .home_contact_city{
             font-size: .62em;
@@ -2468,11 +2464,11 @@ h3, .h2{
             opacity: .55;
         }
         @include mobile(){
-            flex-direction: column;
-            gap: vw-mobile(16);
-            // stacked, so no vertical divider
-            .home_contact_sep{
-                display: none;
+            grid-template-columns: 1fr;
+            gap: vw-mobile(20);
+            .home_contact_phone:nth-child(even){
+                padding-left: 0;
+                border-left: 0;
             }
         }
     }
