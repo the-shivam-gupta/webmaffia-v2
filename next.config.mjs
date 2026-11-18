@@ -16,8 +16,34 @@ const nextConfig = {
       },
     ],
   },
+  async headers() {
+    // Dev keeps its own meta-tag handling (see RootShell); don't force HTTPS on localhost.
+    if (process.env.NODE_ENV !== "production") return [];
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          {
+            key: "Content-Security-Policy",
+            value: "upgrade-insecure-requests",
+          },
+          {
+            key: "Strict-Transport-Security",
+            value: "max-age=63072000; includeSubDomains; preload",
+          },
+        ],
+      },
+    ];
+  },
   async redirects() {
     return [
+      // Force HTTPS (works behind proxies that set x-forwarded-proto).
+      {
+        source: "/:path*",
+        has: [{ type: "header", key: "x-forwarded-proto", value: "http" }],
+        destination: "https://www.webmaffia.com/:path*",
+        permanent: true,
+      },
       // Canonical host: redirect non-www to www.
       {
         source: "/:path*",
