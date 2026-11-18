@@ -56,7 +56,7 @@ export default function ContactPage() {
             We&apos;re excited to work with you soon! Please drop <br />
             an email with your details & requirements to
             <br />
-            <a href="mailto:veera@webmaffia.com">veera@webmaffia.com</a>
+            <a href="mailto:hello@webmaffia.com">hello@webmaffia.com</a>
           </p>
           <p>
             You can also fill this form & we&apos;ll get back in 2 <br />
@@ -119,13 +119,25 @@ export default function ContactPage() {
                         <a href="mailto:veera@webmaffia.com">veera@webmaffia.com</a>
                         <a href="tel:+971562722998">+971 56 272 2998</a>
                       </div>
-                      <div className="contact_info">
-                      <span className="contact_person">Sheetal Gandhi <br />Regional Expansion Lead</span>
-                        <a href="mailto:sheetal.gandhi@webmaffia.com">sheetal.gandhi@webmaffia.com</a>
-                        <a href="tel:+971544949429">+971 544949429</a>
-                      </div>
                     </div>
                   </address>
+                </div>
+                <div className="country_region">
+                  <div className="region_text">USA</div>
+                  <address>
+                    <a
+                      href="https://www.google.com/maps/search/?api=1&query=30%20N%20Gould%20St%2C%20STE%20R%2C%20Sheridan%2C%20WY%2082801%2C%20USA"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      30 N Gould St, STE R, <br />
+                      Sheridan, WY 82801, USA
+                    </a>
+                  </address>
+                  <div className="contact_info">
+                    <a href="mailto:hello@webmaffia.com">hello@webmaffia.com</a>
+                    <a href="tel:+18669849786">+1 (866) 984-9786</a>
+                  </div>
                 </div>
               </div>
             </div>

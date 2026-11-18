@@ -870,11 +870,13 @@ footer {
     border-bottom: 0;
   }
 
-  // Addresses read brighter than the email | phone line under them.
+  // Addresses (and the region heading) use the same colour as the email |
+  // phone line under them.
   .footer_connect_primary_address,
   .footer_connect_office address,
-  .footer_connect_office address a {
-    color: rgba(255, 255, 255, 0.7);
+  .footer_connect_office address a,
+  .footer_connect_usa address .footer_connect_region_head {
+    color: rgba(255, 255, 255, 0.5);
   }
 
   .footer_connect_primary_contact,

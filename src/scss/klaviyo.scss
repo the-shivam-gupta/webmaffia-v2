@@ -44,9 +44,28 @@ a[href*="utm_campaign=poweredby"] {
   z-index: 1 !important;
 }
 
+// Size/position fitting for this popup is done in src/lib/klaviyo.js
+// (openKlaviyoPopup → fitPopup), which scales it to the window.
 .kl-private-reset-css-Xuajs1[style*="z-index: 90000"] {
   z-index: 2147483647 !important;
-  
+
+  // Keep the heading clear of the close (X) button, which sits in the card's
+  // top-right corner: tuck the button into the corner and give the heading
+  // side room so a long, centred title never runs underneath it.
+  button[aria-label*="lose" i] {
+    top: 0.6rem !important;
+    right: 0.6rem !important;
+  }
+  .klaviyo-form h1,
+  .klaviyo-form h2,
+  .klaviyo-form h3,
+  .klaviyo-form h4,
+  .klaviyo-form [role="heading"] {
+    padding-left: 4.5rem !important;
+    padding-right: 4.5rem !important;
+    box-sizing: border-box !important;
+  }
+
   @media (min-width: 1025px) {
     .klaviyo-form {
       width: 90vw !important;

@@ -278,8 +278,7 @@ function LatestWorkSection({ latestWork }) {
 
   return (
     <section data-section="services_work" className="services_work">
-      <h2 className="h2">Latest work</h2>
-      <ServiceWorkSlider items={latestWork} />
+      <ServiceWorkSlider items={latestWork} title="Latest work" />
       <div className="cta_work">
         <Link href="/case-study" className="cta_text">
           View All <span>Work</span>
@@ -302,12 +301,26 @@ const HIDDEN_OTHER_SERVICES = [
   "/services/influencer-marketing",
 ];
 
+// Same order as the header "Services" dropdown.
+const OTHER_SERVICES_ORDER = [
+  "/services/digital-strategy",
+  "/services/website-design-development-services",
+  "/services/search-engine-optimization-services",
+  "/services/ai-powered-solutions-services",
+  "/services/social-media-marketing-strategy",
+  "/services/content-marketing-strategy",
+];
+const orderOf = (href) => {
+  const i = OTHER_SERVICES_ORDER.indexOf(href);
+  return i === -1 ? OTHER_SERVICES_ORDER.length : i;
+};
+
 function OtherServicesSection({ otherServices: allOtherServices }) {
   const otherServices = {
     ...allOtherServices,
-    items: (allOtherServices?.items ?? []).filter(
-      (item) => !HIDDEN_OTHER_SERVICES.includes(item.href)
-    ),
+    items: (allOtherServices?.items ?? [])
+      .filter((item) => !HIDDEN_OTHER_SERVICES.includes(item.href))
+      .sort((a, b) => orderOf(a.href) - orderOf(b.href)),
   };
   if (!otherServices.items.length) return null;
 
@@ -327,7 +340,8 @@ function OtherServicesSection({ otherServices: allOtherServices }) {
             <span className="other_services_row_num">
               {String(index + 1).padStart(2, "0")}
             </span>
-            <h3 className="other_services_row_name h3_plain">{item.title}</h3>
+            <h3 className="other_services_row_name h3_plain">{item.title.replace(/\bdevelopment\b/, "Development")}
+            </h3>
           </Link>
         ))}
       </div>

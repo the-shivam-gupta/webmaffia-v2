@@ -300,6 +300,9 @@ function TeamSection() {
           </div>
         ))}
       </div>
+      <div className="cta_box team_cta">
+        <CtaText button={{ title: "View Team", href: "/team" }} struckWords={1} />
+      </div>
     </section>
   );
 }

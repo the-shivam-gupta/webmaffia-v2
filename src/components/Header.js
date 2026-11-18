@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { toggleTheme } from "@/lib/theme";
 import { openKlaviyoPopup } from "@/lib/klaviyo";
-import KlaviyoFormEmbed from "@/components/KlaviyoFormEmbed";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 const SERVICE_LINKS = [
@@ -338,7 +337,10 @@ const Header = () => {
               </Link>
             </div>
 
-            {/* Office addresses */}
+          </div>
+
+          {/* ── Right: office addresses (2 x 2) + social icons ── */}
+          <div className="right_container">
             <div className="country_container">
               <div className="country_region">
                 <div className="region_text">Mumbai (India)</div>
@@ -397,6 +399,24 @@ const Header = () => {
                   <a href="tel:+971562722998">+971 56 272 2998</a>
                 </div>
               </div>
+
+              <div className="country_region">
+                <div className="region_text">USA</div>
+                <address>
+                  <a
+                    href="https://www.google.com/maps/search/?api=1&query=30%20N%20Gould%20St%2C%20STE%20R%2C%20Sheridan%2C%20WY%2082801%2C%20USA"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    30 N Gould St, STE R,
+                    Sheridan, WY 82801, USA
+                  </a>
+                </address>
+                <div className="contact_info">
+                  <a href="mailto:hello@webmaffia.com">hello@webmaffia.com</a>
+                  <a href="tel:+18669849786">+1 (866) 984-9786</a>
+                </div>
+              </div>
             </div>
 
             {/* Social icons */}
@@ -411,12 +431,6 @@ const Header = () => {
                 </a>
               ))}
             </div>
-          </div>
-
-          {/* ── Right: contact form ── */}
-          <div className="right_container">
-            <div className="mail_title">Drop us a mail</div>
-            <KlaviyoFormEmbed />
           </div>
         </div>
       </div>

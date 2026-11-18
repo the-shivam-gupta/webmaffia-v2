@@ -814,7 +814,7 @@ p{
         gap: vw(90) vw(60);
         @include mobile(){
             grid-template-columns: 1fr;
-            gap: vw-mobile(48);
+            gap: vw-mobile(70);
         }
     }
     .services_item{
@@ -2605,6 +2605,13 @@ html:not(.active) .home_contact_form{
             grid-template-columns: 1fr;
             gap: vw-mobile(32);
             margin-top: vw-mobile(24);
+        }
+    }
+    // "View All Team": on phones the members are stacked, so give the link
+    // clear space below the last "View Profile" so they don't read as one.
+    .team_cta{
+        @include mobile(){
+            margin-top: vw-mobile(64);
         }
     }
     .team_photo{

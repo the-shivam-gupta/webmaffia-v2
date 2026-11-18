@@ -20,7 +20,7 @@ header{
     }
 }
     .right_container{
-        width: 55rem;
+        width: 62rem;
         overflow: visible;
         @include mobile(){
             width: 100%;
@@ -502,26 +502,37 @@ header{
                 }
             }
         }
+        // Offices in a 2 x 2 grid (desktop and phones), social icons below.
         .country_container{
-            display: flex;
-            align-items: flex-start;
-            margin-left: 7rem;
-            width: 77rem;
-            gap: 5rem;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            align-items: start;
+            gap: 6rem 5rem;
+            width: 100%;
+            margin-left: 0;
             @include mobile(){
-                margin-left: 0;
-                width: 100%;
-                flex-direction: column;
-                gap: 0;
-
+                gap: 6rem 3rem;
                 .country_region{
                     width: 100%;
-                    margin-bottom: 5rem;
-
-                    &:last-child{
-                        margin-bottom: 0;
-                    }
+                    margin: 0;
                 }
+                .region_text{
+                    font-size: 3.4rem;
+                    margin-bottom: 1.6rem;
+                }
+                address a{
+                    font-size: 2.5rem;
+                }
+                .contact_info a{
+                    font-size: 2.5rem;
+                    margin-bottom: 1.6rem;
+                    line-height: 1.2;
+                    overflow-wrap: anywhere;
+                }
+            }
+            .country_region{
+                margin-bottom: 0;
+                min-width: 0;
             }
         }
         .contact_info{
@@ -562,14 +573,36 @@ header{
 .menu_container{
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    // desktop: fill the screen and centre both columns vertically; the
+    // addresses block is centred in the space to the right of the links
+    align-items: center;
+    min-height: calc(100vh - 9rem);
+    .right_container{
+        margin-left: auto;
+    }
     @include mobile(){
         flex-direction: column;
+        align-items: flex-start;
+        min-height: 0;
         gap: 5rem;
+        .right_container{
+            margin-left: 0;
+            margin-right: 0;
+        }
     }
     .left_container{
-        width: 34rem;
+        // Takes the room left beside the addresses (up to the width the
+        // services sub-links need on one row), so on narrower screens the
+        // sub-links wrap inside it instead of running under the addresses.
+        flex: 1 1 34rem;
+        max-width: 78rem;
+        min-width: 0;
+        .sub_menu_content{
+            width: 100%;
+        }
         @include mobile(){
+            flex: none;
+            max-width: none;
             width: auto;
         }
     }
@@ -669,12 +702,12 @@ address{
     display: flex;
     align-items: center;
     gap: 5rem;
-    padding-left: 7rem;
-    // margin-top: 5rem;
+    padding-left: 0;
+    margin-top: 6rem;
     @include mobile(){
         margin-top: 8rem;
         margin-bottom: 10rem;
-        padding-left: 0;
+        gap: 6rem;
     }
     img{
         width: 4.1rem;

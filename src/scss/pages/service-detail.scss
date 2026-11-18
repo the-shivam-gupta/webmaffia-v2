@@ -74,6 +74,18 @@
     section{
         margin-bottom: vw(230);
     }
+    // Phones: same 120px (414px-based) gap the homepage uses, applied to every
+    // top-level section so none of them sit tight against the next one.
+    @include mobile(){
+        section,
+        > section{
+            margin-bottom: vw-mobile(120);
+        }
+        // nested sections must not add their own extra gap
+        section section{
+            margin-bottom: 0;
+        }
+    }
 
     .services_work{
         margin-left: 0;
@@ -597,10 +609,9 @@
 // "Latest work" slider on service pages: image cards with the name over a dark
 // gradient, a progress line and round arrow buttons underneath.
 .work_slider{
-    margin-top: 5rem;
+    margin-top: 0;
     margin-bottom: 8rem;
     @include mobile(){
-        margin-top: 6rem;
         margin-bottom: 10rem;
     }
     .swiper{
@@ -634,13 +645,7 @@
     .work_card_media{
         display: block;
         overflow: hidden;
-        aspect-ratio: 16 / 9;
-        border-radius: 2.4rem;
         background: $black_4;
-        @include mobile(){
-            border-radius: 1.8rem;
-            aspect-ratio: 4 / 3;
-        }
         img{
             display: block;
             width: 100%;
@@ -680,51 +685,23 @@
         }
     }
 }
-.work_slider_controls{
+// Heading on the left, Previous / Next on the right of the same row.
+.work_slider_head{
     display: flex;
-    align-items: center;
+    align-items: flex-end;
+    justify-content: space-between;
     gap: 4rem;
-    margin-top: 3rem;
+    margin-bottom: 4rem;
+    .h2{
+        margin: 0;
+    }
     @include mobile(){
-        // counter + progress line on the first row, the two buttons beneath
-        flex-wrap: wrap;
-        gap: 0 3rem;
-        margin-top: 2rem;
-        .work_slider_buttons{
-            width: 100%;
-            justify-content: space-between;
+        gap: 2rem;
+        margin-bottom: 3rem;
+        // no room for the labels beside the heading: arrows only
+        .work_slider_buttons button span{
+            display: none;
         }
-    }
-}
-.work_slider_count{
-    flex: none;
-    font-size: 2.6rem;
-    color: $black_40;
-    strong{
-        font-weight: 500;
-        color: $black;
-    }
-    @include mobile(){
-        font-size: 3.2rem;
-    }
-}
-.work_slider_progress{
-    position: relative;
-    flex: 1;
-    max-width: 45rem;
-    @include mobile(){
-        max-width: none;
-    }
-    height: .2rem;
-    background: $black_4;
-    overflow: hidden;
-    span{
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 100%;
-        background: $black;
-        transition: transform .3s ease, width .3s ease;
     }
 }
 .work_slider_buttons{
@@ -732,7 +709,7 @@
     margin-left: auto;
     gap: 5rem;
     @include mobile(){
-        gap: 4rem;
+        gap: 2rem;
     }
     button{
         display: inline-flex;
@@ -784,7 +761,7 @@
 }
 
 .cta_work{
-    text-align: center;
+    text-align: left;
     .cta_text span::before{
         @include mobile(){
             top: 50%;
@@ -990,6 +967,13 @@ h4{
 .other_services_row_name{
     position: relative;
     min-width: 0;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    text-transform: none;
+    &.h3_plain.h3_plain{
+        color: #4e4e4e;
+    }
     font-size: 3.2rem;
     font-weight: 400;
     line-height: 1.25;
@@ -1093,8 +1077,7 @@ html.active .service_blogs .other_blogs .blog_item{
 }
 
 // Service banner CTAs: both the primary and secondary button are plain text
-// with a strike-through line (same treatment as the homepage ".cta_text"),
-// instead of a filled pill + underline. The line pulls away on hover.
+// (no pill, no strike-through); hover draws an underline in from the left.
 .service_detail .banner_content{
     .banner_cta_group{
         gap: vw(20) vw(50);
@@ -1114,30 +1097,38 @@ html.active .service_blogs .other_blogs .blog_item{
         font-size: vw(28);
         line-height: 1;
         font-weight: $exlight;
+        padding-bottom: vw(8);
+        transition: color .35s ease, transform .45s cubic-bezier(.2, .7, .2, 1);
+        // No strike-through. On hover the text lifts slightly, darkens and an
+        // underline draws in from the left under it.
         &::after{
             content: '';
             position: absolute;
             display: block;
-            left: 50%;
-            top: 55%;
-            bottom: auto;
-            width: 105%;
+            left: 0;
+            right: auto;
+            top: auto;
+            bottom: 0;
+            width: 100%;
             height: vw(2);
-            background: $gray_dark;
-            transform: translateX(-50%) scaleX(1);
-            transform-origin: bottom left;
-            transition: transform 0.3s ease-in;
+            background: currentColor;
+            transform: scaleX(0);
+            transform-origin: left center;
+            transition: transform .45s cubic-bezier(.2, .7, .2, 1);
         }
-        &:hover{
-            background: transparent;
-            color: $gray_dark;
-            &::after{
-                transform: translateX(-50%) scaleX(0);
-                transform-origin: bottom right;
+        @media (hover: hover){
+            &:hover{
+                background: transparent;
+                color: $black;
+                transform: translateY(vw(-3));
+                &::after{
+                    transform: scaleX(1);
+                }
             }
         }
         @include mobile(){
             font-size: vw-mobile(24.752);
+            padding-bottom: vw-mobile(6);
             &::after{
                 height: vw-mobile(1);
             }
