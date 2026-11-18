@@ -28,12 +28,14 @@ export const metadata = {
   },
 };
 
+// Strapi media library file ids (photos folder). Replacing a file there
+// updates the page; `fallback` is only used if the lookup fails.
 const LIFE_PHOTOS = [
-  "https://cms.webmaffia.com/uploads/Mask_group_1_34793bd1cc.png",
-  "https://cms.webmaffia.com/uploads/remiong_554071e59d.png",
-  "https://cms.webmaffia.com/uploads/Rectangle_5_48ac7a5ac6.png",
-  "https://cms.webmaffia.com/uploads/Mask_group_2_1_18102e28b3.png",
-  "https://cms.webmaffia.com/uploads/Mask_group_1_b94b82b771.png",
+  { id: 642, fallback: "https://cms.webmaffia.com/uploads/Mask_group_1_34793bd1cc.png" },
+  { id: 737, fallback: null },
+  { id: 728, fallback: null },
+  { id: 640, fallback: "https://cms.webmaffia.com/uploads/Mask_group_2_1_18102e28b3.png" },
+  { id: 639, fallback: "https://cms.webmaffia.com/uploads/Mask_group_1_b94b82b771.png" },
 ];
 
 // Banner artwork is the testimonial illustration; the copy is the team page's own.
@@ -87,7 +89,13 @@ export default async function TeamPage() {
 
   // Photos come from the Strapi media library by file id, so replacing a file
   // there updates the page. Falls back to the stored `photo` URL.
-  const photoUrls = await getMediaUrlsByIds(Object.values(TEAM_PHOTO_IDS));
+  const photoUrls = await getMediaUrlsByIds([
+    ...Object.values(TEAM_PHOTO_IDS),
+    ...LIFE_PHOTOS.map((photo) => photo.id),
+  ]);
+  const lifePhotos = LIFE_PHOTOS.map(
+    (photo) => photoUrls[photo.id] || photo.fallback
+  ).filter(Boolean);
   const people = [...TEAM_LEADERS, ...TEAM_MEMBERS].map((member) => ({
     ...member,
     photo: photoUrls[TEAM_PHOTO_IDS[member.name]] || member.photo,
@@ -148,7 +156,7 @@ export default async function TeamPage() {
             title={"Serious about the work.\nNot about ourselves."}
           />
           <div className="team_life_grid">
-            {LIFE_PHOTOS.map((src, index) => (
+            {lifePhotos.map((src, index) => (
               <div
                 key={src}
                 className={`team_life_photo${index === 0 ? " team_life_photo--large" : ""}`}
