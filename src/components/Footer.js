@@ -8,6 +8,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation } from "swiper/modules";
 import GoogleReview from "@/components/GoogleReview";
 import { LEGAL_LINKS } from "@/lib/legal";
+import { buildOfficeBlocks, telHref } from "@/lib/offices";
 
 const Footer = ({ footerData, campaignSlugs = [], googleReviews = null }) => {
   const pathname = usePathname();
@@ -24,21 +25,10 @@ const Footer = ({ footerData, campaignSlugs = [], googleReviews = null }) => {
   const offices = footerData?.offices ?? [];
   const copyright = footerData?.copyright;
 
-  const officeText = (office) => `${office.city} ${office.address}`;
-  const indiaOffices = offices.filter((o) =>
-    /mumbai|Bengaluru|bengaluru/i.test(officeText(o))
-  );
   // Follow the CMS order. Every office is its own block with its own title
   // ("India - Mumbai", "India - Bengaluru", "USA", "Dubai"), side by side.
-  const blocks = offices.map((o) => ({
-    office: o,
-    label: indiaOffices.includes(o)
-      ? `India - ${officeCity(o)}`
-      : /dubai/i.test(officeText(o))
-        ? "Dubai"
-        : o.city || null,
-    address: indiaOffices.includes(o) ? officeAddress(o) : o.address,
-  }));
+  // Shared with the overlay menu (see lib/offices.js).
+  const blocks = buildOfficeBlocks(offices);
 
   const copyrightText = copyright?.description || copyright?.brand || null;
 
@@ -164,22 +154,18 @@ const Footer = ({ footerData, campaignSlugs = [], googleReviews = null }) => {
       </div>
 
       <div className="footer_connect_details">
-        {blocks.map(({ office, label, address }) => (
+        {blocks.map(({ key, label, address, href, email, phone }) => (
           <div
             className="footer_connect_office footer_connect_usa"
-            key={office.id || office.city}
+            key={key}
           >
             <address>
               {label ? <RegionHead label={label} /> : null}
-              <a
-                href={office.addressLink || mapsSearchUrl(officeText(office))}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <a href={href} target="_blank" rel="noopener noreferrer">
                 {address}
               </a>
             </address>
-            <OfficeContact email={office.email} phone={office.phone} />
+            <OfficeContact email={email} phone={phone} />
           </div>
         ))}
       </div>
@@ -215,36 +201,11 @@ const Footer = ({ footerData, campaignSlugs = [], googleReviews = null }) => {
   );
 };
 
-// Fallback for offices that have no map link set in the CMS.
-const mapsSearchUrl = (address) =>
-  `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
-
-// "Mumbai (India) 403 A Wing..." -> "Mumbai 403 A Wing..." (the country is the
-// heading). The CMS splits the text oddly, so join it first, then drop "(India)".
-const officeLabel = (office) =>
-  `${office.city ?? ""} ${office.address ?? ""}`
-    .replace(/\s*\(\s*India\s*\)/i, "")
-    .replace(/\s+/g, " ")
-    .trim();
-
-// Short city tag shown above each address inside the India group.
-const officeCity = (office) => {
-  const m = `${office.city ?? ""} ${office.address ?? ""}`.match(
-    /mumbai|Bengaluru|bengaluru/i
-  );
-  if (!m) return null;
-  return /mumbai/i.test(m[0]) ? "Mumbai" : "Bengaluru";
-};
-
-// The address line without the leading city name (the tag already says it).
-const officeAddress = (office) =>
-  officeLabel(office).replace(/^(mumbai|Bengaluru|bengaluru)\s*/i, "");
-
 const OfficeContact = ({ email, phone }) =>
   email || phone ? (
     <div className="footer_connect_office_contact">
       {email && <a href={`mailto:${email}`}>{email}</a>}
-      {phone && <a href={`tel:${phone.replace(/[^d+]/g, "")}`}>{phone}</a>}
+      {phone && <a href={telHref(phone)}>{phone}</a>}
     </div>
   ) : null;
 

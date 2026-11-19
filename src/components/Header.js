@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { toggleTheme } from "@/lib/theme";
 import { openKlaviyoPopup } from "@/lib/klaviyo";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import { buildOfficeBlocks, telHref } from "@/lib/offices";
 
 const SERVICE_LINKS = [
   { href: "/services/digital-strategy", label: "Digital Strategy" },
@@ -16,7 +17,58 @@ const SERVICE_LINKS = [
   { href: "/services/content-marketing-strategy", label: "Content Marketing" },
 ];
 
-const Header = () => {
+// Shown only if the CMS offices can't be loaded (same shape as
+// buildOfficeBlocks() returns), so the menu never ends up without addresses.
+const FALLBACK_OFFICE_BLOCKS = [
+  {
+    key: "mumbai",
+    label: "India - Mumbai",
+    address: "403 A Wing, Cello Triumph, IB Patel Rd, Jay Prakash Nagar, Goregaon (E), Mumbai - 400063",
+    href: "https://maps.app.goo.gl/iPvLshVht1xP6hT1A",
+    email: "veera@webmaffia.com",
+    phone: "+91 9867625909",
+  },
+  {
+    key: "bengaluru",
+    label: "India - Bengaluru",
+    address: "Brigade Exotica - Burgundy Unit 2503, Old Madras Road, Bengaluru - 560049",
+    href: "https://maps.app.goo.gl/iPvLshVht1xP6hT1A",
+    email: "veera@webmaffia.com",
+    phone: "+91 9867625909",
+  },
+  {
+    key: "usa",
+    label: "USA",
+    address: "30 N Gould St, STE R, Sheridan, WY 82801, USA",
+    href: "https://www.google.com/maps/search/?api=1&query=30%20N%20Gould%20St%2C%20STE%20R%2C%20Sheridan%2C%20WY%2082801%2C%20USA",
+    email: "hello@webmaffia.com",
+    phone: "+1 (866) 984-9786",
+  },
+  {
+    key: "dubai",
+    label: "Dubai",
+    address: "JLT Cluster H, Dubai, United Arab Emirates",
+    href: "https://maps.app.goo.gl/2qVqKVXrwNok34KH6",
+    email: "veera@webmaffia.com",
+    phone: "+971 56 272 2998",
+  },
+];
+
+// "India - Mumbai": the country is the bright part, the city stays dimmer.
+// Single-name offices ("USA", "Dubai") are fully bright.
+const OfficeTitle = ({ label }) => {
+  const m = String(label ?? "").match(/^(.+?)(\s+-\s+.+)$/);
+  return (
+    <>
+      <span className="region_strong">{m ? m[1] : label}</span>
+      {m ? m[2] : null}
+    </>
+  );
+};
+
+const Header = ({ offices = [] }) => {
+  const cmsBlocks = buildOfficeBlocks(offices);
+  const officeBlocks = cmsBlocks.length ? cmsBlocks : FALLBACK_OFFICE_BLOCKS;
   const servicesSubRef = useRef(null);
   const campaignsSubRef = useRef(null);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -342,86 +394,22 @@ const Header = () => {
           {/* ── Right: office addresses (2 x 2) + social icons ── */}
           <div className="right_container">
             <div className="country_container">
-              <div className="country_region">
-                <div className="region_text">
-                  <span className="region_strong">India</span> - Mumbai
-                </div>
-                <address>
-                  <a
-                    href="https://maps.app.goo.gl/iPvLshVht1xP6hT1A"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    403 A Wing, Cello Triumph,
-                    IB Patel Rd, Jay Prakash Nagar,
-                    Goregaon (E), Mumbai - 400063
-                  </a>
-                </address>
-                <div className="contact_info">
-                  <a href="mailto:veera@webmaffia.com">veera@webmaffia.com</a>
-                  <a href="tel:+919867625909">+91 9867625909</a>
-                </div>
-              </div>
-
-              <div className="country_region">
+              {officeBlocks.map(({ key, label, address, href, email, phone }) => (
+                <div className="country_region" key={key}>
                   <div className="region_text">
-                    <span className="region_strong">India</span> - Bengaluru
+                    <OfficeTitle label={label} />
                   </div>
                   <address>
-                    <a
-                      href="https://maps.app.goo.gl/iPvLshVht1xP6hT1A"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Brigade Exotica - Burgundy
-                      Unit 2503,
-                      Old Madras Road,
-                      Bengaluru - 560049
+                    <a href={href} target="_blank" rel="noopener noreferrer">
+                      {address}
                     </a>
                   </address>
                   <div className="contact_info">
-                    <a href="mailto:veera@webmaffia.com">veera@webmaffia.com</a>
-                    <a href="tel:+919867625909">+91 9867625909</a>
+                    {email ? <a href={`mailto:${email}`}>{email}</a> : null}
+                    {phone ? <a href={telHref(phone)}>{phone}</a> : null}
                   </div>
                 </div>
-
-              <div className="country_region">
-                <div className="region_text">
-                  <span className="region_strong">USA</span>
-                </div>
-                <address>
-                  <a
-                    href="https://www.google.com/maps/search/?api=1&query=30%20N%20Gould%20St%2C%20STE%20R%2C%20Sheridan%2C%20WY%2082801%2C%20USA"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    30 N Gould St, STE R, Sheridan, WY 82801, USA
-                  </a>
-                </address>
-                <div className="contact_info">
-                  <a href="mailto:hello@webmaffia.com">hello@webmaffia.com</a>
-                  <a href="tel:+18669849786">+1 (866) 984-9786</a>
-                </div>
-              </div>
-
-              <div className="country_region">
-                <div className="region_text">
-                  <span className="region_strong">Dubai</span>
-                </div>
-                <address>
-                  <a
-                    href="https://maps.app.goo.gl/2qVqKVXrwNok34KH6"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    JLT Cluster H, Dubai, United Arab Emirates
-                  </a>
-                </address>
-                <div className="contact_info">
-                  <a href="mailto:veera@webmaffia.com">veera@webmaffia.com</a>
-                  <a href="tel:+971562722998">+971 56 272 2998</a>
-                </div>
-              </div>
+              ))}
             </div>
 
             {/* Social icons */}

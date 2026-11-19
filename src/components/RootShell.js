@@ -83,7 +83,7 @@ export default async function RootShell({ lang = "en", dir = "ltr", children }) 
         {/* End Google Tag Manager (noscript) */}
         <ThemeInit />
         <ScrollToTop />
-        <Header />
+        <Header offices={footerData?.offices ?? []} />
         {children}
         <Footer
           footerData={footerData}
