@@ -471,12 +471,19 @@ header{
             opacity: 0;
         }
     }
+        // Same pattern as the footer office titles: "India" / "USA" / "Dubai"
+        // bright, the city part ("- Mumbai") dimmer, tight gap to the address.
         .region_text{
-            color: $white_30;
-            margin-bottom: 3rem;
+            color: $white_60;
+            margin-bottom: 1.4rem;
             font-size: 2.5rem;
+            line-height: 1.2;
+            font-weight: $exlight;
+            .region_strong{
+                color: rgba($white, 0.95);
+            }
             @include mobile(){
-                margin-bottom: 2rem;
+                margin-bottom: 1.6rem;
                 font-size: 4rem;
             }
         }
@@ -489,7 +496,7 @@ header{
                 padding-left: 0;
                 margin-bottom: 1.5rem;
                 a{
-                    color: $white_30;
+                    color: $white_60;
                     font-size: 1.8rem;
                     line-height: 1.4;
                     transition: all .3s ease-in;
@@ -537,7 +544,7 @@ header{
         }
         .contact_info{
             a{
-                color: $white_30;
+                color: $white_60;
                 font-size: 1.8rem;
                 margin-bottom: 1rem;
                 line-height: 1;
@@ -550,6 +557,42 @@ header{
                     font-size: 3rem;
                     margin-bottom: 4rem;
                 }
+            }
+        }
+        // Tablet / small laptop: the root font-size shrinks a lot here (rem is
+        // ~5.3px at <=1024px, 4px at 768-900px), so the desktop rem sizes made
+        // the office block tiny. Re-size it to ~19px titles / ~14px text, and
+        // widen the block to fit the larger text.
+        @media screen and (min-width: 541px) and (max-width: 1024px){
+            .right_container{
+                width: 72rem;
+            }
+            .region_text{
+                font-size: 3.6rem;
+            }
+            .country_container{
+                gap: 5rem 4rem;
+            }
+            .country_region address a,
+            .contact_info a{
+                font-size: 2.6rem;
+                line-height: 1.4;
+                margin-bottom: 0.6rem;
+            }
+            .contact_info a{
+                overflow-wrap: anywhere;
+            }
+        }
+        @media screen and (min-width: 768px) and (max-width: 900px){
+            .right_container{
+                width: 104rem;
+            }
+            .region_text{
+                font-size: 4.6rem;
+            }
+            .country_region address a,
+            .contact_info a{
+                font-size: 3.4rem;
             }
         }
     .mail_title{
@@ -609,8 +652,16 @@ header{
     .menu_btn{
         position: relative;
         @include mobile(){
+            // Title + arrow share a row so the arrow sits right beside the
+            // text (it used to be pinned to the far right edge).
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
             & > a{
-                padding-right: 7rem;
+                padding-right: 0;
+            }
+            .sub_menu_content{
+                flex: 0 0 100%;
             }
         }
         .menu_btn_toggle{
@@ -630,9 +681,14 @@ header{
             @include mobile(){
                 width: 3rem;
                 height: 3rem;
-                top: 3rem;
+                // In-flow, next to the title. top = half the height cancels
+                // the translateY(-50%) in the transforms below.
+                position: relative;
+                top: 1.5rem;
                 left: auto;
-                right: 0;
+                right: auto;
+                margin-left: 2rem;
+                flex: none;
             }
         }
         &:hover{
@@ -700,7 +756,7 @@ address{
 
 .social_icons{
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     gap: 5rem;
     padding-left: 0;
     margin-top: 6rem;
@@ -716,6 +772,7 @@ address{
         }
     }
     a{
+        display: flex; // no inline baseline gap under the image, so bottoms line up
         transition: transform 0.3s ease-in;
         &:hover{
            transform: translateY(-0.3rem);
@@ -878,6 +935,96 @@ html.active .lang_switcher{
         }
         .lang_switcher_abbr{
             color: $white_60;
+        }
+    }
+}
+
+// Portrait tablets / large phones (541-900px). The root font-size is tiny
+// here (rem is ~4-5px), so size the whole overlay menu with a unit `--u` that
+// follows the screen width but is capped by the height (min(1vw, 1.1vh)).
+// Links on the left, offices on the right, everything scaled together, so the
+// menu fits on one screen with no scrolling at any tablet size. `html` prefix
+// beats the rem overrides in media.scss; placed last so it wins.
+@media screen and (min-width: 541px) and (max-width: 900px){
+    .menu_wrapper{
+        --u: min(1vw, 1.1vh);
+        padding: calc(var(--u) * 11) 6vw calc(var(--u) * 4);
+        overflow-y: auto; // safety net only; the sizes below fit one screen
+    }
+    html .menu_wrapper .menu_container{
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 4vw;
+        min-height: calc(100vh - var(--u) * 15);
+        padding-bottom: 0;
+    }
+    html .menu_wrapper .menu_container .left_container{
+        flex: 1 1 0;
+        min-width: 0;
+        width: auto;
+        max-width: none;
+    }
+    html .menu_wrapper .menu_container .right_container{
+        flex: none;
+        width: calc(var(--u) * 50);
+        max-width: none;
+        margin: 0;
+    }
+    html .menu_wrapper .menu_link{
+        margin-bottom: calc(var(--u) * 2.6);
+        padding-left: calc(var(--u) * 7.2);
+        &::before{
+            font-size: calc(var(--u) * 4.2);
+            width: calc(var(--u) * 6);
+            height: auto;
+            line-height: 1;
+        }
+    }
+    html .menu_wrapper .menu_container .left_container .menu_link > a,
+    html .menu_wrapper .menu_container .left_container .menu_link > button:not(.menu_btn_toggle){
+        font-size: calc(var(--u) * 4.2);
+    }
+    html .menu_wrapper .menu_link.menu_btn .menu_btn_toggle{
+        width: calc(var(--u) * 3.8);
+        height: calc(var(--u) * 3.8);
+        top: calc(var(--u) * 2.5);
+        margin-left: calc(var(--u) * 1);
+    }
+    html .menu_wrapper .menu_link .sub_menu_content .sub_menu{
+        padding-top: calc(var(--u) * 2);
+        gap: calc(var(--u) * 1.4) calc(var(--u) * 2);
+        padding-right: 0;
+        li{
+            font-size: calc(var(--u) * 2.1);
+            margin-bottom: 0;
+            &::before{
+                right: calc(var(--u) * -1.1);
+            }
+        }
+    }
+    html .menu_wrapper .country_container{
+        gap: calc(var(--u) * 5) calc(var(--u) * 3.5);
+    }
+    html .menu_wrapper .region_text{
+        font-size: calc(var(--u) * 2.9);
+        margin-bottom: calc(var(--u) * 1.6);
+    }
+    html .menu_wrapper .country_region address a,
+    html .menu_wrapper .contact_info a{
+        font-size: calc(var(--u) * 2.05);
+        line-height: 1.45;
+        margin-bottom: calc(var(--u) * 0.7);
+    }
+    html .menu_wrapper .country_region address{
+        margin-bottom: calc(var(--u) * 1.8);
+    }
+    html .menu_wrapper .social_icons{
+        margin-top: calc(var(--u) * 5);
+        margin-bottom: 0;
+        gap: calc(var(--u) * 3.4);
+        img{
+            width: calc(var(--u) * 4.6);
         }
     }
 }

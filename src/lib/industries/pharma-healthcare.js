@@ -37,9 +37,9 @@ export const pharmaHealthcare = {
 
   stats: [
     { value: "8", label: "Services under one roof" },
-    { value: "3", label: "Offices: Mumbai, Bengaluru, Dubai" },
+    { value: "4", label: "Offices: Mumbai, Bengaluru, USA, Dubai" },
     { value: "ISO 27001", label: "Certified information security" },
-    { value: "4.3★", label: "Google rating, 120+ reviews" },
+    { value: "4.3★", label: "Google rating, 46+ reviews" },
   ],
 
   approach: {

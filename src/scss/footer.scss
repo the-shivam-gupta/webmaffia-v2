@@ -966,6 +966,11 @@ footer {
     font-size: 1.4em;
     line-height: 1.2;
     letter-spacing: 0.02em;
+
+    // "India" / "USA" / "Dubai" — brighter than the city part ("- Mumbai").
+    .footer_connect_label_strong {
+      color: rgba(255, 255, 255, 0.95);
+    }
   }
 
   // India block: "India :" heading, then the Mumbai and Bengaluru addresses

@@ -45,8 +45,8 @@ export const energyMetalsManufacturing = {
       "label": "Services under one roof"
     },
     {
-      "value": "3",
-      "label": "Offices: Mumbai, Bengaluru, Dubai"
+      "value": "4",
+      "label": "Offices: Mumbai, Bengaluru, USA, Dubai"
     },
     {
       "value": "ISO 27001",
@@ -54,7 +54,7 @@ export const energyMetalsManufacturing = {
     },
     {
       "value": "4.3★",
-      "label": "Google rating, 120+ reviews"
+      "label": "Google rating, 46+ reviews"
     }
   ],
   "approach": {

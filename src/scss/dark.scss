@@ -6,6 +6,14 @@ html{
         .workspace .service_item a .service_name, .workspace .service_item a .service_type, .award_section .awards_box .awards_item, .aside_title, .blog_section .blog_set .blog_page .blog_title, .region_text{
             color: $white;
         }
+        // Menu office titles: only "India" / "USA" / "Dubai" are bright, the
+        // city part stays dimmer (the group above would turn it all white).
+        .menu_wrapper .region_text{
+            color: $white_60;
+            .region_strong{
+                color: rgba($white, 0.95);
+            }
+        }
         .award_section .awards_box .awards_item .award_date{
             color: rgba(255,255,255,0.3);
         }
@@ -296,17 +304,6 @@ html{
         .campaign_page .hero_section .campaign_content ul li{
             color: $white;
         }
-        .case_study_detail .case_study_showcase_wrapper .visit_website_button{
-            background: $white;
-
-            &:hover{
-                border-color: $white;
-                background: $black;
-                a{
-                    color: $white;
-                }
-            }
-        }
         .blogs_date{
             color: $gray;
         }
@@ -334,9 +331,6 @@ html{
             &.disabled{
                 color: $white_30;
             }
-        }
-        .case_study_detail .case_study_showcase_wrapper .visit_website_button a{
-            color: $black;
         }
         .client_para, .contact_person{
             color: $white;
@@ -658,6 +652,10 @@ html{
             .footer_connect_usa_label,
             .footer_copyright {
                 color: $black_60;
+            }
+
+            .footer_connect_usa_label .footer_connect_label_strong {
+                color: $black;
             }
 
             .footer_connect_usa,

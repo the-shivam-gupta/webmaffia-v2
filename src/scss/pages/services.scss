@@ -18,9 +18,38 @@
             align-items: flex-end;
             margin-bottom: 17.5rem;
             
+            // "Take a Look": no strike-through on the last word. Same behaviour
+            // as the homepage `.banner_cta_secondary`: a thin underline under
+            // the whole label that retracts to the right on hover.
             .cta_text{
+                position: relative;
                 display: inline-block;
                 margin-bottom: 4rem;
+                padding-bottom: 0.8rem;
+                span{
+                    color: inherit;
+                    &::before{
+                        display: none;
+                    }
+                }
+                &::after{
+                    content: '';
+                    position: absolute;
+                    left: 0;
+                    bottom: 0;
+                    width: 100%;
+                    height: 1px;
+                    background: currentColor;
+                    opacity: 0.6;
+                    transform: scaleX(1);
+                    transform-origin: bottom left;
+                    transition: transform 0.3s ease-in;
+                }
+                &:hover::after,
+                &:focus-visible::after{
+                    transform: scaleX(0);
+                    transform-origin: bottom right;
+                }
             }
             &>img{
                 width: 60rem;

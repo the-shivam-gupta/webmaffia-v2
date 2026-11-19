@@ -744,9 +744,12 @@ p{
             background: transparent;
             color: $black;
         }
+        // Phones: same pill as the header "Contact Us" (.cta in menu.scss) —
+        // fully rounded ends, same size/padding.
         @include mobile(){
-            padding: vw-mobile(11.2) vw-mobile(22.4);
-            font-size: vw-mobile(13.6);
+            border-radius: 5rem;
+            padding: 2.8rem 5.6rem;
+            font-size: 3.4rem;
         }
     }
     // Underline slides out to the right on hover, same as `.link` (blog_link).

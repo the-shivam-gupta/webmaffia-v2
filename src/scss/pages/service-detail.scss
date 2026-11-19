@@ -219,9 +219,38 @@
 }
 
 .service_why_choose{
+    // "About Us": no strike-through. Same behaviour as the homepage
+    // `.banner_cta_secondary`: a thin underline under the whole label that
+    // retracts to the right on hover.
     .cta_text{
+        position: relative;
         display: inline-block;
         margin-top: 2rem;
+        padding-bottom: 0.8rem;
+        span{
+            color: inherit;
+            &::before{
+                display: none;
+            }
+        }
+        &::after{
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 1px;
+            background: currentColor;
+            opacity: 0.6;
+            transform: scaleX(1);
+            transform-origin: bottom left;
+            transition: transform 0.3s ease-in;
+        }
+        &:hover::after,
+        &:focus-visible::after{
+            transform: scaleX(0);
+            transform-origin: bottom right;
+        }
     }
 }
 
@@ -760,11 +789,38 @@
     }
 }
 
+// "View All Work": no strike-through on the last word. Same behaviour as the
+// homepage `.banner_cta_secondary`: a thin underline under the whole label
+// that retracts to the right on hover.
 .cta_work{
     text-align: left;
-    .cta_text span::before{
-        @include mobile(){
-            top: 50%;
+    .cta_text{
+        position: relative;
+        display: inline-block;
+        padding-bottom: 0.8rem;
+        span{
+            color: inherit;
+            &::before{
+                display: none;
+            }
+        }
+        &::after{
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 1px;
+            background: currentColor;
+            opacity: 0.6;
+            transform: scaleX(1);
+            transform-origin: bottom left;
+            transition: transform 0.3s ease-in;
+        }
+        &:hover::after,
+        &:focus-visible::after{
+            transform: scaleX(0);
+            transform-origin: bottom right;
         }
     }
 }
@@ -1072,81 +1128,6 @@ html.active .service_blogs .other_blogs .blog_item{
         font-size: vw(84);
         @include mobile(){
             font-size: vw-mobile(34);
-        }
-    }
-}
-
-// Service banner CTAs: both the primary and secondary button are plain text
-// (no pill, no strike-through); hover draws an underline in from the left.
-.service_detail .banner_content{
-    .banner_cta_group{
-        gap: vw(20) vw(50);
-        @include mobile(){
-            gap: vw-mobile(16) vw-mobile(32);
-        }
-    }
-    .banner_cta,
-    .banner_cta_secondary{
-        position: relative;
-        display: inline-block;
-        padding: 0;
-        border: 0;
-        border-radius: 0;
-        background: transparent;
-        color: $gray_dark;
-        font-size: vw(28);
-        line-height: 1;
-        font-weight: $exlight;
-        padding-bottom: vw(8);
-        transition: color .35s ease, transform .45s cubic-bezier(.2, .7, .2, 1);
-        // No strike-through. On hover the text lifts slightly, darkens and an
-        // underline draws in from the left under it.
-        &::after{
-            content: '';
-            position: absolute;
-            display: block;
-            left: 0;
-            right: auto;
-            top: auto;
-            bottom: 0;
-            width: 100%;
-            height: vw(2);
-            background: currentColor;
-            transform: scaleX(0);
-            transform-origin: left center;
-            transition: transform .45s cubic-bezier(.2, .7, .2, 1);
-        }
-        @media (hover: hover){
-            &:hover{
-                background: transparent;
-                color: $black;
-                transform: translateY(vw(-3));
-                &::after{
-                    transform: scaleX(1);
-                }
-            }
-        }
-        @include mobile(){
-            font-size: vw-mobile(24.752);
-            padding-bottom: vw-mobile(6);
-            &::after{
-                height: vw-mobile(1);
-            }
-        }
-    }
-}
-html.active .service_detail .banner_content{
-    .banner_cta,
-    .banner_cta_secondary{
-        background: transparent;
-        border-color: transparent;
-        color: rgba($white, 0.7);
-        &::after{
-            background: rgba($white, 0.7);
-        }
-        &:hover{
-            background: transparent;
-            color: rgba($white, 0.7);
         }
     }
 }

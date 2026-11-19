@@ -343,7 +343,9 @@ const Header = () => {
           <div className="right_container">
             <div className="country_container">
               <div className="country_region">
-                <div className="region_text">Mumbai (India)</div>
+                <div className="region_text">
+                  <span className="region_strong">India</span> - Mumbai
+                </div>
                 <address>
                   <a
                     href="https://maps.app.goo.gl/iPvLshVht1xP6hT1A"
@@ -362,7 +364,9 @@ const Header = () => {
               </div>
 
               <div className="country_region">
-                  <div className="region_text">Bengaluru</div>
+                  <div className="region_text">
+                    <span className="region_strong">India</span> - Bengaluru
+                  </div>
                   <address>
                     <a
                       href="https://maps.app.goo.gl/iPvLshVht1xP6hT1A"
@@ -382,39 +386,40 @@ const Header = () => {
                 </div>
 
               <div className="country_region">
-                <div className="region_text">Dubai (UAE)</div>
-                <address>
-                  <a
-                    href="https://maps.app.goo.gl/2qVqKVXrwNok34KH6"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    JLT Cluster H
-                    <br />
-                    Dubai, United Arab Emirates
-                  </a>
-                </address>
-                <div className="contact_info">
-                  <a href="mailto:veera@webmaffia.com">veera@webmaffia.com</a>
-                  <a href="tel:+971562722998">+971 56 272 2998</a>
+                <div className="region_text">
+                  <span className="region_strong">USA</span>
                 </div>
-              </div>
-
-              <div className="country_region">
-                <div className="region_text">USA</div>
                 <address>
                   <a
                     href="https://www.google.com/maps/search/?api=1&query=30%20N%20Gould%20St%2C%20STE%20R%2C%20Sheridan%2C%20WY%2082801%2C%20USA"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    30 N Gould St, STE R,
-                    Sheridan, WY 82801, USA
+                    30 N Gould St, STE R, Sheridan, WY 82801, USA
                   </a>
                 </address>
                 <div className="contact_info">
                   <a href="mailto:hello@webmaffia.com">hello@webmaffia.com</a>
                   <a href="tel:+18669849786">+1 (866) 984-9786</a>
+                </div>
+              </div>
+
+              <div className="country_region">
+                <div className="region_text">
+                  <span className="region_strong">Dubai</span>
+                </div>
+                <address>
+                  <a
+                    href="https://maps.app.goo.gl/2qVqKVXrwNok34KH6"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    JLT Cluster H, Dubai, United Arab Emirates
+                  </a>
+                </address>
+                <div className="contact_info">
+                  <a href="mailto:veera@webmaffia.com">veera@webmaffia.com</a>
+                  <a href="tel:+971562722998">+971 56 272 2998</a>
                 </div>
               </div>
             </div>
@@ -425,9 +430,10 @@ const Header = () => {
                 { href: "https://www.instagram.com/webmaffia/?hl=en", src: "/assets/images/icons/insta.webp", alt: "Instagram" },
                 { href: "https://www.facebook.com/Webmaffia/", src: "/assets/images/icons/fb.webp", alt: "Facebook" },
                 { href: "https://in.linkedin.com/company/webmaffia", src: "/assets/images/icons/linkedin.webp", alt: "LinkedIn" },
-              ].map(({ href, src, alt }) => (
+                { href: "https://www.youtube.com/@webmaffiadigitalagency", src: "/assets/images/icons/youtube.svg", alt: "YouTube", unoptimized: true },
+              ].map(({ href, src, alt, unoptimized }) => (
                 <a key={href} href={href} target="_blank" rel="noopener noreferrer">
-                  <Image src={src} alt={alt} width={50} height={50} />
+                  <Image src={src} alt={alt} width={50} height={50} unoptimized={unoptimized} />
                 </a>
               ))}
             </div>

@@ -166,15 +166,16 @@ export default function CaseStudyDetailPage({ caseStudy }) {
                   />
                 </picture>
                 {showcase.button?.href ? (
-                  <button type="button" className="visit_website_button">
+                  <div className="visit_website_button">
                     <a
+                      className="cta"
                       href={showcase.button.href}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
                       {showcase.button.title || "Check the website"}
                     </a>
-                  </button>
+                  </div>
                 ) : null}
               </div>
             ) : null}

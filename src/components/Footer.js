@@ -248,11 +248,19 @@ const OfficeContact = ({ email, phone }) =>
     </div>
   ) : null;
 
-const RegionHead = ({ label }) => (
-  <div className="footer_connect_region_head">
-    <span className="footer_connect_usa_label">{label}</span>
-  </div>
-);
+// "India - Mumbai": the country is the bright part, the city stays dimmer.
+// Single-name regions ("USA", "Dubai") are fully bright, like "India".
+const RegionHead = ({ label }) => {
+  const m = String(label).match(/^(.+?)(\s+-\s+.+)$/);
+  return (
+    <div className="footer_connect_region_head">
+      <span className="footer_connect_usa_label">
+        <span className="footer_connect_label_strong">{m ? m[1] : label}</span>
+        {m ? m[2] : null}
+      </span>
+    </div>
+  );
+};
 
 export default Footer;
 
