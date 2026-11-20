@@ -707,6 +707,20 @@ p{
     }
 }
 
+// Testimonial Previous / Next on the service pages (outside .home_wrapper):
+// no strike-through and no underline. The arrows stay hidden
+// (`.slide_cta .cta_text::after`); the swiper chevrons stay.
+.services_parent .testimonial .slide_cta .cta_text{
+    display: inline-flex;
+    align-items: center;
+    span{
+        color: inherit;
+        &::before{
+            display: none;
+        }
+    }
+}
+
 // Banner CTAs — rendered in Banner.js from a CMS banner's `button`/`href`
 // (primary, filled pill) and `secondaryButton` (secondary, underlined text
 // link). Global so it works on every page that renders <Banner>.
@@ -1649,16 +1663,24 @@ h2, .sub_heading{
             // Previous / Next sit together at the left under the quote (the
             // base rule spreads them to both edges).
             justify-content: flex-start;
-            gap: vw-mobile(32);
+            gap: vw-mobile(40);
+            width: 100%;
             .cta_text,
             .swiper-button-prev,
             .swiper-button-next{
-                font-size: vw-mobile(14);
+                font-size: vw-mobile(16);
                 gap: vw-mobile(8);
+                padding: vw-mobile(8) 0;
+                color: $black;
+                span{
+                    color: inherit;
+                }
             }
             .swiper-navigation-icon{
-                width: vw-mobile(8);
-                height: vw-mobile(14);
+                width: vw-mobile(8) !important;
+                height: vw-mobile(14) !important;
+                fill: currentColor;
+                color: inherit;
             }
         }
         // Muted by default, full black on hover with the chevron nudging in

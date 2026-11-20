@@ -281,10 +281,13 @@
     .follow_us{
         &>div{
             display: flex;
-            align-items: center;
+            align-items: flex-end;
             gap: 6rem;
             img{
                 width: 5rem;
+                &[alt="YouTube"]{
+                    width: 5.5rem;
+                }
                 transition: all 0.3s ease-in;
                 &:hover{
                     filter: brightness(0.5);

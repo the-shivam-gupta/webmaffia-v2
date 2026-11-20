@@ -2,6 +2,8 @@ import Image from "next/image";
 import Banner from "@/components/Banner";
 import JsonLd from "@/components/JsonLd";
 import KlaviyoFormEmbed from "@/components/KlaviyoFormEmbed";
+import { getFooter } from "@/lib/strapiPage";
+import { buildOfficeBlocks, telHref } from "@/lib/offices";
 import {
   buildBreadcrumbSchema,
   ORGANIZATION_SCHEMA,
@@ -44,7 +46,11 @@ const bannerData = {
   },
 };
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  // Offices (label, address, email, phone) come from Strapi, same as the menu and footer.
+  const footer = await getFooter();
+  const regions = buildOfficeBlocks(footer?.offices ?? []);
+
   return (
     <main className="wrapper">
       <JsonLd data={BREADCRUMB_SCHEMA} />
@@ -73,72 +79,24 @@ export default function ContactPage() {
             <div>
               <div className="h2">Address</div>
               <div className="country_container">
-                <div className="country_region">
-                  <div className="region_text">Mumbai (India)</div>
-                  <address>
-                    <a
-                      href="https://maps.app.goo.gl/iPvLshVht1xP6hT1A"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      403 A Wing, Cello Triumph, <br />
-                      IB Patel Rd, Jay Prakash Nagar, <br />
-                      Goregaon (E) , Mumbai - 400063
-                    </a>
-                  </address>
-                  <div className="contact_info">
-                    <a href="mailto:veera@webmaffia.com">veera@webmaffia.com</a>
-                    <a href="tel:+919867625909">+91 9867625909</a>
-                  </div>
-                </div>
-                <div className="country_region">
-                  <div className="region_text">Bengaluru</div>
-                  <address>
-                    <a
-                      href="https://maps.app.goo.gl/iPvLshVht1xP6hT1A"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Brigade Exotica - Burgundy <br />
-                      Unit 2503, <br />
-                      Old Madras Road, <br />
-                      Bengaluru - 560049
-                    </a>
-                  </address>
-                  <div className="contact_info">
-                    <a href="mailto:veera@webmaffia.com">veera@webmaffia.com</a>
-                    <a href="tel:+919867625909">+91 9867625909</a>
-                  </div>
-                </div>
-                <div className="country_region">
-                  <div className="region_text">Dubai (UAE)</div>
-                  <address>
-                    <div className="contact_persons_row">
-                    <div className="contact_info">
-                      <span className="contact_person">Veera Ghyara Roy <br />Co-Founder</span>
-                        <a href="mailto:veera@webmaffia.com">veera@webmaffia.com</a>
-                        <a href="tel:+971562722998">+971 56 272 2998</a>
+                {regions.map(({ key, label, address, href, email, phone }) => (
+                  <div className="country_region" key={key}>
+                    <div className="region_text">{label}</div>
+                    <address>
+                      {address ? (
+                        <a href={href} target="_blank" rel="noopener noreferrer">
+                          {address}
+                        </a>
+                      ) : null}
+                    </address>
+                    {email || phone ? (
+                      <div className="contact_info">
+                        {email ? <a href={`mailto:${email}`}>{email}</a> : null}
+                        {phone ? <a href={telHref(phone)}>{phone}</a> : null}
                       </div>
-                    </div>
-                  </address>
-                </div>
-                <div className="country_region">
-                  <div className="region_text">USA</div>
-                  <address>
-                    <a
-                      href="https://www.google.com/maps/search/?api=1&query=30%20N%20Gould%20St%2C%20STE%20R%2C%20Sheridan%2C%20WY%2082801%2C%20USA"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      30 N Gould St, STE R, <br />
-                      Sheridan, WY 82801, USA
-                    </a>
-                  </address>
-                  <div className="contact_info">
-                    <a href="mailto:hello@webmaffia.com">hello@webmaffia.com</a>
-                    <a href="tel:+18669849786">+1 (866) 984-9786</a>
+                    ) : null}
                   </div>
-                </div>
+                ))}
               </div>
             </div>
             <div className="follow_us">
@@ -178,6 +136,19 @@ export default function ContactPage() {
                     alt="Instagram"
                     width={50}
                     height={50}
+                  />
+                </a>
+                <a
+                  href="https://www.youtube.com/@webmaffiadigitalagency"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Image
+                    src="/assets/images/icons/youtube.svg"
+                    alt="YouTube"
+                    width={50}
+                    height={50}
+                    unoptimized
                   />
                 </a>
               </div>

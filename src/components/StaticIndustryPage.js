@@ -341,20 +341,6 @@ export default function StaticIndustryPage({ page }) {
             </div>
           </section>
 
-          {/* Results */}
-          <section className="re_block" aria-labelledby="results-h">
-            <Label>{page.results.label}</Label>
-            <h2 id="results-h">{page.results.title}</h2>
-            <div className="re_cols re_cols4 re_results">
-              {page.results.items.map((item) => (
-                <div key={item.label}>
-                  <b>{item.value}</b>
-                  <span>{item.label}</span>
-                </div>
-              ))}
-            </div>
-          </section>
-
           {/* FAQ (homepage accordion style) */}
           <div id="faq" className="re_faq">
             <HomeFaq

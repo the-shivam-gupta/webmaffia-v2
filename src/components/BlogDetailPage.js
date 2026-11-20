@@ -17,6 +17,7 @@ function Lines({ text }) {
   ));
 }
 
+// Same services, labels and order as the menu.
 const BLOG_SERVICES = [
   { href: "/services/digital-strategy", num: "01", labelKey: "blog.services.digitalStrategy" },
   {
@@ -25,9 +26,9 @@ const BLOG_SERVICES = [
     labelKey: "blog.services.design",
   },
   { href: "/services/search-engine-optimization-services", num: "03", labelKey: "blog.services.seo" },
-  { href: "/services/social-media-marketing-strategy", num: "04", labelKey: "blog.services.social" },
-  { href: "/services/content-marketing-strategy", num: "05", labelKey: "blog.services.content" },
-  { href: "/services/influencer-marketing", num: "06", labelKey: "blog.services.influencer" },
+  { href: "/services/ai-powered-solutions-services", num: "04", labelKey: "blog.services.ai" },
+  { href: "/services/social-media-marketing-strategy", num: "05", labelKey: "blog.services.social" },
+  { href: "/services/content-marketing-strategy", num: "06", labelKey: "blog.services.content" },
 ];
 
 export default function BlogDetailPage({
