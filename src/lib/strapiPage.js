@@ -899,10 +899,9 @@ const SERVICES_TECH_POPULATE = [
     "populate[sections][on][services-tech.awards][populate][awardsList][populate]=*",
     "populate[sections][on][services-tech.our-process][populate]=*",
     "populate[sections][on][services-tech.industries-we-serve][populate][lists][populate][icons][populate]=*",
-    "populate[sections][on][services-tech.tools-we-use][populate][lists][populate][icons][populate]=*",
+    "populate[sections][on][services-tech.tools-we-use][populate][lists][populate][logo][populate]=*",
     "populate[sections][on][services-tech.blogs][populate][blogTitle][populate]=*",
     "populate[sections][on][services-tech.fa-qs][populate]=*",
-    "populate[otherServices][populate][services][populate]=*",
     "populate[workTitle][populate]=*",
     "populate[seo][populate]=*",
 ].join("&");

@@ -11,11 +11,6 @@ import {
   withCityInHeading,
 } from "@/lib/serviceLocations";
 import { getServiceRenderConfig } from "@/lib/serviceContent";
-import {
-  getStaticService,
-  getStaticServiceConfig,
-  STATIC_SERVICE_SLUGS,
-} from "@/lib/services";
 
 /**
  * Handles two URL shapes under the single `[slug]` dynamic segment (Next.js
@@ -31,30 +26,14 @@ export async function generateStaticParams() {
     getAllServiceLocationPaths(),
   ]);
 
-  const slugs = new Set([
-    ...services.map((service) => service.slug),
-    ...STATIC_SERVICE_SLUGS,
-  ]);
-
   return [
-    ...[...slugs].map((slug) => ({ slug })),
+    ...services.map((service) => ({ slug: service.slug })),
     ...locationPaths.map(({ serviceLocation }) => ({ slug: serviceLocation })),
   ];
 }
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
-
-  const staticService = getStaticService(slug);
-  if (staticService) {
-    return {
-      title: staticService.metadata.title,
-      description: staticService.metadata.description,
-      alternates: {
-        canonical: `${SITE_URL}/services/${slug}`,
-      },
-    };
-  }
 
   const service = await getServiceEntryBySlug(slug);
 
@@ -82,24 +61,6 @@ export async function generateMetadata({ params }) {
 
 export default async function ServiceSlugPage({ params }) {
   const { slug } = await params;
-
-  const staticService = getStaticService(slug);
-  if (staticService) {
-    // Content is static; only the work categories (for "Latest work") are
-    // still read from the CMS entry.
-    const cmsEntry = await getServiceEntryBySlug(slug);
-    const config = {
-      ...(await getStaticServiceConfig(staticService)),
-      workCategories: cmsEntry?.workCategories,
-    };
-    const breadcrumbs = [
-      { name: "Home", path: "/" },
-      { name: "Services", path: "/services" },
-      { name: staticService.headingTitle, path: `/services/${slug}` },
-    ];
-
-    return <ServiceDetailPage config={config} breadcrumbs={breadcrumbs} />;
-  }
 
   const service = await getServiceEntryBySlug(slug);
 

@@ -10,7 +10,12 @@ import StatisticsBar from "@/components/StatisticsBar";
 import ServiceWorkSlider from "@/components/ServiceWorkSlider";
 import { TestimonialsSection } from "@/components/HomePage";
 import { getTestimonials } from "@/lib/strapiPage";
-import { buildBreadcrumbSchema, buildFaqSchema } from "@/lib/schema";
+import {
+  buildBreadcrumbSchema,
+  buildFaqSchema,
+  buildServiceSchema,
+  ORGANIZATION_SCHEMA,
+} from "@/lib/schema";
 import { getLatestBlogItems, getLatestWorkItems } from "@/lib/case-study-helpers";
 
 function RichText({ className, html }) {
@@ -324,24 +329,19 @@ function OtherServicesSection({ otherServices: allOtherServices }) {
   };
   if (!otherServices.items.length) return null;
 
-  // Wrapping row of pill buttons below the FAQ: numbered badge and service name.
+  // Full-width list below the FAQ: service name and an arrow per pill.
   return (
-    <div className="other_services_row">
-      <div className="other_services_row_head">
-        <h2 className="other_services_row_title">{otherServices.heading}</h2>
-      </div>
-      <div className="other_services_row_list">
-        {otherServices.items.map((item, index) => (
-          <Link
-            href={item.href}
-            className="other_services_row_item"
-            key={item.href}
-          >
-            <span className="other_services_row_num">
-              {String(index + 1).padStart(2, "0")}
-            </span>
-            <h3 className="other_services_row_name h3_plain">{item.title.replace(/\bdevelopment\b/, "Development")}
+    <div className="svc_other">
+      <h2 className="svc_other_title">{otherServices.heading}</h2>
+      <div className="svc_other_list">
+        {otherServices.items.map((item) => (
+          <Link href={item.href} className="svc_other_item" key={item.href}>
+            <h3 className="svc_other_name h3_plain">
+              {item.title.replace(/development/, "Development")}
             </h3>
+            <span className="svc_other_arrow" aria-hidden="true">
+              &rarr;
+            </span>
           </Link>
         ))}
       </div>
@@ -424,6 +424,16 @@ export default async function ServiceDetailPage({ config, breadcrumbs }) {
     .filter((section) => section.type === "faqs")
     .flatMap((section) => section.items ?? []);
 
+  // Service schema from the page's own name, URL and first intro paragraph.
+  const currentPage = breadcrumbs?.[breadcrumbs.length - 1];
+  const serviceSchema = currentPage
+    ? buildServiceSchema({
+        name: currentPage.name,
+        path: currentPage.path,
+        description: descriptions.find((text) => typeof text === "string" && text.trim()),
+      })
+    : null;
+
   const bannerData = {
     imagePosition: "right",
     priority: true,
@@ -457,6 +467,8 @@ export default async function ServiceDetailPage({ config, breadcrumbs }) {
       {breadcrumbs?.length > 0 && (
         <JsonLd data={buildBreadcrumbSchema(breadcrumbs)} />
       )}
+      <JsonLd data={ORGANIZATION_SCHEMA} />
+      {serviceSchema && <JsonLd data={serviceSchema} />}
       {faqItems.length > 0 && <JsonLd data={buildFaqSchema(faqItems)} />}
       <div className="ml-setter service_detail">
         <Banner data={bannerData} className={heroClass}>

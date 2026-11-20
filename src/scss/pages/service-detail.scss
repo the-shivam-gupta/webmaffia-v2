@@ -1131,3 +1131,82 @@ html.active .service_blogs .other_blogs .blog_item{
         }
     }
 }
+
+// ---- Service pages: "Our Other Services" ---------------------------------
+// Simple pill links: service name + small arrow. They wrap to fit any width.
+.svc_other{
+    padding-top: 2rem;
+}
+.svc_other_title{
+    margin: 0 0 5rem;
+    max-width: 12em;
+    font-size: 6.4rem;
+    font-weight: $exlight;
+    line-height: 1.15;
+    letter-spacing: 0;
+    @include mobile(){
+        margin-bottom: 4rem;
+        font-size: 8rem;
+        line-height: 1.1;
+    }
+}
+.svc_other_list{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.6rem;
+    @include mobile(){
+        gap: 2rem;
+    }
+}
+.svc_other_item{
+    display: inline-flex;
+    align-items: center;
+    gap: 1.6rem;
+    max-width: 100%;
+    padding: 1.8rem 3rem;
+    border: .1rem solid #cfcfcf;
+    border-radius: 10rem;
+    color: $black;
+    transition: background-color .3s ease, color .3s ease, border-color .3s ease;
+    @include mobile(){
+        gap: 2rem;
+        padding: 2.6rem 4rem;
+    }
+    @media (hover: hover){
+        &:hover{
+            background: $black;
+            border-color: $black;
+            color: #fff;
+            .svc_other_name.h3_plain{
+                color: #fff;
+            }
+            .svc_other_arrow{
+                transform: translateX(.5rem);
+            }
+        }
+    }
+}
+.svc_other_name{
+    margin: 0;
+    font-size: 2.2rem;
+    font-weight: 400;
+    line-height: 1.3;
+    text-align: left;
+    text-transform: none;
+    &.h3_plain.h3_plain{
+        color: $black;
+        transition: color .3s ease;
+    }
+    @include mobile(){
+        font-size: 3.6rem;
+    }
+}
+.svc_other_arrow{
+    flex: none;
+    font-size: 2.2rem;
+    line-height: 1;
+    transition: transform .3s ease;
+    @include mobile(){
+        font-size: 3.4rem;
+    }
+}
