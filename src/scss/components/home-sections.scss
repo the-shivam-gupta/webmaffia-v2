@@ -1238,6 +1238,15 @@ h2, .sub_heading{
             transform: none;
         }
     }
+    // Captionless variant (/about): the card still goes black with an inverted
+    // logo on hover, but the logo stays put (nothing to lift it clear of).
+    .work_box .awards_work--plain:hover,
+    .work_box .awards_work--plain:focus{
+        img{
+            transform: none;
+            opacity: 1;
+        }
+    }
     // The card's own :hover style (black / white in dark mode, inverted logo)
     // also applies on tap; the tabindex makes iOS Safari honour it.
     h2{

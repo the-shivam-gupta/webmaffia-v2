@@ -225,7 +225,9 @@ function AwardDetails({ text }) {
   );
 }
 
-export function LogoGridSection({ section }) {
+// `showDetails={false}` renders award logos without the hover caption.
+// `children` replaces the section's CMS button (e.g. a page-specific link).
+export function LogoGridSection({ section, showDetails = true, children }) {
   if (!section.cards.length) return null;
 
   const isClients = section.type === "clients";
@@ -252,7 +254,11 @@ export function LogoGridSection({ section }) {
               />
             </Link>
           ) : (
-            <div className="awards_work" key={card.id} tabIndex={0}>
+            <div
+              className={`awards_work${showDetails ? "" : " awards_work--plain"}`}
+              key={card.id}
+              tabIndex={showDetails ? 0 : undefined}
+            >
               <Image
                 src={card.image.url}
                 alt={card.image.alt}
@@ -260,12 +266,16 @@ export function LogoGridSection({ section }) {
                 height={card.image.height}
                 style={card.scale ? { transform: `scale(${card.scale})` } : undefined}
               />
-              <AwardDetails text={card.details || card.label} />
+              {showDetails ? (
+                <AwardDetails text={card.details || card.label} />
+              ) : null}
             </div>
           )
         )}
       </div>
-      {section.button ? (
+      {children ? (
+        children
+      ) : section.button ? (
         <div className="cta_box">
           <CtaText button={section.button} struckWords={isClients ? 1 : 2} />
         </div>

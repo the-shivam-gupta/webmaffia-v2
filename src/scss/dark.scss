@@ -983,6 +983,17 @@ html.active .team_faq{
     }
 }
 
+// About page fact table, dark theme.
+html.active .about_facts_table{
+    th,
+    td{
+        color: $white;
+    }
+    tr{
+        border-color: rgba($white, 0.18);
+    }
+}
+
 // "Our Other Services" (dark theme): white names, dim numbers.
 html.active .other_services_row_item{
     color: $white;

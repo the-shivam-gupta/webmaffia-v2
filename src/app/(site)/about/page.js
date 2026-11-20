@@ -4,12 +4,21 @@ import Link from "next/link";
 import Banner from "@/components/Banner";
 import JsonLd from "@/components/JsonLd";
 import TeamFaq from "@/components/TeamFaq";
-import { ABOUT_FAQS } from "@/lib/aboutFaqs";
-import { buildBannerCta, getAboutUs, getStrapiImageUrl } from "@/lib/strapiPage";
+import { LogoGridSection } from "@/components/HomePage";
+import { buildSections } from "@/lib/homeSections";
+import {
+  buildBannerCta,
+  getAboutUs,
+  getHome,
+  getSeoFields,
+  getStrapiImageUrl,
+} from "@/lib/strapiPage";
 import {
   buildBreadcrumbSchema,
   ORGANIZATION_SCHEMA,
   LOCAL_BUSINESS_SCHEMA,
+  SITE_URL,
+  buildFaqSchema,
 } from "@/lib/schema";
 
 const BREADCRUMB_SCHEMA = buildBreadcrumbSchema([
@@ -17,16 +26,53 @@ const BREADCRUMB_SCHEMA = buildBreadcrumbSchema([
   { name: "About Us", path: "/about" },
 ]);
 
-const ABOUT_AWARDS = [
-  { src: "/assets/images/awards/img-1.webp", alt: "Award 1" },
-  { src: "/assets/images/awards/img-2.webp", alt: "Award 2" },
-  { src: "/assets/images/awards/arvind.png", alt: "Award 3" },
-  { src: "/assets/images/awards/img-4.webp", alt: "Award 4" },
-  { src: "/assets/images/awards/img-5.webp", alt: "Award 5" },
-  { src: "/assets/images/awards/img-6.webp", alt: "Award 6" },
-  { src: "/assets/images/awards/img-7.webp", alt: "Award 7" },
-  { src: "/assets/images/awards/img-8.webp", alt: "Award 8" },
+// Strapi `facts` component (`lists`: { heading, description }) -> table rows.
+function buildAboutFacts(rawFacts) {
+  return (rawFacts?.lists ?? [])
+    .filter((item) => item?.heading?.trim() && item?.description?.trim())
+    .map((item, index) => ({
+      id: item.id ?? index,
+      label: item.heading.trim(),
+      value: item.description.trim(),
+    }));
+}
+
+const MONTHS = [
+  "January", "February", "March", "April", "May", "June", "July",
+  "August", "September", "October", "November", "December",
 ];
+
+// "2026-11-18T09:00:00.000Z" -> { iso: "2026-11-18", label: "18 November 2026" }.
+// Formatted manually (UTC) so server and client never disagree on timezone.
+function formatUpdatedAt(value) {
+  const date = value ? new Date(value) : null;
+  if (!date || Number.isNaN(date.getTime())) return null;
+  return {
+    iso: date.toISOString().slice(0, 10),
+    label: `${date.getUTCDate()} ${MONTHS[date.getUTCMonth()]} ${date.getUTCFullYear()}`,
+  };
+}
+
+function buildAboutPageSchema(slug, dateModified) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    name: "About Webmaffia",
+    url: `${SITE_URL}/${slug}`,
+    ...(dateModified ? { dateModified } : {}),
+    publisher: { "@type": "Organization", name: "Webmaffia", url: `${SITE_URL}/` },
+  };
+}
+
+// Strapi `faqs` component -> { question, answer } items.
+function buildAboutFaqs(rawFaqs) {
+  return (rawFaqs?.faqsList ?? [])
+    .filter((item) => item?.question && item?.description)
+    .map((item) => ({
+      question: item.question.trim(),
+      answer: item.description.trim(),
+    }));
+}
 
 function renderMultiline(text) {
   if (!text) return null;
@@ -78,6 +124,8 @@ function buildAboutBannerData(rawBanner) {
       ...(lastSpace > 0 ? { line2: subHeading.slice(lastSpace + 1) } : {}),
     },
     descriptions: paragraphs.length ? paragraphs : undefined,
+    // The hero image is the page's LCP element: load it eagerly at high priority.
+    priority: true,
     cta: buildBannerCta(rawBanner),
     ...(images ? { images } : {}),
   };
@@ -86,20 +134,34 @@ function buildAboutBannerData(rawBanner) {
 export async function generateMetadata() {
   const data = await getAboutUs();
   const slug = data?.slug || "about";
+  // Strapi `seo` component wins; the previous values stay as fallbacks.
+  const seo = getSeoFields(data?.seo);
   return {
-    title: "About Webmaffia - Taking Marketing to Another Level",
+    title: seo.title ?? "About Webmaffia - Taking Marketing to Another Level",
     description:
-      data?.banner?.description
+      seo.description ??
+      (data?.banner?.description
         ? splitParagraphs(data.banner.description)[0]?.replace(/\n/g, " ").slice(0, 160) || ""
-        : "An award-winning digital agency with a strong foothold in creative thinking & execution, Webmaffia is growing in creative strength with every passing year.",
+        : "An award-winning digital agency with a strong foothold in creative thinking & execution, Webmaffia is growing in creative strength with every passing year."),
+    ...(seo.keywords ? { keywords: seo.keywords } : {}),
     alternates: {
-      canonical: `https://www.webmaffia.com/${slug}`,
+      canonical: seo.canonical ?? `https://www.webmaffia.com/${slug}`,
     },
   };
 }
 
 export default async function AboutPage() {
-  const raw = await getAboutUs();
+  const [raw, home] = await Promise.all([getAboutUs(), getHome()]);
+
+  // Same awards as the homepage (Strapi "trophies" section), with the
+  // "Latest wins" heading. Captions stay off until the real award details are
+  // filled in the CMS.
+  const trophies = buildSections(home?.sections).find(
+    (section) => section.type === "trophies"
+  );
+  const awardsSection = trophies
+    ? { ...trophies, tagline: "", title: "Latest\nwins", description: "", button: null }
+    : null;
 
   const bannerData = raw?.banner ? buildAboutBannerData(raw.banner) : null;
 
@@ -120,11 +182,18 @@ export default async function AboutPage() {
       }
     : null;
 
+  const faqItems = buildAboutFaqs(raw?.faqs);
+  const faqSchema = faqItems.length ? buildFaqSchema(faqItems) : null;
+  const factItems = buildAboutFacts(raw?.facts);  const updated = formatUpdatedAt(raw?.updatedAt);
+  const aboutPageSchema = buildAboutPageSchema(raw?.slug || "about", updated?.iso);
+
   return (
     <main className="wrapper about_wrapper">
       <JsonLd data={BREADCRUMB_SCHEMA} />
       <JsonLd data={ORGANIZATION_SCHEMA} />
       <JsonLd data={LOCAL_BUSINESS_SCHEMA} />
+      <JsonLd data={aboutPageSchema} />
+      {faqSchema && <JsonLd data={faqSchema} />}
       <div className="ml-setter about_us">
         {bannerData && (
           <Banner
@@ -157,39 +226,58 @@ export default async function AboutPage() {
         </section>
         )}
 
-        <div className="about_award">
-          <section data-section="awards" className="our_work awards">
-            <h2 className="sub_heading">
-              Latest <br /> wins
-            </h2>
-            <div className="work_box">
-              {ABOUT_AWARDS.map((award) => (
-                <Link href="/awards" key={award.src}>
-                  <Image
-                    src={award.src}
-                    alt={award.alt}
-                    width={150}
-                    height={130}
-                  />
-                </Link>
+        {factItems.length > 0 && (
+        <section data-section="facts" className="about_facts">
+          <div className="about_facts_head">
+            {raw?.facts?.tagline && <h2 className="sub_title">{raw.facts.tagline}</h2>}
+            {raw?.facts?.title && <div className="sub_heading">{raw.facts.title}</div>}
+          </div>
+          <table className="about_facts_table">
+            <caption className="about_facts_caption">
+              {raw?.facts?.title || "Webmaffia at a glance"}
+            </caption>
+            <tbody>
+              {factItems.map((fact) => (
+                <tr key={fact.id}>
+                  <th scope="row">{fact.label}</th>
+                  <td>{fact.value}</td>
+                </tr>
               ))}
-            </div>
+            </tbody>
+          </table>
+        </section>
+        )}
+
+        {awardsSection && (
+        <div className="about_award">
+          <LogoGridSection section={awardsSection} showDetails={false}>
             <div className="about_cta">
               <Link href="/services" className="cta_text">
                 Next up <span>Services</span>
               </Link>
             </div>
-          </section>
+          </LogoGridSection>
         </div>
+        )}
 
-        {/* Static for now (moved from /team); same markup and styles. */}
+        {faqItems.length > 0 && (
         <section data-section="faq" className="team_faq">
           <div className="team_faq_head">
-            <h2 className="sub_title">FAQ</h2>
-            <div className="sub_heading">About Webmaffia</div>
+            {raw?.faqs?.tagline && <h2 className="sub_title">{raw.faqs.tagline}</h2>}
+            {raw?.faqs?.title && <div className="sub_heading">{raw.faqs.title}</div>}
+            {raw?.faqs?.description?.trim() && (
+              <p className="team_faq_intro">{raw.faqs.description.trim()}</p>
+            )}
           </div>
-          <TeamFaq items={ABOUT_FAQS} />
+          <TeamFaq items={faqItems} />
         </section>
+        )}
+
+        {updated && (
+        <p className="about_last_updated">
+          Last updated: <time dateTime={updated.iso}>{updated.label}</time>
+        </p>
+        )}
       </div>
     </main>
   );
