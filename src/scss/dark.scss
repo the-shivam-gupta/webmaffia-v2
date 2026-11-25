@@ -114,8 +114,17 @@ html{
         .blog_enquiry{
             background: rgba(255, 255, 255, 0.04);
             color: $white;
-            &::before{
-                background: radial-gradient(circle, rgba(255, 255, 255, .1), transparent 70%);
+            [role="listbox"]{
+                background: #1c1c1c !important;
+                color: $white !important;
+                border-color: rgba(255, 255, 255, .2) !important;
+            }
+            div:has(> [role="listbox"]) > div:not([role="listbox"]){
+                background: #1c1c1c !important;
+                border-color: rgba(255, 255, 255, .2) !important;
+                input{
+                    color: $white !important;
+                }
             }
             .blog_enquiry_tag{
                 background: rgba(255, 255, 255, 0.08);
