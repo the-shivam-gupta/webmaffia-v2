@@ -5,11 +5,12 @@ import Banner from "@/components/Banner";
 import JsonLd from "@/components/JsonLd";
 import TeamFaq from "@/components/TeamFaq";
 import { LogoGridSection } from "@/components/HomePage";
-import { buildSections } from "@/lib/homeSections";
+import { buildAwardCaption } from "@/lib/awards";
+import { formatUpdatedAt } from "@/lib/dates";
 import {
   buildBannerCta,
   getAboutUs,
-  getHome,
+  getAwards,
   getSeoFields,
   getStrapiImageUrl,
 } from "@/lib/strapiPage";
@@ -37,22 +38,6 @@ function buildAboutFacts(rawFacts) {
     }));
 }
 
-const MONTHS = [
-  "January", "February", "March", "April", "May", "June", "July",
-  "August", "September", "October", "November", "December",
-];
-
-// "2026-11-18T09:00:00.000Z" -> { iso: "2026-11-18", label: "18 November 2026" }.
-// Formatted manually (UTC) so server and client never disagree on timezone.
-function formatUpdatedAt(value) {
-  const date = value ? new Date(value) : null;
-  if (!date || Number.isNaN(date.getTime())) return null;
-  return {
-    iso: date.toISOString().slice(0, 10),
-    label: `${date.getUTCDate()} ${MONTHS[date.getUTCMonth()]} ${date.getUTCFullYear()}`,
-  };
-}
-
 function buildAboutPageSchema(slug, dateModified) {
   return {
     "@context": "https://schema.org",
@@ -62,6 +47,52 @@ function buildAboutPageSchema(slug, dateModified) {
     ...(dateModified ? { dateModified } : {}),
     publisher: { "@type": "Organization", name: "Webmaffia", url: `${SITE_URL}/` },
   };
+}
+
+// The "Latest wins" grid shows the first awards from the Strapi Awards entry
+// (the same cards the /awards page lists), in the homepage's award-card design.
+const MAX_ABOUT_AWARDS = 8;
+
+function buildAboutAwardsSection(rawAwards) {
+  // The Strapi list repeats an award once per year / rank (e.g. several "Abby
+  // Awards"), so keep only the first card of each award name here.
+  const seen = new Set();
+  const cards = (rawAwards?.card ?? [])
+    .filter((card) => {
+      if (!card?.image?.url) return false;
+      const key = (card.name ?? "").toLowerCase().replace(/[^a-z0-9]/g, "");
+      if (key && seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    })
+    .slice(0, MAX_ABOUT_AWARDS)
+    .map((card, index) => {
+      const name = card.name?.trim() || "";
+      return {
+        id: card.id ?? index,
+        label: name,
+        // "year · rank" / award name / description, shown on hover.
+        details: buildAwardCaption({ name, details: card.details }),
+        image: {
+          url: getStrapiImageUrl(card.image),
+          alt: name || card.image.alternativeText || "",
+          width: card.image.width || 150,
+          height: card.image.height || 130,
+        },
+        scale: null,
+      };
+    });
+
+  return cards.length
+    ? {
+        type: "trophies",
+        tagline: "",
+        title: "Latest\nwins",
+        description: "",
+        button: null,
+        cards,
+      }
+    : null;
 }
 
 // Strapi `faqs` component -> { question, answer } items.
@@ -151,17 +182,9 @@ export async function generateMetadata() {
 }
 
 export default async function AboutPage() {
-  const [raw, home] = await Promise.all([getAboutUs(), getHome()]);
+  const [raw, awards] = await Promise.all([getAboutUs(), getAwards()]);
 
-  // Same awards as the homepage (Strapi "trophies" section), with the
-  // "Latest wins" heading. Captions stay off until the real award details are
-  // filled in the CMS.
-  const trophies = buildSections(home?.sections).find(
-    (section) => section.type === "trophies"
-  );
-  const awardsSection = trophies
-    ? { ...trophies, tagline: "", title: "Latest\nwins", description: "", button: null }
-    : null;
+  const awardsSection = buildAboutAwardsSection(awards);
 
   const bannerData = raw?.banner ? buildAboutBannerData(raw.banner) : null;
 
@@ -250,7 +273,7 @@ export default async function AboutPage() {
 
         {awardsSection && (
         <div className="about_award">
-          <LogoGridSection section={awardsSection} showDetails={false}>
+          <LogoGridSection section={awardsSection}>
             <div className="about_cta">
               <Link href="/services" className="cta_text">
                 Next up <span>Services</span>

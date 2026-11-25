@@ -5,6 +5,8 @@ import {
   getServiceTechBySlug,
   getStrapiImageUrl,
 } from "@/lib/strapiPage";
+import SERVICE_TOOLS_FALLBACK from "@/lib/serviceToolsFallback";
+import TOOL_ICONS from "@/lib/toolIcons";
 
 /**
  * Builds the render-ready `{ hero, sections }` shape ServiceDetailPage
@@ -12,6 +14,10 @@ import {
  * `services-tech.features` / `services-tech.technology` components). There
  * is no static fallback content — a service without a CMS entry yet simply
  * renders an empty hero/sections until it's added in Strapi.
+ *
+ * One temporary exception: "Tools We Use" falls back to the old static tool
+ * lists (serviceToolsFallback.js) for any group whose Strapi entry has no
+ * logos yet. See buildToolGroups.
  */
 
 function splitParagraphs(text) {
@@ -242,36 +248,128 @@ function buildLogoTitleItems(rawLists) {
     .filter(Boolean);
 }
 
+// Tool names and group titles are compared lowercased with punctuation removed.
+const normalizeName = (text) =>
+  String(text ?? "").toLowerCase().replace(/[^a-z0-9]/g, "");
+
+// Tool name -> title of the logo already in Strapi, for names that don't
+// match a logo title once punctuation is ignored.
+const TOOL_ICON_ALIASES = Object.fromEntries(
+  Object.entries({
+    Semrush: "semrush-icon",
+    Ahrefs: "ahref",
+    "Google Search Console": "google-search-console-icon",
+    "Looker Studio": "data-studio",
+    GA4: "Google Analytics 4",
+  }).map(([name, title]) => [normalizeName(name), normalizeName(title)])
+);
+
+// The service whose Strapi tool logos are reused for any tool name that
+// matches one (same source the old static pages used).
+const SHARED_TOOLS_SOURCE_SLUG = "search-engine-optimization-services";
+
 /**
- * Maps the `tools-we-use` `lists` repeatable — each entry a `title` plus an
- * `icons` repeatable of `{ logo }` media — onto `{ title, icons: [{ url,
- * alt, width, height, title }] }` rows, dropping icons with no image and
- * rows left with no icons.
+ * Logos from one Strapi `tools-we-use` list item. `logo` is a repeatable
+ * component of `{ name, logo: media }`; the `name` is used as the alt text.
+ * A bare media entry (older shape) and an `icons` repeatable of `{ logo }`
+ * are still understood.
  */
-function buildToolGroups(lists) {
+function strapiToolIcons(item) {
+  return [
+    ...[item?.logo ?? []].flat(),
+    ...(item?.icons ?? []),
+  ]
+    .map((entry) => {
+      const media = entry?.logo?.url ? entry.logo : entry?.url ? entry : null;
+      if (!media) return null;
+      const name =
+        (entry.logo?.url ? entry.name?.trim() : "") ||
+        media.alternativeText ||
+        media.name?.replace(/\.[^.]+$/, "") ||
+        "";
+      return {
+        url: getStrapiImageUrl(media),
+        alt: name,
+        title: name,
+        width: media.width,
+        height: media.height,
+      };
+    })
+    .filter(Boolean);
+}
+
+/** Title -> icon map of the shared source service's Strapi tool logos. */
+function buildSharedToolIcons(allEntries) {
+  const source = (allEntries ?? []).find(
+    (entry) => entry.slug === SHARED_TOOLS_SOURCE_SLUG
+  );
+  const section = source?.sections?.find(
+    (s) => s.__component === "services-tech.tools-we-use"
+  );
+  const map = new Map();
+  (section?.lists ?? []).forEach((item) =>
+    strapiToolIcons(item).forEach((icon) => map.set(normalizeName(icon.title), icon))
+  );
+  return map;
+}
+
+/**
+ * Icons for the static fallback tool names: a logo from Strapi first, then a
+ * local brand/generic SVG, and a name-only chip as the last resort.
+ */
+function fallbackToolIcons(tools, sharedIcons) {
+  const icons = tools.map((name) => {
+    const key = normalizeName(name);
+    const icon =
+      sharedIcons?.get(TOOL_ICON_ALIASES[key] ?? key) ??
+      (TOOL_ICONS[key]
+        ? { url: TOOL_ICONS[key], title: name, alt: name, width: 75, height: 75 }
+        : { url: null, title: name, alt: name });
+    return [icon.url ?? key, icon];
+  });
+  return [...new Map(icons).values()];
+}
+
+/**
+ * Maps the `tools-we-use` `lists` repeatable — each entry a `title` plus a
+ * `logo` repeatable of `{ name, logo }` — onto `{ title, icons: [{ url, alt,
+ * width, height, title }] }` rows.
+ *
+ * TEMPORARY: until logos are added in Strapi, a group with none uses the old
+ * static tool list for that service (matched by group title). Once a group has
+ * logos in Strapi, those replace the static ones for that group.
+ */
+function buildToolGroups(lists, { slug, sharedIcons } = {}) {
+  const fallbackGroups = SERVICE_TOOLS_FALLBACK[slug]?.groups ?? [];
+
   return (lists ?? [])
-    .map((item) => ({
-      title: item.title?.trim() || "",
-      // `logo` is a media field (array or single); older entries used an
-      // `icons` repeatable of { logo }.
-      icons: [
-        ...[item.logo ?? []].flat(),
-        ...(item.icons ?? []).map((entry) => entry.logo),
-      ]
-        .filter((media) => media?.url)
-        .map((media) => {
-          const name =
-            media.alternativeText || media.name?.replace(/\.[^.]+$/, "") || "";
-          return {
-            url: getStrapiImageUrl(media),
-            alt: name,
-            title: name,
-            width: media.width,
-            height: media.height,
-          };
-        }),
-    }))
+    .map((item) => {
+      const title = item.title?.trim() || "";
+      let icons = strapiToolIcons(item);
+      if (!icons.length) {
+        const fallback = fallbackGroups.find(
+          (group) => normalizeName(group.title) === normalizeName(title)
+        );
+        icons = fallback ? fallbackToolIcons(fallback.tools, sharedIcons) : [];
+      }
+      return { title, icons };
+    })
     .filter((group) => group.icons.length);
+}
+
+/** The whole static "Tools We Use" section, for a service with none in Strapi. */
+function buildFallbackToolsSection(slug, sharedIcons) {
+  const fallback = SERVICE_TOOLS_FALLBACK[slug];
+  if (!fallback) return null;
+  return {
+    type: "tools",
+    dataSection: "service_tools_static",
+    heading: fallback.heading,
+    items: fallback.groups.map((group) => ({
+      title: group.title,
+      icons: fallbackToolIcons(group.tools, sharedIcons),
+    })),
+  };
 }
 
 /**
@@ -285,7 +383,7 @@ function buildToolGroups(lists) {
  * the influencer-marketing page) is derived automatically from whether the
  * card has a description, rather than hardcoded per service.
  */
-export function buildServiceSections(cmsSections) {
+export function buildServiceSections(cmsSections, toolsContext) {
   if (!cmsSections?.length) return [];
 
   const merged = [];
@@ -396,7 +494,7 @@ export function buildServiceSections(cmsSections) {
       }
 
       case "services-tech.tools-we-use": {
-        const items = buildToolGroups(section.lists);
+        const items = buildToolGroups(section.lists, toolsContext);
         if (!items.length) return;
         merged.push({
           type: "tools",
@@ -456,6 +554,23 @@ export function buildServiceSections(cmsSections) {
         return;
     }
   });
+
+  // TEMPORARY: a service with no usable "Tools We Use" in Strapi gets the old
+  // static section, placed where it used to sit (right after industries, else
+  // after the features).
+  if (toolsContext?.slug && !merged.some((s) => s.type === "tools")) {
+    const fallbackTools = buildFallbackToolsSection(
+      toolsContext.slug,
+      toolsContext.sharedIcons
+    );
+    if (fallbackTools) {
+      const afterIndex = Math.max(
+        merged.map((s) => s.type).lastIndexOf("industries"),
+        merged.map((s) => s.type).lastIndexOf("features")
+      );
+      merged.splice(afterIndex + 1, 0, fallbackTools);
+    }
+  }
 
   return merged;
 }
@@ -532,8 +647,13 @@ export async function getServiceRenderConfig(slug) {
   ]);
 
   return {
+    // When the Strapi entry was last saved; shown as "Last updated" on the page.
+    updatedAt: serviceTech?.updatedAt,
     hero: buildServiceHero(serviceTech?.banner),
-    sections: buildServiceSections(serviceTech?.sections),
+    sections: buildServiceSections(serviceTech?.sections, {
+      slug,
+      sharedIcons: buildSharedToolIcons(allEntries),
+    }),
     otherServices: buildOtherServicesSection(serviceTech?.otherServices, allEntries, slug),
   };
 }

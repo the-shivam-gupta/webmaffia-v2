@@ -6,6 +6,7 @@ import BlogListItem from "@/components/BlogListItem";
 import JsonLd from "@/components/JsonLd";
 import ContactSection from "@/components/ContactSection";
 import ServiceTeamFaq from "@/components/ServiceTeamFaq";
+import ServiceToc from "@/components/ServiceToc";
 import StatisticsBar from "@/components/StatisticsBar";
 import ServiceWorkSlider from "@/components/ServiceWorkSlider";
 import { TestimonialsSection } from "@/components/HomePage";
@@ -17,6 +18,7 @@ import {
   ORGANIZATION_SCHEMA,
 } from "@/lib/schema";
 import { getLatestBlogItems, getLatestWorkItems } from "@/lib/case-study-helpers";
+import { formatUpdatedAt } from "@/lib/dates";
 
 function RichText({ className, html }) {
   if (!html) return null;
@@ -217,7 +219,7 @@ function ToolsSection({ section }) {
       <div className="tools_list">
         {section.items.map((item, index) => (
           <div className="tools_row" key={`${item.title}-${index}`}>
-            <h4>{item.title}</h4>
+            <h3 className="tool_label">{item.title}</h3>
             <div className="tools_img">
               {item.icons.map((icon, iconIndex) => (
                 <div key={`${item.title}-${iconIndex}-${icon.url}`}>
@@ -278,6 +280,54 @@ const SECTION_CLASS_NAMES = {
   faqs: "service_faqs_section",
 };
 
+// "On this page" table of contents: one link per CMS section that has a
+// heading, each pointing at an id on that section's wrapper.
+const TOC_MIN_ITEMS = 3;
+
+function slugify(text) {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+// Short link labels by section type, so every service gets the same slim row
+// whatever its (often long, question-style) headings are. The full heading is
+// kept as the link's tooltip and as the source of the section id.
+const TOC_SHORT_LABELS = {
+  introduction: "Overview",
+  features: "What we offer",
+  industries: "Industries",
+  tools: "Tools",
+  whyChooseUs: "Why us",
+  process: "Process",
+  awards: "Awards",
+  blogs: "Blog",
+  faqs: "FAQ",
+};
+
+function buildTocItems(sections) {
+  const used = new Set();
+  const usedLabels = new Set();
+  return (sections ?? []).flatMap((section) => {
+    if (section.type === "statistics") return [];
+    const title = (
+      section.type === "faqs" ? section.tagline || "FAQ" : section.heading
+    )?.trim();
+    // A second section of the same type (e.g. the "About Webmaffia"
+    // introduction after the FAQ) uses its own heading as the label.
+    const shortLabel = TOC_SHORT_LABELS[section.type];
+    const label = shortLabel && !usedLabels.has(shortLabel) ? shortLabel : title || shortLabel;
+    if (label) usedLabels.add(label);
+    const base = slugify(title || label || "");
+    if (!label || !base) return [];
+    let id = base;
+    for (let n = 2; used.has(id); n += 1) id = `${base}-${n}`;
+    used.add(id);
+    return [{ dataSection: section.dataSection, id, label, title: title || label }];
+  });
+}
+
 function LatestWorkSection({ latestWork }) {
   if (!latestWork?.length) return null;
 
@@ -296,7 +346,12 @@ function LatestWorkSection({ latestWork }) {
 // Last fold of every service page: the same "Let's talk" block as the
 // homepage (shared copy), without the email / phone rows.
 function ServiceContact() {
-  return <ContactSection showDetails={false} />;
+  return (
+    <ContactSection
+      showDetails={false}
+      description="Tell us about your goals and we’ll show you how Webmaffia can help you reach them."
+    />
+  );
 }
 
 // These two services are not offered in the "other services" list (same two
@@ -365,7 +420,7 @@ function TechnologyBlock({ technologies }) {
           className="technology_items"
           key={group.label ?? `${technologies.title}-${index}`}
         >
-          {group.label ? <h4 className="h4">{group.label}</h4> : null}
+          {group.label ? <h3 className="h4 tool_label">{group.label}</h3> : null}
           <div className="technology_img">
             {group.icons.map((icon, iconIndex) => (
               <div key={`${group.label ?? "icon"}-${iconIndex}-${icon.src}`}>
@@ -386,7 +441,7 @@ function TechnologyBlock({ technologies }) {
 }
 
 export default async function ServiceDetailPage({ config, breadcrumbs }) {
-  const { hero, sections, workCategories, otherServices, latestWork: fallbackLatestWork } = config;
+  const { hero, sections, workCategories, otherServices, latestWork: fallbackLatestWork, updatedAt } = config;
   const testimonials = await getTestimonials();
   // Every relevant project (not just two) — they go in a slider.
   const dynamicLatestWork = await getLatestWorkItems(
@@ -421,6 +476,9 @@ export default async function ServiceDetailPage({ config, breadcrumbs }) {
     .filter((section) => section.type === "faqs")
     .flatMap((section) => section.items ?? []);
 
+  // "Last updated" = when the Strapi entry was last saved.
+  const updated = formatUpdatedAt(updatedAt);
+
   // Service schema from the page's own name, URL and first intro paragraph.
   const currentPage = breadcrumbs?.[breadcrumbs.length - 1];
   const serviceSchema = currentPage
@@ -428,6 +486,7 @@ export default async function ServiceDetailPage({ config, breadcrumbs }) {
         name: currentPage.name,
         path: currentPage.path,
         description: descriptions.find((text) => typeof text === "string" && text.trim()),
+        dateModified: updated?.iso,
       })
     : null;
 
@@ -472,6 +531,12 @@ export default async function ServiceDetailPage({ config, breadcrumbs }) {
           {descriptions.map((text, i) => (
             <p key={i}>{text}</p>
           ))}
+          {updated && (
+            <div className="service_updated">
+              Last updated: <time dateTime={updated.iso}>{updated.label}</time>.
+              Written and maintained by the Webmaffia team.
+            </div>
+          )}
         </Banner>
 
         {resolvedSections?.length > 0 && (() => {
@@ -485,9 +550,19 @@ export default async function ServiceDetailPage({ config, breadcrumbs }) {
           let insertedLatestWork = false;
           let insertedOtherServices = false;
           const hasBlogs = resolvedSections.some((s) => s.type === "blogs");
+          const tocItems = buildTocItems(resolvedSections);
+          const hasStatistics = resolvedSections.some((s) => s.type === "statistics");
+          const tocIdBySection = new Map(
+            tocItems.map((item) => [item.dataSection, item.id])
+          );
 
           return (
             <div className="services_parent">
+              {/* The contents sit right below the statistics bar; a service
+                  without one gets them at the top instead. */}
+              {tocItems.length >= TOC_MIN_ITEMS && !hasStatistics && (
+                <ServiceToc items={tocItems} />
+              )}
               {resolvedSections.map((section) => {
                 const showLatestWorkAfter = section.type === "features" && !insertedLatestWork;
                 if (showLatestWorkAfter) insertedLatestWork = true;
@@ -501,7 +576,12 @@ export default async function ServiceDetailPage({ config, breadcrumbs }) {
                 // the homepage), so it skips the generic wrapper below.
                 if (section.type === "statistics") {
                   return (
-                    <StatisticsBar key={section.dataSection} stats={section.stats} />
+                    <Fragment key={section.dataSection}>
+                      <StatisticsBar stats={section.stats} />
+                      {tocItems.length >= TOC_MIN_ITEMS && (
+                        <ServiceToc items={tocItems} afterStats />
+                      )}
+                    </Fragment>
                   );
                 }
 
@@ -514,6 +594,11 @@ export default async function ServiceDetailPage({ config, breadcrumbs }) {
                       />
                     )}
                     <section
+                      id={
+                        tocItems.length >= TOC_MIN_ITEMS
+                          ? tocIdBySection.get(section.dataSection)
+                          : undefined
+                      }
                       data-section={section.dataSection}
                       className={SECTION_CLASS_NAMES[section.type] ?? "service_features"}
                     >

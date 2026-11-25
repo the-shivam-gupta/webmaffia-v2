@@ -365,10 +365,6 @@
                 margin-bottom: 0;
             }
         }
-
-        h4{
-            width: 28rem;
-        }
     }
     .technology_img{
         display: flex;
@@ -525,11 +521,6 @@
             &:nth-last-child(1){
                 margin-bottom: 0;
             }
-        }
-
-        h4{
-            width: 45rem;
-            flex-shrink: 0;
         }
     }
     .tools_img{
@@ -856,6 +847,124 @@ h4{
     }
 }
 
+// "Last updated … Written and maintained by …" line in the hero, under the
+// intro paragraphs. Small and quiet. rem is only 4px on phones, hence the
+// larger rem value there. Text colour is set explicitly for dark mode because
+// a plain div isn't covered by the paragraph colour rules.
+.service_detail .service_updated{
+    margin: 0 0 3rem;
+    font-size: 1.4rem;
+    line-height: 1.5;
+    opacity: 0.6;
+    @include mobile(){
+        margin-bottom: 5rem;
+        font-size: 3rem;
+    }
+}
+html.active .service_detail .service_updated{
+    color: $white;
+}
+
+// "On this page" contents: a small label and one row of short links
+// (ServiceToc.js), placed below the statistics bar. No rules around it, so it
+// doesn't read as a second statistics bar. The section being read is
+// underlined (aria-current). rem is only 4px on phones, hence the larger rem
+// values there. Dark mode sets the text colour explicitly.
+.service_detail .service_toc{
+    margin: 10rem 0 14rem;
+    @include mobile(){
+        margin: 14rem 0 20rem;
+    }
+    // Right below the statistics bar, which already leaves its own gap.
+    &.service_toc--after_stats{
+        margin-top: 0;
+    }
+}
+.service_detail .service_toc_title{
+    margin: 0 0 2.2rem;
+    font-size: 1.4rem;
+    letter-spacing: 0.3rem;
+    text-transform: uppercase;
+    opacity: 0.6;
+    @include mobile(){
+        margin-bottom: 4.5rem;
+        font-size: 3rem;
+        letter-spacing: 0.6rem;
+    }
+}
+.service_detail .service_toc_list{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.4rem 4.4rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    @include mobile(){
+        gap: 4rem 7rem;
+    }
+    a{
+        display: inline-block;
+        padding-bottom: 0.7rem;
+        font-size: 2.2rem;
+        line-height: 1.2;
+        border-bottom: 0.2rem solid transparent;
+        opacity: 0.55;
+        transition: opacity 0.3s ease, border-color 0.3s ease;
+        @include mobile(){
+            padding-bottom: 1.4rem;
+            font-size: 3.6rem;
+            border-bottom-width: 0.5rem;
+        }
+        &:hover,
+        &:focus-visible{
+            opacity: 1;
+        }
+        &[aria-current]{
+            opacity: 1;
+            border-bottom-color: currentColor;
+        }
+    }
+}
+html.active .service_detail{
+    .service_toc_title,
+    .service_toc_list a{
+        color: $white;
+    }
+}
+// Clear the fixed header when jumping to a section (e.g. a #link in the URL).
+.service_detail .services_parent section[id]{
+    scroll-margin-top: 14rem;
+    @include mobile(){
+        scroll-margin-top: 30rem;
+    }
+}
+
+// Tool / technology labels are <h3> (they sit right under an <h2>; an <h4>
+// skipped a heading level) but keep the former <h4> look. Prefixed with their
+// containers so they win over the global and scoped h3 rules. Colour comes
+// from the heading colour rules: html.active h3 is already white in dark
+// mode (dark.scss line 4), and .h4 covers the technology labels.
+.service_tools .tools_row .tool_label,
+.technology_items .tool_label{
+    margin: 4rem 0 2.8rem;
+    font-size: 3.8rem;
+    line-height: 1.5;
+    letter-spacing: .8rem;
+    font-weight: 300;
+}
+.service_tools .tools_row .tool_label{
+    width: 45rem;
+    flex-shrink: 0;
+}
+.technology_items .tool_label{
+    width: 28rem;
+    font-size: 4.2rem;
+    line-height: 1.1;
+    @include mobile(){
+        font-size: 4rem;
+    }
+}
+
 .other_services{
     background: $black_4;
     padding: 4.2rem 3.2rem 1.5rem;
@@ -1102,10 +1211,17 @@ html.active .service_blogs .other_blogs .blog_item{
     }
 }
 
-// Statistics bar on service pages (shared home markup). The page's side
-// margins and section spacing come from .services_parent, and the grid sizes
-// its columns to however many stats the CMS has instead of a fixed five.
+// Statistics bar on service pages (shared home markup). The page's section
+// spacing comes from .services_parent, and the grid sizes its columns to
+// however many stats the CMS has instead of a fixed five.
+//
+// Like the homepage bar it runs edge to edge: the negative side margins cancel
+// .services_parent's own `margin: 0 8rem` (same rem value, so it matches at
+// every breakpoint, including phones where rem is 4px). Colours / borders are
+// the shared .statistics_bar ones, which already have dark-mode rules.
 .services_parent .statistics_bar{
+    margin-left: -8rem;
+    margin-right: -8rem;
     margin-top: vw(120);
     @include mobile(){
         margin-top: vw-mobile(56);

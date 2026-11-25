@@ -2,6 +2,7 @@ import { Fragment } from "react";
 import Image from "next/image";
 import Banner from "@/components/Banner";
 import JsonLd from "@/components/JsonLd";
+import { parseAwardDetails } from "@/lib/awards";
 import { buildBannerCta, getAwards, getStrapiImageUrl } from "@/lib/strapiPage";
 import { buildBreadcrumbSchema } from "@/lib/schema";
 
@@ -27,16 +28,6 @@ const FALLBACK_CARDS = [
   { image: FALLBACK_CARD_IMAGES[4], title: "Digital crest awards", year: "2015", type: "Gold", description: "Best Website Corporate / Brand" },
   { image: FALLBACK_CARD_IMAGES[5], title: "Kyoorius creative awards", year: "2015", type: "Gold", description: "Best use of Animation\nfor AM / NS India" },
 ];
-
-function parseAwardDetails(details) {
-  const lines = (details || "").split("\n").map((s) => s.trim());
-  const nonEmpty = lines.filter(Boolean);
-  return {
-    year: nonEmpty[0] || "",
-    type: nonEmpty[1] || "",
-    description: nonEmpty.slice(2).join("\n"),
-  };
-}
 
 function renderMultiline(text) {
   if (!text) return null;

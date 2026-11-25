@@ -205,7 +205,9 @@
     margin: 0 8rem 12rem;
     font-size: 1.4rem;
     opacity: 0.6;
+    // rem is only 4px on phones, so 1.4rem would be ~5.6px there.
     @include mobile(){
         margin-bottom: 8rem;
+        font-size: 3rem;
     }
 }

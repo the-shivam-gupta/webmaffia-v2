@@ -109,16 +109,18 @@ const LOCAL_BUSINESS_SCHEMA = {
  * Builds a Service JSON-LD object for a service detail page, using only what
  * the page itself states.
  *
- * @param {{ name: string, path: string, description?: string }} service -
- *   `path` is site-relative (e.g. "/services/digital-strategy").
+ * @param {{ name: string, path: string, description?: string, dateModified?: string }} service -
+ *   `path` is site-relative (e.g. "/services/digital-strategy"); `dateModified`
+ *   is an ISO date ("2026-11-18").
  */
-function buildServiceSchema({ name, path, description }) {
+function buildServiceSchema({ name, path, description, dateModified }) {
   const text = description?.replace(/\s+/g, " ").trim();
   return {
     "@context": "https://schema.org",
     "@type": "Service",
     name,
     ...(text ? { description: text } : {}),
+    ...(dateModified ? { dateModified } : {}),
     url: `${SITE_URL}${path}`,
     provider: { "@type": "Organization", name: "Webmaffia", url: `${SITE_URL}/` },
   };
