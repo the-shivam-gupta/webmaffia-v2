@@ -7,7 +7,7 @@ import { DEFAULT_LOCALE, normalizeLocale } from "@/lib/i18n";
  */
 const dictionaries = {
   en: {
-    "meta.blog.title": "Blog | Webmaffia",
+    "meta.blog.title": "SEO, GEO & Website Design Blog | Webmaffia",
     "meta.blog.description":
       "Insights on digital marketing, SEO, web development, AI, and brand strategy from the Webmaffia team.",
     "meta.authors.title": "Authors | Webmaffia",

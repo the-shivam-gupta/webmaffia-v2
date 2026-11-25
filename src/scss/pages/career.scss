@@ -34,6 +34,123 @@
     }
 }
 
+// Question-and-answer sections under the openings (Strapi career.details: a question + a rich-text answer).
+// Aligned with the accordion's left offset; headings use the blog article h3
+// look (3.2rem / 300 / 1.3), body text the article paragraph look.
+.career .career_qa{
+    margin: 0 12rem 16rem;
+    @include mobile(){
+        margin: 0;
+        padding: 0 6.5rem;
+        margin-bottom: 18rem;
+    }
+    .career_qa_item{
+        max-width: 96rem;
+        padding: 6rem 0;
+        border-top: .1rem solid rgba($black, 0.15);
+        @include mobile(){
+            max-width: none;
+            padding: 10rem 0;
+        }
+    }
+    .career_qa_title{
+        margin: 0 0 2.4rem;
+        font-size: 3.2rem;
+        font-weight: 300;
+        line-height: 1.3;
+        letter-spacing: 0;
+        @include mobile(){
+            margin-bottom: 4rem;
+        }
+    }
+    // <p> gets its phone size from the global p rule, as elsewhere.
+    p{
+        margin: 0 0 2rem;
+        font-size: 2rem;
+        font-weight: 300;
+        line-height: 1.6;
+    }
+    // Lists and links come from the CMS rich text.
+    ul, ol{
+        margin: 0 0 2.6rem;
+        padding-left: 3.5rem;
+        @include mobile(){
+            margin-bottom: 4rem;
+        }
+    }
+    ul{
+        list-style: disc;
+    }
+    ol{
+        list-style: decimal;
+    }
+    li{
+        margin-bottom: 1rem;
+        font-size: 2rem;
+        font-weight: 300;
+        line-height: 1.6;
+        @include mobile(){
+            margin-bottom: 2rem;
+            font-size: 3rem;
+        }
+    }
+    // Links behave like the blog's ".link": the underline is shown and wipes
+    // out to the right on hover (the global `p a` rule draws it the other way
+    // round, so it is overridden here).
+    // Drawn as a background line (not a ::after) so it also works when the
+    // link wraps onto two lines ("contact / page"): an absolutely positioned
+    // ::after has no usable width on a wrapped inline link and disappeared.
+    a{
+        text-decoration: none;
+        background-image: linear-gradient($black_60, $black_60);
+        background-repeat: no-repeat;
+        background-position: 0 100%;
+        background-size: 100% vw(2);
+        -webkit-box-decoration-break: clone;
+        box-decoration-break: clone;
+        // Only the size animates. The line's anchor flips instantly (left when
+        // idle, right on hover), exactly like the .link's transform-origin, so
+        // it retracts toward the right and grows back from the left. Animating
+        // the position as well made the line wobble.
+        transition: background-size 0.3s ease-in;
+        &::after{
+            display: none;
+        }
+        &:hover{
+            background-position: 100% 100%;
+            background-size: 0 vw(2);
+        }
+    }
+}
+html.active .career .career_qa{
+    .career_qa_item{
+        border-top-color: rgba($white, 0.2);
+    }
+    .career_qa_title, p, li, a{
+        color: $white;
+    }
+    // The underline turns light, as the blog's ".link" does in dark mode.
+    a{
+        background-image: linear-gradient(rgba($white, 0.6), rgba($white, 0.6));
+    }
+}
+
+// "Last updated" line under the openings.
+.career .career_updated{
+    margin: -12rem 12rem 12rem;
+    font-size: 1.4rem;
+    opacity: 0.6;
+    // A <p>: on phones the global p rule (!important) sets the size, so a small
+    // !important size is set here.
+    @include mobile(){
+        margin: -6rem 6.5rem 12rem;
+        font-size: vw-mobile(12) !important;
+    }
+}
+html.active .career .career_updated{
+    color: $white;
+}
+
 .resume_box{
     margin-bottom: 5rem;
     label{
@@ -165,6 +282,15 @@
             margin-bottom: 5rem;
             @include mobile(){
                 margin-bottom: 7rem;
+            }
+            // The shared .service_rich_text sets paragraphs to 2.2rem but bullets
+            // to 2.4rem, so a job description showed two text sizes. Bullets use
+            // the paragraph size here (3rem on phones, as both already are).
+            > li{
+                font-size: 2.2rem;
+                @include mobile(){
+                    font-size: 3rem;
+                }
             }
         }
     }

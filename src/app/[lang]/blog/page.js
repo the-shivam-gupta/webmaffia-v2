@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import BlogListItem from "@/components/BlogListItem";
 import BlogSearch from "@/components/BlogSearch";
 import BlogPagination from "@/components/BlogPagination";
+import HomeFaq from "@/components/HomeFaq";
 import JsonLd from "@/components/JsonLd";
 import { buildLocalizedAlternates, localesWithPosts } from "@/lib/blog-seo";
 import { t } from "@/lib/dictionaries";
@@ -16,10 +17,55 @@ import {
   getBlogsByLocale,
   getBlogWithMeta,
   getStrapiImageUrl,
+  parseBlogDate,
 } from "@/lib/strapiPage";
-import { buildBreadcrumbSchema, SITE_URL } from "@/lib/schema";
+import {
+  buildBreadcrumbSchema,
+  buildFaqSchema,
+  ORGANIZATION_SCHEMA,
+  SITE_URL,
+} from "@/lib/schema";
 
 const BLOG_PAGE_SIZE = 9;
+
+// Definitions for the terms the post teasers use without explaining them.
+const BLOG_TERMS = [
+  {
+    name: "SEO (search engine optimisation)",
+    text: "The work of getting a website's pages found and ranked in conventional search results such as Google's blue links.",
+  },
+  {
+    name: "GEO (generative engine optimisation)",
+    text: "The equivalent work for generative answer engines such as ChatGPT, Perplexity and Google AI Overviews, where the goal is to be retrieved, quoted and cited inside an answer rather than ranked as a link.",
+  },
+  {
+    name: "AI search",
+    text: "Any search experience where an AI model writes the answer and the sources sit underneath it, including Google AI Overviews and AI Mode.",
+  },
+  {
+    name: "Zero-click search",
+    text: "A search in which the person finds what they need on the results page itself, through an AI summary, a snippet or a map listing, and never visits a website.",
+  },
+];
+
+const MONTH_NAMES = [
+  "January", "February", "March", "April", "May", "June", "July",
+  "August", "September", "October", "November", "December",
+];
+
+// Date of the newest post -> { iso, label }. parseBlogDate builds the date in
+// local time, so it is read back with the local getters (not UTC, which could
+// land on the previous day).
+function newestPostDate(post) {
+  const time = parseBlogDate(post?.date);
+  if (!time) return null;
+  const date = new Date(time);
+  const pad = (n) => String(n).padStart(2, "0");
+  return {
+    iso: `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`,
+    label: `${date.getDate()} ${MONTH_NAMES[date.getMonth()]} ${date.getFullYear()}`,
+  };
+}
 
 // /blog?category=<slug> gets its own tab title, description and canonical URL.
 // Without a (valid) category the layout's default metadata applies.
@@ -82,6 +128,18 @@ export default async function BlogPage({ params, searchParams }) {
   const { page, category, q } = await searchParams;
   const query = typeof q === "string" ? q.trim() : "";
 
+  // Freshness: the newest post's date and the post count (real data, so it
+  // moves on its own whenever a post is added).
+  const newest = newestPostDate(blogs[0]);
+  const blogSchema = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: t(lang, "meta.blog.title"),
+    url: `${SITE_URL}${blogPath}`,
+    ...(newest ? { dateModified: newest.iso } : {}),
+    publisher: { "@type": "Organization", name: "Webmaffia", url: `${SITE_URL}/` },
+  };
+
   // /blog?category=<slug> shows every post tagged with that category
   const activeCategory = category
     ? blogs
@@ -105,6 +163,46 @@ export default async function BlogPage({ params, searchParams }) {
     : [];
   const isFiltered = Boolean(activeCategory || query);
 
+  // The intro and terms are English copy, so other languages skip them; they
+  // sit on the first page of the unfiltered listing only.
+  const showIntro =
+    lang === "en" && !isFiltered && (Number.parseInt(page, 10) || 1) === 1;
+
+  // Real questions the listing leaves unanswered (English copy, first page of
+  // the unfiltered listing only, like the intro). Also feeds the FAQPage schema.
+  const faqItems = showIntro
+    ? [
+        {
+          id: "geo-vs-seo",
+          question: "What is the difference between GEO and SEO?",
+          answer:
+            "SEO (search engine optimisation) is the work of getting a website's pages found and ranked in conventional search results such as Google's blue links. GEO (generative engine optimisation) is the equivalent work for answer engines such as ChatGPT, Perplexity and Google AI Overviews, where the goal is to be retrieved, quoted and cited inside an answer rather than ranked as a link. Most businesses need both, because AI answers often draw on pages that already rank well.",
+        },
+        {
+          id: "seo-or-rebuild",
+          question: "Should I fix my SEO or rebuild my website first?",
+          answer:
+            "It depends on what is holding the site back. Spending on SEO for a website that converts poorly sends traffic into a dead end, while rebuilding a site without an SEO strategy risks losing the rankings it already has. The Webmaffia post \"SEO or Website Rebuild First?\" explains how to diagnose which problem to fix first.",
+        },
+        {
+          id: "who-writes",
+          question: "Who writes the Webmaffia blog?",
+          answer:
+            "The Webmaffia team writes and edits the posts: the strategists, designers and developers who deliver the agency's SEO, AI, website design and development work. Each post names its author, and the Authors page lists the team behind the articles.",
+        },
+        {
+          id: "topics",
+          question: "What topics does the Webmaffia blog cover?",
+          answer: `The Webmaffia blog covers ${
+            allCategories.length > 0
+              ? allCategories.map((item) => item.title).join(", ")
+              : "search, AI search, website design and development"
+          }. Use the category filter next to the search box to narrow the list to one topic.`,
+        },
+      ]
+    : [];
+  const faqSchema = faqItems.length ? buildFaqSchema(faqItems) : null;
+
   const featuredBlog = isFiltered ? null : blogs[0];
   const featuredHref = featuredBlog
     ? localizePath(lang, `/blog/${featuredBlog.slug}`)
@@ -125,6 +223,9 @@ export default async function BlogPage({ params, searchParams }) {
   return (
     <main className="wrapper">
       <JsonLd data={breadcrumbSchema} />
+      <JsonLd data={ORGANIZATION_SCHEMA} />
+      {faqSchema && <JsonLd data={faqSchema} />}
+      <JsonLd data={blogSchema} />
       <div className="blog_listing">
 
         <section className="our_blog">
@@ -136,6 +237,34 @@ export default async function BlogPage({ params, searchParams }) {
             ) : (
               <h1 className="blog_page_title">Blogs</h1>
             )}
+          </div>
+          {newest && !isFiltered ? (
+            <p className="blog_updated">
+              Last updated: <time dateTime={newest.iso}>{newest.label}</time> ·{" "}
+              {blogs.length} {blogs.length === 1 ? "post" : "posts"}
+            </p>
+          ) : null}
+          {showIntro ? (
+            <div className="blog_intro">
+              <p className="blog_intro_text">
+                The Webmaffia blog publishes practical guides on search, AI search and
+                the web for business owners and marketing teams. Posts are written by
+                the Webmaffia team
+                {allCategories.length > 0
+                  ? ` and fall into ${allCategories.length} ${
+                      allCategories.length === 1 ? "category" : "categories"
+                    } you can filter below: ${allCategories
+                      .map((item) => item.title)
+                      .join(", ")}`
+                  : ""}
+                . The archive holds {blogs.length} {blogs.length === 1 ? "article" : "articles"}
+                {newest ? `, and the newest was published on ${newest.label}` : ""}.
+              </p>
+            </div>
+          ) : null}
+          {/* Search + category filter sit below the intro (right under the
+              title when a search / category is active and there is no intro). */}
+          <div className="blog_search_wrap">
             <BlogSearch
               defaultValue={query}
               category={activeCategory?.slug}
@@ -267,6 +396,63 @@ export default async function BlogPage({ params, searchParams }) {
             lang={lang}
           />
         </section>
+
+        {showIntro ? (
+          <section className="blog_terms_section" aria-labelledby="blog-terms-h">
+            <h2 id="blog-terms-h" className="blog_terms_title">
+              Terms used across these posts
+            </h2>
+            <dl className="blog_terms">
+              {BLOG_TERMS.map((term) => (
+                <div key={term.name}>
+                  <dt>{term.name}</dt>
+                  <dd>{term.text}</dd>
+                </div>
+              ))}
+            </dl>
+          </section>
+        ) : null}
+
+        {faqItems.length > 0 ? (
+          <div className="blog_faq">
+            <HomeFaq title="Questions about our blog" items={faqItems} />
+          </div>
+        ) : null}
+
+        {showIntro ? (
+          <section className="blog_about" aria-labelledby="blog-about-h">
+            <h2 id="blog-about-h" className="blog_about_title">
+              About the authors
+            </h2>
+            <p className="blog_about_text">
+              These posts are written and edited by the Webmaffia team: the strategists,
+              designers and developers who deliver the agency&rsquo;s SEO, generative
+              engine optimisation, AI, website design and development work. Articles draw
+              on what the team sees in live client projects, and each post names its
+              author, its category and the date it was published.
+            </p>
+            <h3 className="blog_cta_title">Want this work done for you?</h3>
+            <p className="blog_about_text">
+              Webmaffia does the work these posts describe: SEO and generative engine
+              optimisation, AI-powered solutions, website design and web development. If
+              you are weighing up whether to fix your SEO or rebuild your site, or you
+              want to understand how your brand is currently described in AI answers,
+              tell us what you are trying to change and we will tell you what we would
+              do first.
+            </p>
+            <div className="blog_about_links">
+              <Link href="/contact" className="cta_text">
+                Get in <span>touch</span>
+              </Link>
+              <Link href="/services" className="cta_text">
+                See our <span>services</span>
+              </Link>
+              <Link href={localizePath(lang, "/author")} className="cta_text">
+                Meet our <span>authors</span>
+              </Link>
+            </div>
+          </section>
+        ) : null}
       </div>
     </main>
   );

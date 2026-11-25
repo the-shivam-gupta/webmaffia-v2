@@ -528,6 +528,264 @@
 }
 
 // Blog listing header: "Blogs" title on the left, the search bar on the right.
+// "Last updated · N posts" line under the title row of the listing.
+.blog_listing .blog_updated{
+    margin: -1.5rem 0 4rem;
+    font-size: 1.4rem;
+    opacity: 0.6;
+    // A <p>: on phones the global p rule (!important) sets the size, so a small !important size is set here.
+    @include mobile(){
+        margin: -2rem 0 6rem;
+        font-size: vw-mobile(12) !important;
+    }
+}
+html.active .blog_listing .blog_updated{
+    color: $white;
+}
+
+// Intro note under the title row. Same paragraph style as the card teasers
+// (".other_blogs .blog_item > div a p": 1.8rem, light weight, full width).
+.blog_listing .blog_intro{
+    max-width: 96rem;
+    margin: 0 0 6rem;
+    @include mobile(){
+        max-width: none;
+        margin-bottom: 9rem;
+    }
+    // .our_blog p adds its own margins; reset them for this note.
+    .blog_intro_text{
+        width: 100%;
+        margin: 0;
+        font-size: 1.8rem;
+        font-weight: 300;
+        line-height: 1.6;
+        @include mobile(){
+            // Phones: the global `p` rule sets the size (vw-mobile(14) !important),
+            // exactly as on the card teasers, so only width / spacing are set here.
+            width: 100% !important;
+            line-height: 1.5;
+        }
+    }
+}
+
+// "Terms used across these posts" at the foot of the listing: same side margins
+// as the grid above, a title, then a 2 x 2 grid of terms set like the cards
+// (title 2.4rem / 500, text 1.8rem / 300). One column on phones.
+.blog_listing .blog_terms_section{
+    margin: 4rem 8rem 12rem;
+    padding-top: 8rem;
+    border-top: .1rem solid rgba($black, 0.15);
+    @include mobile(){
+        margin: 0;
+        padding: 12rem 6.5rem 0;
+        margin-bottom: 17.75rem;
+    }
+    // Same type as the page title (".blog_search_row .blog_page_title").
+    .blog_terms_title{
+        margin: 0 0 6rem;
+        font-size: 5.6rem;
+        font-weight: $exlight;
+        line-height: 1.1;
+        letter-spacing: 0;
+        @include mobile(){
+            margin-bottom: 9rem;
+            font-size: 8.4rem;
+        }
+    }
+    .blog_terms{
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6rem 10rem;
+        margin: 0;
+        @include mobile(){
+            grid-template-columns: 1fr;
+            gap: 8rem;
+        }
+        // Same type as the card titles (".other_blogs .blog_item .blog_item_title":
+        // 2.4rem / 500 / 1.1, 4.2rem / 1.25 on phones, no letter-spacing).
+        dt{
+            margin: 0 0 1.6rem;
+            font-size: 2.4rem;
+            font-weight: 500;
+            line-height: 1.1;
+            letter-spacing: 0;
+            @include mobile(){
+                margin-bottom: 3rem;
+                font-size: 4.2rem;
+                line-height: 1.25;
+            }
+        }
+        // Same type as the article body paragraphs (blog-detail.scss
+        // ".blog_content p": 2rem / 400 / 1.6; its list text is 3rem on phones).
+        dd{
+            margin: 0;
+            font-size: 2rem;
+            font-weight: 300;
+            line-height: 1.6;
+            @include mobile(){
+                // The article's <p> gets vw-mobile(14) from the global `p` rule on
+                // phones; a <dd> isn't a <p>, so the same size is set here.
+                font-size: vw-mobile(14);
+                line-height: 1.6;
+            }
+        }
+    }
+}
+html.active .blog_listing{
+    .blog_intro_text, .blog_terms_title, .blog_terms dt, .blog_terms dd{
+        color: $white;
+    }
+    .blog_terms_section{
+        border-top-color: rgba($white, 0.2);
+    }
+}
+
+// FAQ at the foot of the listing: the homepage accordion, given the same side
+// margins as the grid above (the accordion's own homepage margins are dropped).
+.blog_listing .blog_faq{
+    margin: 0 8rem 12rem;
+    @include mobile(){
+        margin: 0;
+        padding: 0 6.5rem;
+        margin-bottom: 17.75rem;
+    }
+    .home_faqs{
+        margin-left: 0;
+        margin-right: 0;
+        // Same heading type as the other section titles on this page.
+        .sub_heading{
+            width: 100%;
+            font-size: 5.6rem;
+            font-weight: $exlight;
+            line-height: 1.1;
+            letter-spacing: 0;
+            @include mobile(){
+                font-size: 8.4rem;
+            }
+        }
+    }
+}
+
+// "About the authors" + "Want this work done for you?": publisher attribution
+// and a route from reading to enquiring. Title type matches the terms heading.
+.blog_listing .blog_about{
+    margin: 0 8rem 12rem;
+    padding-top: 8rem;
+    border-top: .1rem solid rgba($black, 0.15);
+    @include mobile(){
+        margin: 0;
+        padding: 12rem 6.5rem 0;
+        margin-bottom: 17.75rem;
+    }
+    .blog_about_title{
+        margin: 0 0 4rem;
+        font-size: 5.6rem;
+        font-weight: $exlight;
+        line-height: 1.1;
+        letter-spacing: 0;
+        @include mobile(){
+            margin-bottom: 6rem;
+            font-size: 8.4rem;
+        }
+    }
+    // Same h3 as the article body (blog-detail.scss ".blog_content h3"): 3.2rem
+    // / 300 / 1.3, no letter-spacing. The article sets no phone font size, so
+    // 3.2rem applies there too; only its phone margins differ.
+    .blog_cta_title{
+        margin: 5rem 0 2.2rem;
+        font-size: 3.2rem;
+        font-weight: 300;
+        line-height: 1.3;
+        letter-spacing: 0;
+        text-transform: none;
+        @include mobile(){
+            margin: 8rem 0 3.4rem;
+        }
+    }
+    // A <p>: its phone size comes from the global `p` rule, as on the cards.
+    .blog_about_text{
+        max-width: 96rem;
+        margin: 0;
+        font-size: 2rem;
+        font-weight: 300;
+        line-height: 1.6;
+        @include mobile(){
+            max-width: none;
+            line-height: 1.6;
+        }
+    }
+    // No strike-through line on these links (the global .cta_text draws one
+    // through the last word and wipes it on hover): the line is removed and the
+    // last word takes the link's own colour.
+    .blog_about_links .cta_text span{
+        color: inherit;
+        &::before{
+            display: none;
+        }
+    }
+    // The links read as buttons: pill outline with an arrow; the first one is
+    // filled (primary). On hover the outlined ones fill and the arrow nudges.
+    .blog_about_links .cta_text{
+        display: inline-block;
+        padding: 1.5rem 3.2rem;
+        font-size: 2rem;
+        font-weight: 400;
+        line-height: 1;
+        color: $black;
+        border: .1rem solid $black;
+        border-radius: 10rem;
+        transition: background-color .25s ease, color .25s ease, border-color .25s ease;
+        // Phones: compact pills (not stretched to full width); rem is ~4px there.
+        @include mobile(){
+            padding: 2.4rem 4.6rem;
+            font-size: 3rem;
+        }
+        &:first-child{
+            color: $white;
+            background: $black;
+        }
+        @media (hover: hover){
+            &:hover{
+                color: $white;
+                background: $black;
+            }
+        }
+    }
+    .blog_about_links{
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem 3rem;
+        margin-top: 5rem;
+        @include mobile(){
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 3rem;
+            margin-top: 8rem;
+        }
+    }
+}
+html.active .blog_listing .blog_about{
+    border-top-color: rgba($white, 0.2);
+    .blog_about_title, .blog_cta_title, .blog_about_text{
+        color: $white;
+    }
+    // Buttons invert: white outline / text, and the primary one is filled white.
+    .blog_about_links .cta_text{
+        color: $white;
+        border-color: $white;
+        &:first-child{
+            color: $black;
+            background: $white;
+        }
+        @media (hover: hover){
+            &:hover{
+                color: $black;
+                background: $white;
+            }
+        }
+    }
+}
+
 .blog_search_row{
     display: flex;
     align-items: center;
@@ -561,6 +819,17 @@
             flex: none;
             width: 100%;
         }
+    }
+}
+
+// The search now sits under the title (and intro), left-aligned to the same
+// column as the intro text instead of centred.
+.blog_listing .blog_search_wrap .blog_search{
+    max-width: 96rem;
+    margin: 0 0 6rem;
+    @include mobile(){
+        max-width: none;
+        margin-bottom: 9rem;
     }
 }
 

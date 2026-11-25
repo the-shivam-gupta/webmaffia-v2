@@ -1,43 +1,26 @@
-"use client";
-
 import Banner from "@/components/Banner";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
 import CareerAccordion from "@/components/CareerAccordion";
 import JsonLd from "@/components/JsonLd";
-import { buildBreadcrumbSchema } from "@/lib/schema";
+import { formatUpdatedAt } from "@/lib/dates";
+import {
+  buildBannerCta,
+  getCareer,
+  getStrapiImageUrl,
+  rewriteStrapiHtmlUrls,
+} from "@/lib/strapiPage";
+import {
+  buildBreadcrumbSchema,
+  buildFaqSchema,
+  ORGANIZATION_SCHEMA,
+  SITE_URL,
+} from "@/lib/schema";
 
 const BREADCRUMB_SCHEMA = buildBreadcrumbSchema([
   { name: "Home", path: "/" },
   { name: "Career", path: "/career" },
 ]);
 
-const ROLE_INTERESTS = [
-  { id: "Web_design", value: "Web design", label: "Web design" },
-  { id: "Web_development", value: "Web development", label: "Web development" },
-  { id: "SEO_specialist", value: "SEO specialist", label: "SEO" },
-  {
-    id: "Social_media_manager",
-    value: "Social media manager",
-    label: "Social Media Management",
-  },
-  {
-    id: "content_creation",
-    value: "Content Creation",
-    label: "Content Creation",
-  },
-  {
-    id: "digital_marketing",
-    value: "Digital Marketing Creatives",
-    label: "Digital Marketing Creatives",
-  },
-  {
-    id: "video_creation",
-    value: "Video Creation",
-    label: "Video Creation",
-  },
-];
-
+// Shown only when Strapi returns nothing.
 const BASE_CAREER_BANNER = {
   imagePosition: "right",
   subheading: { enabled: true, text: "CAREER" },
@@ -46,181 +29,140 @@ const BASE_CAREER_BANNER = {
     "Are you passionate about crafting exceptional\ndigital experiences? Join our team at Web Maffia\nand embark on an exciting journey where creativity\nmeets innovation. We're seeking talented\nIndividuals who are eager to push the boundaries\nof web design and development. Explore our\ncurrent openings below and take the first step\ntowards shaping the future of the web with us.",
 };
 
-const RESUME_ACCEPT =
-  ".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+// Strapi `banner` component -> Banner props (same shape the About / Awards
+// pages build).
+function buildCareerBanner(rawBanner) {
+  if (!rawBanner) return BASE_CAREER_BANNER;
 
-export default function CareerPage() {
-  const router = useRouter();
-  const [submitting, setSubmitting] = useState(false);
-  const [bannerData, setBannerData] = useState(BASE_CAREER_BANNER);
-  const [careerData, setCareerData] = useState(null);
+  const subHeading = rawBanner.subHeading || "";
+  const lastSpace = subHeading.lastIndexOf(" ");
+  const images = {};
 
-  useEffect(() => {
-    fetch("/api/career-data")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data?.banner) setBannerData(data.banner);
-        if (data?.career) setCareerData(data.career);
-      })
-      .catch(() => {});
-  }, []);
-  const [error, setError] = useState("");
-  const [resume, setResume] = useState(null);
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    mobile: "",
-    interests: [],
-  });
+  if (rawBanner.desktopImage?.url) {
+    images.banner = {
+      url: getStrapiImageUrl(rawBanner.desktopImage),
+      alt: rawBanner.desktopImage.alternativeText || "",
+      width: rawBanner.desktopImage.width || 871,
+      height: rawBanner.desktopImage.height || 767,
+    };
+  }
+  if (rawBanner.mobileImage?.url) {
+    images.bannerMobile = {
+      url: getStrapiImageUrl(rawBanner.mobileImage),
+      alt: rawBanner.mobileImage.alternativeText || "",
+    };
+  }
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    if (name === "mobile" && !/^\d*$/.test(value)) return;
-    setForm((prev) => ({ ...prev, [name]: value }));
+  return {
+    imagePosition: rawBanner.imagePosition || "right",
+    // The hero image is the page's LCP element: load it eagerly.
+    priority: true,
+    subheading: rawBanner.heading
+      ? { enabled: true, text: rawBanner.heading }
+      : undefined,
+    title: {
+      line1: lastSpace > 0 ? subHeading.slice(0, lastSpace) : subHeading,
+      ...(lastSpace > 0 ? { line2: subHeading.slice(lastSpace + 1) } : {}),
+    },
+    description: (rawBanner.description || "").trim(),
+    cta: buildBannerCta(rawBanner),
+    ...(Object.keys(images).length ? { images } : {}),
   };
+}
 
-  const toggleInterest = (value) => {
-    setForm((prev) => ({
-      ...prev,
-      interests: prev.interests.includes(value)
-        ? prev.interests.filter((v) => v !== value)
-        : [...prev.interests, value],
-    }));
+// Strapi `career` component -> the openings the accordion renders.
+function buildCareerOpenings(rawCareer) {
+  if (!rawCareer) return null;
+  return {
+    heading: rawCareer.heading,
+    accordion: (rawCareer.accordion || []).map((item) => ({
+      id: item.id,
+      jobTitle: item.jobTitle,
+      description: item.description || "",
+    })),
   };
+}
 
-  const handleResumeChange = (e) => {
-    const file = e.target.files?.[0];
-    setResume(file || null);
-  };
+// Strapi `details` (repeatable on the Career page: question + rich-text answer)
+// -> items.
+function buildCareerDetails(rawDetails) {
+  return (rawDetails ?? [])
+    .map((item, index) => ({
+      id: item.id ?? index,
+      question: item.question?.trim(),
+      html: rewriteStrapiHtmlUrls(item.answer?.trim() ?? ""),
+    }))
+    .filter((item) => item.question && item.html);
+}
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
+// Rich-text answer -> plain text (used by the FAQPage schema).
+function htmlToText(html) {
+  return html
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&#39;|&rsquo;/g, "'")
+    .replace(/\s+/g, " ")
+    .trim();
+}
 
-    if (!resume) {
-      setError("Please upload your resume.");
-      return;
-    }
+// Rendered on the server so the banner and the openings are in the page HTML
+// (they used to be fetched in the browser after load, which left the HTML
+// almost empty and made the page jump when the data arrived).
+export default async function CareerPage() {
+  const raw = await getCareer();
 
-    setSubmitting(true);
+  const bannerData = buildCareerBanner(raw?.banner);
+  const careerData = buildCareerOpenings(raw?.career);
+  const details = buildCareerDetails(raw?.details);
+  const faqSchema = details.length
+    ? buildFaqSchema(
+        details.map((item) => ({
+          question: item.question,
+          answer: htmlToText(item.html),
+        }))
+      )
+    : null;
+  const updated = formatUpdatedAt(raw?.updatedAt);
 
-    try {
-      const body = new FormData();
-      body.append("form_source", "career");
-      body.append("name", form.name);
-      body.append("email", form.email);
-      body.append("mobile", form.mobile);
-      form.interests.forEach((interest) => body.append("interests[]", interest));
-      body.append("resume", resume);
-
-      const res = await fetch("/api/career", {
-        method: "POST",
-        body,
-      });
-
-      if (!res.ok) throw new Error("Submission failed");
-      router.push("/thank-you");
-    } catch {
-      setError("Something went wrong. Please try again.");
-    } finally {
-      setSubmitting(false);
-    }
+  const careerPageSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: "Careers at Webmaffia",
+    url: `${SITE_URL}/${raw?.slug || "career"}`,
+    ...(updated ? { dateModified: updated.iso } : {}),
+    publisher: { "@type": "Organization", name: "Webmaffia", url: `${SITE_URL}/` },
   };
 
   return (
     <main className="wrapper">
       <JsonLd data={BREADCRUMB_SCHEMA} />
+      <JsonLd data={ORGANIZATION_SCHEMA} />
+      <JsonLd data={careerPageSchema} />
+      {faqSchema && <JsonLd data={faqSchema} />}
       <div className="ml-setter career">
         <Banner data={bannerData} />
 
         <section className="contact_us">
           <CareerAccordion data={careerData} />
-
-          {/* <div id="career-apply">
-            <h2 className="h2">
-              Let&apos;s work <br />
-              together
-            </h2>
-            <form
-              className="form"
-              onSubmit={handleSubmit}
-              encType="multipart/form-data"
-            >
-              <label htmlFor="career_name">Your Name</label>
-              <input
-                type="text"
-                name="name"
-                id="career_name"
-                className="txtNumeric"
-                value={form.name}
-                onChange={handleChange}
-                required
-              />
-
-              <label htmlFor="career_email">Your Email</label>
-              <input
-                type="email"
-                name="email"
-                id="career_email"
-                value={form.email}
-                onChange={handleChange}
-                required
-              />
-
-              <label htmlFor="career_mobile">Your Number</label>
-              <input
-                type="text"
-                name="mobile"
-                id="career_mobile"
-                maxLength={10}
-                inputMode="numeric"
-                pattern="[0-9]+"
-                value={form.mobile}
-                onChange={handleChange}
-                required
-              />
-
-              <label htmlFor="career_interests">You are interested in</label>
-              <div className="input_checkox">
-                {ROLE_INTERESTS.map(({ id, value, label }) => (
-                  <label key={id} htmlFor={id} className="checkmark">
-                    <input
-                      type="checkbox"
-                      id={id}
-                      checked={form.interests.includes(value)}
-                      onChange={() => toggleInterest(value)}
-                    />
-                    <span>{label}</span>
-                  </label>
-                ))}
-              </div>
-
-              <div className="resume_box">
-                <label htmlFor="resume">Upload your Resume</label>
-                <input
-                  type="file"
-                  name="resume"
-                  id="resume"
-                  accept={RESUME_ACCEPT}
-                  onChange={handleResumeChange}
-                  required
-                />
-              </div>
-
-              <input type="hidden" name="form_source" value="career" readOnly />
-
-              {error && (
-                <p role="alert" style={{ color: "#c72c2c", marginBottom: "2rem" }}>
-                  {error}
-                </p>
-              )}
-
-              <button type="submit" className="cta_text" disabled={submitting}>
-                Apply <span>{submitting ? "…" : "Now"}</span>
-              </button>
-            </form>
-          </div> */}
         </section>
+
+        {details.length > 0 && (
+          <section className="career_qa" aria-label="About working at Webmaffia">
+            {details.map((item) => (
+              <article key={item.id} className="career_qa_item">
+                <h2 className="career_qa_title">{item.question}</h2>
+                <div dangerouslySetInnerHTML={{ __html: item.html }} />
+              </article>
+            ))}
+          </section>
+        )}
+
+        {updated && (
+          <p className="career_updated">
+            Last updated: <time dateTime={updated.iso}>{updated.label}</time>
+          </p>
+        )}
       </div>
     </main>
   );

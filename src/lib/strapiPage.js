@@ -960,7 +960,7 @@ async function fetchCareerRaw() {
         throw new Error("STRAPI_API_URL is not configured");
     }
 
-    const response = await fetch(`${strapiBaseUrl}/api/career?populate[banner][populate]=*&populate[career][populate]=*`, {
+    const response = await fetch(`${strapiBaseUrl}/api/career?populate[banner][populate]=*&populate[career][populate]=*&populate[details][populate]=*`, {
         headers: {
             Authorization: `Bearer ${STRAPI_TOKEN}`,
             "Content-Type": "application/json",
