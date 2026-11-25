@@ -41,11 +41,20 @@
             @include mobile(){
                 width: 100%;
             }
+            // Every award image gets the same box and is fitted inside it, so
+            // tightly cropped logos don't balloon and padded photos don't
+            // shrink the row; titles line up across both columns.
             img{
-                width: 41rem;
+                display: block;
+                width: 26rem;
+                height: 17rem;
+                object-fit: contain;
+                object-position: left center;
                 margin-bottom: 2rem;
                 @include mobile(){
-                    width: 100%;
+                    width: 70%;
+                    // rem is ~4px on phones, so the box is larger there.
+                    height: 40rem;
                     margin-bottom: 4rem;
                 }
             }
@@ -92,6 +101,38 @@
             margin-top: 10rem;
         }
     }
+}
+
+// Dark mode: most award logos are black on a transparent background (and the
+// trophy photos sit on white), so they are inverted. hue-rotate(180deg) turns
+// the flipped hues of any coloured artwork back to roughly the original.
+html.active .award_section .awards_box .awards_item img{
+    filter: invert(1) hue-rotate(180deg);
+}
+
+// FAQ below the cards: the shared .team_faq layout (see team.scss, dark mode in
+// dark.scss) with room above it and before the "Last updated" line.
+.awards_page .awards_faq{
+    margin-top: 10rem;
+    margin-bottom: 4rem;
+    @include mobile(){
+        margin-top: 14rem;
+        margin-bottom: 6rem;
+    }
+}
+
+.awards_page .awards_last_updated{
+    margin: 0 8rem 6rem;
+    font-size: 1.4rem;
+    opacity: 0.6;
+    // rem is only 4px on phones, so 1.4rem would be ~5.6px there.
+    @include mobile(){
+        margin: 0 6.5rem 8rem;
+        font-size: 3rem;
+    }
+}
+html.active .awards_page .awards_last_updated{
+    color: #fff;
 }
 
 h3{

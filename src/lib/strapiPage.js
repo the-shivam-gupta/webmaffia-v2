@@ -790,7 +790,7 @@ async function fetchAwardsRaw() {
         throw new Error("STRAPI_API_URL is not configured");
     }
 
-    const response = await fetch(`${strapiBaseUrl}/api/award?populate[banner][populate]=*&populate[card][populate]=*`, {
+    const response = await fetch(`${strapiBaseUrl}/api/award?populate[banner][populate]=*&populate[card][populate]=*&populate[faqs][populate]=*&populate[seo][populate]=*`, {
         headers: {
             Authorization: `Bearer ${STRAPI_TOKEN}`,
             "Content-Type": "application/json",

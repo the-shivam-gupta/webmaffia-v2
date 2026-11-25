@@ -3,8 +3,20 @@ import Image from "next/image";
 import Banner from "@/components/Banner";
 import JsonLd from "@/components/JsonLd";
 import { parseAwardDetails } from "@/lib/awards";
-import { buildBannerCta, getAwards, getStrapiImageUrl } from "@/lib/strapiPage";
-import { buildBreadcrumbSchema } from "@/lib/schema";
+import TeamFaq from "@/components/TeamFaq";
+import {
+  buildBannerCta,
+  getAwards,
+  getSeoFields,
+  getStrapiImageUrl,
+} from "@/lib/strapiPage";
+import { formatUpdatedAt } from "@/lib/dates";
+import {
+  buildBreadcrumbSchema,
+  buildFaqSchema,
+  ORGANIZATION_SCHEMA,
+  SITE_URL,
+} from "@/lib/schema";
 
 const BREADCRUMB_SCHEMA = buildBreadcrumbSchema([
   { name: "Home", path: "/" },
@@ -81,12 +93,16 @@ function buildAwardsBannerData(rawBanner) {
 export async function generateMetadata() {
   const data = await getAwards();
   const slug = data?.slug || "awards";
+  // Strapi `seo` component wins; the previous values stay as fallbacks.
+  const seo = getSeoFields(data?.seo);
   return {
-    title: "Webmaffia Awards and Recognition - Digital Marketing Excellence",
+    title: seo.title ?? "Webmaffia Awards - Digital Marketing Excellence",
     description:
+      seo.description ??
       "Discover Webmaffia's journey of digital marketing excellence through prestigious awards. Celebrating innovation, creativity & success in the industry.",
+    ...(seo.keywords ? { keywords: seo.keywords } : {}),
     alternates: {
-      canonical: `https://www.webmaffia.com/${slug}`,
+      canonical: seo.canonical ?? `https://www.webmaffia.com/${slug}`,
     },
   };
 }
@@ -120,9 +136,33 @@ export default async function AwardsPage() {
       })
     : FALLBACK_CARDS;
 
+  // Strapi `faqs` component -> { question, answer } items.
+  // The repeatable is `faqs` here (`faqsList` on About); the answer text is
+  // `description` or `answer` depending on the component.
+  const faqItems = (data?.faqs?.faqs ?? data?.faqs?.faqsList ?? [])
+    .map((item) => ({
+      question: item?.question?.trim(),
+      answer: (item?.description ?? item?.answer)?.trim(),
+    }))
+    .filter((item) => item.question && item.answer);
+  const faqSchema = faqItems.length ? buildFaqSchema(faqItems) : null;
+
+  const updated = formatUpdatedAt(data?.updatedAt);
+  const awardsPageSchema = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "Webmaffia Awards",
+    url: `${SITE_URL}/${data?.slug || "awards"}`,
+    ...(updated ? { dateModified: updated.iso } : {}),
+    publisher: { "@type": "Organization", name: "Webmaffia", url: `${SITE_URL}/` },
+  };
+
   return (
     <main className="wrapper">
       <JsonLd data={BREADCRUMB_SCHEMA} />
+      <JsonLd data={ORGANIZATION_SCHEMA} />
+      <JsonLd data={awardsPageSchema} />
+      {faqSchema && <JsonLd data={faqSchema} />}
       <div className="ml-setter awards_page">
         <Banner data={bannerData} />
 
@@ -132,7 +172,7 @@ export default async function AwardsPage() {
               <div className="awards_item" key={`${award.year}-${award.type}-${index}`}>
                 <Image
                   src={award.image}
-                  alt=""
+                  alt={[award.title, award.year, award.type].filter(Boolean).join(" ")}
                   width={410}
                   height={267}
                   className="dark_img"
@@ -152,6 +192,22 @@ export default async function AwardsPage() {
             height={491}
           />
         </section>
+
+        {faqItems.length > 0 && (
+          <section data-section="faq" className="team_faq awards_faq">
+            <div className="team_faq_head">
+              {data?.faqs?.tagline && <h2 className="sub_title">{data.faqs.tagline}</h2>}
+              {data?.faqs?.title && <div className="sub_heading">{data.faqs.title}</div>}
+            </div>
+            <TeamFaq items={faqItems} />
+          </section>
+        )}
+
+        {updated && (
+          <p className="awards_last_updated">
+            Last updated: <time dateTime={updated.iso}>{updated.label}</time>
+          </p>
+        )}
       </div>
     </main>
   );
