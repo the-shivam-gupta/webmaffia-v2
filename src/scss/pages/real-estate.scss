@@ -314,6 +314,29 @@
         }
     }
 
+    // Lead paragraph under a block heading (problems, what you receive).
+    // Colour follows the page ink variable, so light / dark need no extra rule.
+    .re_block .re_intro{
+        max-width: 78rem;
+        margin-top: 2.4rem;
+        @include mobile(){
+            max-width: none;
+            margin-top: 4rem;
+        }
+    }
+
+    // "Published by / Last updated" line before the final blocks.
+    .re_updated{
+        margin: -6rem 0 13rem;
+        font-size: 1.4rem;
+        color: var(--re-muted);
+        @include mobile(){
+            margin: -12rem 0 22rem;
+            // rem is only ~4px on phones, so 1.4rem would be unreadable.
+            font-size: 3rem;
+        }
+    }
+
     // ---------- numbered problem rows ----------
     .re_rows{
         margin-top: 5rem;

@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import JsonLd from "@/components/JsonLd";
 import HomeFaq from "@/components/HomeFaq";
+import { formatUpdatedAt } from "@/lib/dates";
 import { INDUSTRY_LINKS } from "@/lib/industries";
 import { buildBreadcrumbSchema, buildFaqSchema, SITE_URL } from "@/lib/schema";
 
@@ -74,11 +75,14 @@ export default function StaticIndustryPage({ page }) {
     answer: item.answer,
   }));
 
+  const updated = formatUpdatedAt(page.updated);
+
   const schema = {
     "@context": "https://schema.org",
     "@graph": [
       {
-        "@type": "ProfessionalService",
+        // Also typed Organization so engines that look for it find the publisher.
+        "@type": ["ProfessionalService", "Organization"],
         "@id": `${SITE_URL}/#org`,
         name: "Webmaffia",
         legalName: "Pixtop Media Solutions Pvt Ltd",
@@ -184,7 +188,7 @@ export default function StaticIndustryPage({ page }) {
           <div className="re_stats" role="list">
             {page.stats.map((item) => (
               <div className="re_stat" role="listitem" key={item.label}>
-                <b>{item.value}</b>
+                <b>{item.value}</b>{" "}
                 <span>{item.label}</span>
               </div>
             ))}
@@ -212,6 +216,7 @@ export default function StaticIndustryPage({ page }) {
           <section className="re_block" aria-labelledby="problems-h">
             <Label>{page.problems.label}</Label>
             <h2 id="problems-h">{page.problems.title}</h2>
+            {page.problems.intro && <p className="re_intro">{page.problems.intro}</p>}
             <ul className="re_rows">
               {page.problems.items.map((item, i) => (
                 <li key={item.title}>
@@ -298,6 +303,7 @@ export default function StaticIndustryPage({ page }) {
           <section className="re_block" aria-labelledby="receive-h">
             <Label>{page.receive.label}</Label>
             <h2 id="receive-h">{page.receive.title}</h2>
+            {page.receive.intro && <p className="re_intro">{page.receive.intro}</p>}
             <ul className="re_checks">
               {page.receive.items.map((text) => (
                 <li key={text}>
@@ -349,6 +355,13 @@ export default function StaticIndustryPage({ page }) {
               items={faqItems}
             />
           </div>
+
+          {updated && (
+            <p className="re_updated">
+              Published by Webmaffia · Last updated:{" "}
+              <time dateTime={updated.iso}>{updated.label}</time>
+            </p>
+          )}
 
           {/* Explore other industries (same look as "Our Other Services") */}
           {otherIndustries.length > 0 ? (

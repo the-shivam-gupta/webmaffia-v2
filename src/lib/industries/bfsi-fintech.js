@@ -23,7 +23,7 @@ export const bfsiFintech = {
     "label": "BFSI and fintech marketing",
     "title": "BFSI and fintech digital marketing that turns trust into sign-ups",
     "leadStrong": "Webmaffia is a Mumbai digital marketing agency for banks, NBFCs, insurers, asset managers, brokers and fintech companies.",
-    "lead": "One team covers all eight services, with regulatory disclosures and data security built in from day one.",
+    "lead": "BFSI stands for banking, financial services and insurance (banks, lenders, insurers, brokers, wealth platforms and payment companies), and fintech covers the digital-first businesses building products across those categories. One team covers all eight services, with regulatory disclosures and data security built in from day one.",
     "primary": {
       "text": "Get a plan",
       "href": "/contact"
@@ -61,8 +61,8 @@ export const bfsiFintech = {
     "label": "Our approach",
     "title": "More than just a website. A trusted front door to your products.",
     "paragraphs": [
-      "People choose a financial brand they understand and trust. We create websites, apps and content that explain products simply, show the right disclosures, make costs and eligibility clear, and guide customers through applications without friction.",
-      "Because one team runs strategy, website, search, apps, social and content, every message goes through the same compliance review and every channel feels like one brand."
+      "People choose a financial brand they understand and trust. Webmaffia builds websites, apps and content for BFSI and fintech brands that explain products simply, show the right disclosures, make costs and eligibility clear, and guide customers through applications without friction.",
+      "Because one Webmaffia team runs strategy, website, search, apps, social and content, every message goes through the same compliance review and every channel feels like one brand."
     ],
     "image": {
       "src": "/assets/images/industry/BFSI%20Finetech%202.jpg",
@@ -74,25 +74,26 @@ export const bfsiFintech = {
   "problems": {
     "label": "The problems we solve",
     "title": "BFSI & Fintech businesses face unique digital challenges. We solve them.",
+    "intro": "Five problems come up in almost every BFSI and fintech brief Webmaffia receives: products customers cannot understand, applications they abandon halfway, advertising and disclosure rules that constrain every claim, a trust gap new fintech brands must close before the first sign-up, and paid acquisition costs that climb with every campaign. Here is how Webmaffia addresses each one.",
     "items": [
       {
-        "title": "Products are hard to understand",
+        "title": "How do I explain complex financial products to customers?",
         "text": "Plain-language product pages, comparisons and calculators help customers choose with confidence."
       },
       {
-        "title": "High drop-off in applications",
+        "title": "How do I reduce drop-off in loan and account applications?",
         "text": "Shorter, mobile-first journeys with clear eligibility and progress cut abandonment."
       },
       {
-        "title": "Strict advertising and disclosure rules",
+        "title": "How do I advertise under RBI, SEBI and ASCI disclosure rules?",
         "text": "Templates place mandatory disclosures correctly, and every claim goes through your compliance review."
       },
       {
-        "title": "Low trust in new fintech brands",
+        "title": "How do I build trust for a new fintech brand?",
         "text": "Regulatory registrations, security practices, grievance details and real reviews are easy to find."
       },
       {
-        "title": "Expensive paid acquisition",
+        "title": "How do I lower customer acquisition cost in fintech?",
         "text": "SEO for product, calculator and how-to searches builds a lower-cost, compounding channel."
       }
     ]
@@ -135,25 +136,25 @@ export const bfsiFintech = {
         "icon": "doc",
         "title": "Content marketing",
         "href": "/services/content-marketing-strategy",
-        "text": "Guides, explainers, market updates and glossary content written for clarity and reviewed for compliance."
+        "text": "Webmaffia writes guides, explainers, market updates and glossary content for clarity, and routes every piece through your compliance review before publication."
       },
       {
         "icon": "app",
         "title": "App store optimization",
         "href": "/services/app-store-optimization",
-        "text": "Store listings, keywords, ratings strategy and creatives for banking, trading, insurance and payment apps."
+        "text": "Webmaffia manages store listings, keywords, ratings strategy and creatives for banking, trading, insurance and payment apps."
       },
       {
         "icon": "mega",
         "title": "Influencer marketing",
         "href": "/services/influencer-marketing",
-        "text": "Registered and credible finance voices only, with briefs that follow regulator and ASCI rules."
+        "text": "Webmaffia briefs registered and credible finance voices only, with briefs that follow SEBI and ASCI rules."
       }
     ]
   },
   "types": {
     "label": "Website types and features",
-    "title": "Tailored for every BFSI and fintech need",
+    "title": "Which type of financial website do I need?",
     "columns": [
       "Feature",
       "Corporate and investor website",
@@ -221,7 +222,7 @@ export const bfsiFintech = {
   },
   "process": {
     "label": "Our process",
-    "title": "A simple 3-step process",
+    "title": "How does Webmaffia work with BFSI and fintech clients?",
     "steps": [
       {
         "title": "Discover & Plan",
@@ -239,7 +240,8 @@ export const bfsiFintech = {
   },
   "receive": {
     "label": "What you receive",
-    "title": "Everything you need for a successful launch",
+    "title": "What do you get in a Webmaffia engagement?",
+    "intro": "Every Webmaffia BFSI and fintech engagement includes the following deliverables, from first design through to post-launch support:",
     "items": [
       "Custom website design and development",
       "CMS with compliance approval workflow",
@@ -254,7 +256,7 @@ export const bfsiFintech = {
   },
   "band": {
     "label": "Security and compliance",
-    "title": "Built for trust. Secured for the long run.",
+    "title": "What compliance and security safeguards does Webmaffia follow?",
     "text": "Financial marketing is regulated and customer data is sensitive. We build secure, review-ready workflows, and your compliance team approves what goes live.",
     "points": [
       "Disclosures placed as required by RBI, SEBI, IRDAI, AMFI or other applicable rules",
@@ -265,12 +267,12 @@ export const bfsiFintech = {
   },
   "why": {
     "label": "Why Webmaffia",
-    "title": "Why BFSI and fintech brands choose Webmaffia",
+    "title": "Why do BFSI and fintech brands choose Webmaffia?",
     "items": [
       {
         "icon": "users",
         "title": "Financial services focus",
-        "text": "We understand regulated products, compliance cycles and trust signals."
+        "text": "Webmaffia understands regulated products, compliance cycles and trust signals, and has worked with Aditya Birla Capital, Perfios and Airpay."
       },
       {
         "icon": "spark",
@@ -337,7 +339,7 @@ export const bfsiFintech = {
       },
       {
         "question": "How do you protect customer data?",
-        "answer": "We collect only what is needed, use consent-based forms and secure integrations, and align practices with India's DPDP Act and GDPR. Our parent company is ISO/IEC 27001:2022 certified."
+        "answer": "Webmaffia collects only what is needed, uses consent-based forms and secure integrations, and aligns its practices with India's DPDP Act and GDPR. Webmaffia's parent company, Pixtop Media Solutions Pvt Ltd, holds ISO/IEC 27001:2022 certification valid until 2028."
       },
       {
         "question": "Will our website rank on Google and AI Overviews?",
@@ -345,7 +347,7 @@ export const bfsiFintech = {
       },
       {
         "question": "How much does BFSI digital marketing cost?",
-        "answer": "Cost depends on services, products, journeys, content volume, review cycles and integrations. We share a scoped plan after discovery."
+        "answer": "Webmaffia does not publish fixed prices for BFSI and fintech marketing, because cost depends on the services you take, the number of products and application journeys, content volume, compliance review cycles and the integrations required. After a discovery call, Webmaffia shares a scoped plan setting out deliverables and fees line by line."
       }
     ]
   }
