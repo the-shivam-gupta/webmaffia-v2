@@ -191,7 +191,7 @@
             margin-bottom: 2.5rem;
             line-height: 1.4;
             font-size: 2.4rem;
-            font-weight: 500;
+            font-weight: 400;
             @include mobile(){
                 font-size: 3rem;
                 padding-left: 5rem;
@@ -211,8 +211,15 @@
                     height: 3.2rem;
                 }
             }
+            // CMS editors sometimes wrap a bullet's text in <p> and sometimes
+            // don't; the <p> must not change its size / weight / width, or
+            // neighbouring bullets look different.
             p{
                 margin: 0;
+                width: auto;
+                font-size: inherit;
+                font-weight: inherit;
+                line-height: inherit;
             }
         }
     }
@@ -1161,7 +1168,6 @@ html.active .service_blogs .other_blogs .blog_item{
 .svc_other_item{
     display: inline-flex;
     align-items: center;
-    gap: 1.6rem;
     max-width: 100%;
     padding: 1.8rem 3rem;
     border: .1rem solid #cfcfcf;
@@ -1169,7 +1175,6 @@ html.active .service_blogs .other_blogs .blog_item{
     color: $black;
     transition: background-color .3s ease, color .3s ease, border-color .3s ease;
     @include mobile(){
-        gap: 2rem;
         padding: 2.6rem 4rem;
     }
     @media (hover: hover){
@@ -1179,9 +1184,6 @@ html.active .service_blogs .other_blogs .blog_item{
             color: #fff;
             .svc_other_name.h3_plain{
                 color: #fff;
-            }
-            .svc_other_arrow{
-                transform: translateX(.5rem);
             }
         }
     }
@@ -1199,14 +1201,5 @@ html.active .service_blogs .other_blogs .blog_item{
     }
     @include mobile(){
         font-size: 3.6rem;
-    }
-}
-.svc_other_arrow{
-    flex: none;
-    font-size: 2.2rem;
-    line-height: 1;
-    transition: transform .3s ease;
-    @include mobile(){
-        font-size: 3.4rem;
     }
 }

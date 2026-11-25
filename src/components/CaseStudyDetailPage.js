@@ -78,7 +78,7 @@ function ContentBlockSection({
         <SectionTitle heading={block.heading} className="challenge_content__title" />
         {block.subHeading ? (
           isSolution ? (
-            <h4>{block.subHeading}</h4>
+            <p className="challenge_content__subheading">{block.subHeading}</p>
           ) : (
             <p className="challenge_content__para">{block.subHeading}</p>
           )

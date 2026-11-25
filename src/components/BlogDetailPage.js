@@ -5,6 +5,7 @@ import BlogEnquiryForm from "./BlogEnquiryForm";
 import BlogReadingProgress from "./BlogReadingProgress";
 import BlogShare from "./BlogShare";
 import BlogStickyNav from "./BlogStickyNav";
+import GoogleSourceButtons from "./GoogleSourceButtons";
 import { t } from "@/lib/dictionaries";
 import { localizePath } from "@/lib/i18n";
 
@@ -166,16 +167,7 @@ export default function BlogDetailPage({
                     See more of Webmaffia in the Top stories section when you
                     search on Google.
                   </p>
-                  <div
-                    className="blog_google_source_light"
-                    google-add-preferred-source-btn=""
-                    data-theme="light"
-                  />
-                  <div
-                    className="blog_google_source_dark"
-                    google-add-preferred-source-btn=""
-                    data-theme="dark"
-                  />
+                  <GoogleSourceButtons />
                 </div>
                 <div className="blog_enquiry_wrap">
                   <BlogEnquiryForm />

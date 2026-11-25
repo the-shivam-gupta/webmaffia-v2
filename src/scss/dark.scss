@@ -911,6 +911,104 @@ html.active .team_section{
     }
 }
 
+// /team "Who will work on my project?" rows (dark theme): these used black /
+// dark-grey text and black rules that vanish on the dark background.
+html.active .team_page{
+    .team_pod_list{
+        border-top-color: $white;
+    }
+    .team_pod_item{
+        border-bottom-color: rgba($white, 0.18);
+        p{
+            color: rgba($white, 0.7);
+        }
+    }
+    .team_pod_number,
+    .team_pod_title{
+        color: $white;
+    }
+}
+
+// Blog article body (dark theme). The article's h2 / h3 were hard-coded #000
+// and its list items, table cells and inline text only had the black body
+// colour, so they vanished on the black page. Table borders were #000 too.
+html.active .blog_section .blog_set .blog_page .blog_content{
+    color: $white;
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    li,
+    th,
+    td,
+    strong,
+    b,
+    em,
+    blockquote,
+    figcaption{
+        color: $white;
+    }
+    th,
+    td{
+        border-color: rgba($white, 0.3);
+    }
+    blockquote{
+        border-color: rgba($white, 0.3);
+    }
+}
+
+// Service detail pages (dark theme): text and borders that were hard-coded to
+// black / grey in service-detail.scss and so vanished on the black page.
+html.active .service_rich_text{
+    li,
+    strong{
+        color: $white;
+    }
+}
+
+// "Latest work" slider: card name / type and the Previous / Next buttons.
+html.active .work_slider{
+    .work_card_info,
+    .work_card_name{
+        color: $white;
+    }
+    .work_card_type{
+        color: $white_60;
+    }
+    .work_card_media{
+        background: rgba($white, 0.06);
+    }
+}
+html.active .work_slider_buttons button{
+    color: $white;
+}
+
+// "Our Other Services" pills: white name and border, and on hover the pill
+// inverts to white with dark text (mirror of the light theme).
+html.active .svc_other_item{
+    border-color: rgba($white, 0.3);
+    color: $white;
+    .svc_other_name.h3_plain.h3_plain{
+        color: $white;
+    }
+    @media (hover: hover){
+        &:hover{
+            background: $white;
+            border-color: $white;
+            color: $black;
+            .svc_other_name.h3_plain.h3_plain{
+                color: $black;
+            }
+        }
+    }
+}
+
+// "Our Other Services" row: the name had a fixed dark grey.
+html.active .other_services_row_item .other_services_row_name.h3_plain.h3_plain{
+    color: $white;
+}
+
 html.active .home_wrapper .features_all{
     color: $white;
 }

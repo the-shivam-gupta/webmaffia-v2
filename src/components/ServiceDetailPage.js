@@ -339,9 +339,6 @@ function OtherServicesSection({ otherServices: allOtherServices }) {
             <h3 className="svc_other_name h3_plain">
               {item.title.replace(/development/, "Development")}
             </h3>
-            <span className="svc_other_arrow" aria-hidden="true">
-              &rarr;
-            </span>
           </Link>
         ))}
       </div>

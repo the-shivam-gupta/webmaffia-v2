@@ -41,7 +41,7 @@ function ServicesSection({ section }) {
   if (!section.cards.length) return null;
 
   return (
-    <section data-section="services" className="services_grid">
+    <section id="services" data-section="services" className="services_grid">
       <div className="services_intro">
         <SectionHead tagline={section.tagline} title={section.title} />
         {section.description ? (
@@ -128,7 +128,7 @@ function ProjectsSection({ section }) {
   if (!section.cards.length) return null;
 
   return (
-    <section data-section="features" className="features" ref={featuresRef}>
+    <section id="features" data-section="features" className="features" ref={featuresRef}>
       <div className="features_head">
         <div className="features_title">
           <SectionHead tagline={section.tagline} title={section.title} />
@@ -234,6 +234,7 @@ export function LogoGridSection({ section, showDetails = true, children }) {
 
   return (
     <section
+      id={isClients ? "our_work" : "awards"}
       data-section={isClients ? "our_work" : "awards"}
       className={isClients ? "our_work" : "our_work awards"}
     >
@@ -286,7 +287,7 @@ export function LogoGridSection({ section, showDetails = true, children }) {
 
 function TeamSection() {
   return (
-    <section data-section="team" className="team_section">
+    <section id="team" data-section="team" className="team_section">
       <SectionHead tagline="Team" title="The brains behind the breakthroughs." />
       <div className="team_grid">
         {TEAM_LEADERS.map(({ role, name, linkedin, photo }) => (
@@ -321,7 +322,7 @@ function IndustriesSection({ section }) {
   if (!section.cards.length) return null;
 
   return (
-    <section data-section="industries" className="home_industries">
+    <section id="industries" data-section="industries" className="home_industries">
       <div className="home_industries_head">
         <SectionHead tagline={section.tagline} title={section.title} />
         {section.description ? (
@@ -329,10 +330,15 @@ function IndustriesSection({ section }) {
         ) : null}
       </div>
       <div className="home_industries_grid">
-        {section.cards.map((card) => {
+        {section.cards.map((card, index) => {
           const content = (
             <>
-              <h3 className="home_industries_name">{card.title}</h3>
+              <h3
+                className="home_industries_name"
+                data-number={`${String(index + 1).padStart(2, "0")} /`}
+              >
+                {card.title}
+              </h3>
               {card.subtitle ? (
                 <p className="home_industries_clients">{card.subtitle}</p>
               ) : null}
@@ -386,7 +392,7 @@ export function TestimonialsSection({ section, testimonials }) {
   if (!testimonials.length) return null;
 
   return (
-    <section data-section="testimonial" className="testimonial">
+    <section id="testimonial" data-section="testimonial" className="testimonial">
       <div className="testimonial_top">
         <div>
           <SectionHead tagline={section.tagline} title={section.title} />
@@ -457,7 +463,7 @@ function BlogsSection({ section, blogs }) {
   if (!blogs.length) return null;
 
   return (
-    <section data-section="blogs" className="home_blogs">
+    <section id="blogs" data-section="blogs" className="home_blogs">
       <SectionHead tagline={section.tagline} title={section.title} />
       {section.description ? (
         <p className="section_description">{section.description}</p>

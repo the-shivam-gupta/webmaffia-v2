@@ -1309,7 +1309,9 @@ footer {
       font-size: vw(19);
       font-weight: 400;
       line-height: 1.4;
-      transition: color 0.3s ease;
+      // Dimmed until hovered (same in light and dark mode).
+      opacity: 0.6;
+      transition: color 0.3s ease, opacity 0.3s ease;
 
       &::after {
         content: "";
@@ -1326,6 +1328,7 @@ footer {
 
       &:hover {
         color: $white;
+        opacity: 1;
 
         &::after {
           transform: scaleX(1);
