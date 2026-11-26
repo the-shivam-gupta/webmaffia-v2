@@ -10,7 +10,41 @@ import {
   getTestimonials,
   splitBannerTitle,
 } from "@/lib/strapiPage";
-import { ORGANIZATION_SCHEMA, LOCAL_BUSINESS_SCHEMA } from "@/lib/schema";
+import HomeFaq from "@/components/HomeFaq";
+import { formatUpdatedAt } from "@/lib/dates";
+import {
+  ORGANIZATION_SCHEMA,
+  LOCAL_BUSINESS_SCHEMA,
+  SITE_URL,
+  buildFaqSchema,
+} from "@/lib/schema";
+
+// Static FAQ: every answer restates facts already shown on this page.
+const HOME_FAQS = [
+  {
+    question: "Which industries does Webmaffia work in?",
+    answer:
+      "Real estate, pharma and healthcare, infrastructure and telecom, energy, metals and manufacturing, BFSI and fintech, and consumer and lifestyle brands. Much of this work is in approval-heavy sectors where marketing passes through legal, medical or regulatory review before it goes live.",
+  },
+  {
+    question: "Can Webmaffia handle regulated, approval-heavy marketing?",
+    answer:
+      "Yes. Pharma and healthcare, BFSI and infrastructure clients make up a large part of the Webmaffia client list. The Lupin Global and Lupin US websites are two published examples.",
+  },
+  {
+    question: "Is Webmaffia ISO certified?",
+    answer: "Webmaffia is ISO/IEC 27001:2022 certified for information security management.",
+  },
+  {
+    question: "How long has Webmaffia been working, and with how many brands?",
+    answer: "Webmaffia has been in business for 14+ years, has served 175+ brands and has won 30+ industry awards.",
+  },
+  {
+    question: "Does one team handle strategy, design, technology and marketing, or is work outsourced?",
+    answer:
+      "All six Webmaffia services (digital strategy, design and development, AI-powered solutions, SEO/AEO/GEO, social media and influencer marketing, and content marketing) are delivered by Webmaffia's in-house team across its Mumbai, Bengaluru, USA and Dubai offices.",
+  },
+].map((faq, index) => ({ id: `home-faq-${index}`, ...faq }));
 
 export const metadata = {
   alternates: {
@@ -228,17 +262,42 @@ export default async function Home() {
   const locations = buildOfficeLocations(footer?.offices);
   // getBlog() is already sorted newest-first.
   const latestBlogs = blogs.slice(0, 3).map(mapBlogCard);
+  const updated = formatUpdatedAt(home?.updatedAt) ?? formatUpdatedAt("2026-11-26");
+  const pageSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: "Webmaffia",
+    url: `${SITE_URL}/`,
+    ...(updated ? { dateModified: updated.iso } : {}),
+    publisher: { "@type": "Organization", name: "Webmaffia", url: `${SITE_URL}/` },
+  };
 
   return (
     <>
       <JsonLd data={ORGANIZATION_SCHEMA} />
       <JsonLd data={LOCAL_BUSINESS_SCHEMA} />
+      <JsonLd data={pageSchema} />
+      <JsonLd data={buildFaqSchema(HOME_FAQS)} />
       <HomePage
         bannerData={bannerData}
         sections={sections}
         testimonials={testimonials}
         blogs={latestBlogs}
         locations={locations}
+        beforeContact={<HomeFaq tagline="FAQ" title="Before you get in touch" items={HOME_FAQS} />}
+        footerNote={
+          <p className="home_published">
+            Published by Webmaffia, a creative digital agency with offices in Mumbai,
+            Bengaluru, the USA and Dubai. Co-founded by Veera Roy and Prasad Devadiga;
+            technology led by Ankit Tomer (CTO), creative led by Prasanna Devadiga (CCO).
+            ISO/IEC 27001:2022 certified.
+            {updated ? (
+              <>
+                {" "}Last updated: <time dateTime={updated.iso}>{updated.label}</time>
+              </>
+            ) : null}
+          </p>
+        }
       />
     </>
   );

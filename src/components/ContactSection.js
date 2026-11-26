@@ -56,18 +56,25 @@ export default function ContactSection({
               <span className="home_contact_phones">
                 <span className="home_contact_phone">
                   <a href="tel:+919867625909">+91 98676 25909</a>
+                  {" "}
                   <span className="home_contact_city">Mumbai</span>
                 </span>
+                {" "}
                 <span className="home_contact_phone">
                   <a href="tel:+919867625909">+91 98676 25909</a>
+                  {" "}
                   <span className="home_contact_city">Bengaluru</span>
                 </span>
+                {" "}
                 <span className="home_contact_phone">
                   <a href="tel:+18669849786">+1 (866) 984-9786</a>
+                  {" "}
                   <span className="home_contact_city">USA</span>
                 </span>
+                {" "}
                 <span className="home_contact_phone">
                   <a href="tel:+971562722998">+971 56 272 2998</a>
+                  {" "}
                   <span className="home_contact_city">Dubai</span>
                 </span>
               </span>

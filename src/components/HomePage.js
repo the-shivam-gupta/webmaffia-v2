@@ -516,6 +516,8 @@ export default function HomePage({
   testimonials = [],
   blogs = [],
   locations = [],
+  beforeContact = null,
+  footerNote = null,
 }) {
   return (
     <main className="wrapper home_wrapper opacity_0">
@@ -566,7 +568,9 @@ export default function HomePage({
           }
         })}
 
+        {beforeContact}
         <ContactSection />
+        {footerNote}
       </div>
     </main>
   );

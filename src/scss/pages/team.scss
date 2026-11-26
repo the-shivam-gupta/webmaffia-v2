@@ -231,3 +231,70 @@
         text-decoration: underline;
     }
 }
+
+
+// Intro paragraphs under the section headings, and the "About this page" block.
+.team_page{
+    .team_intro{
+        max-width: 96rem;
+        margin: 3rem 0 6rem;
+        font-weight: 300;
+        @include mobile(){
+            max-width: none;
+            margin: 5rem 0 8rem;
+        }
+    }
+    .team_life .team_intro{
+        margin-bottom: 0;
+    }
+    .team_about_page{
+        margin: 12rem 8rem 12rem;
+        padding-top: 6rem;
+        border-top: 0.1rem solid rgba(0, 0, 0, 0.15);
+        @include mobile(){
+            margin: 17.75rem 6.5rem;
+            padding-top: 10rem;
+        }
+        .team_about_title{
+            margin: 0 0 3rem;
+            font-size: 3.2rem;
+            font-weight: 300;
+            line-height: 1.3;
+            letter-spacing: 0;
+            text-transform: none;
+            @include mobile(){
+                margin-bottom: 5rem;
+                font-size: 6rem;
+            }
+        }
+        p{
+            max-width: 96rem;
+            margin: 0 0 2rem;
+            font-size: 2rem;
+            font-weight: 300;
+            line-height: 1.6;
+            @include mobile(){
+                max-width: none;
+            }
+        }
+        .team_updated{
+            font-size: 1.4rem;
+            opacity: 0.6;
+            @include mobile(){
+                font-size: vw-mobile(12) !important;
+            }
+        }
+    }
+}
+
+// Dark mode for the new blocks.
+html.active .team_page{
+    .team_intro,
+    .team_about_title,
+    .team_about_page p{
+        color: $white;
+    }
+    .team_about_page{
+        border-top-color: rgba($white, 0.2);
+    }
+}

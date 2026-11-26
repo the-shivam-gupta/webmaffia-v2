@@ -349,7 +349,7 @@ function ServiceContact() {
   return (
     <ContactSection
       showDetails={false}
-      description="Tell us about your goals and we’ll show you how Webmaffia can help you reach them."
+      description="Tell us about your goals and the Webmaffia team in Mumbai will show you how we can help you reach them."
     />
   );
 }
@@ -406,7 +406,7 @@ const TESTIMONIAL_HEAD = {
   tagline: "Word on the street",
   title: "Don't take our\nword for it",
   description:
-    "Approvals, compliance, investors, dealers, plant heads. We've sat in those meetings, so your project moves faster.",
+    "Approvals, compliance, investors, dealers, plant heads. Webmaffia has sat in those meetings with pharmaceutical, real estate, infrastructure, energy, manufacturing and financial services clients, so your project moves faster.",
 };
 
 function TechnologyBlock({ technologies }) {
@@ -485,7 +485,9 @@ export default async function ServiceDetailPage({ config, breadcrumbs }) {
     ? buildServiceSchema({
         name: currentPage.name,
         path: currentPage.path,
-        description: descriptions.find((text) => typeof text === "string" && text.trim()),
+        description:
+          hero.descriptionText ||
+          descriptions.find((text) => typeof text === "string" && text.trim()),
         dateModified: updated?.iso,
       })
     : null;

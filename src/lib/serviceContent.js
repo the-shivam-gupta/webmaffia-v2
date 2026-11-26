@@ -92,6 +92,8 @@ export function buildServiceHero(banner) {
     subtitle: banner.heading?.trim(),
     title: banner.subHeading?.trim(),
     description,
+    // Plain-text first paragraph, for the Service schema description.
+    descriptionText: paragraphs[0]?.replace(/\s+/g, " ").trim(),
     heroClassName: paragraphs.length > 1 ? "banner_para" : undefined,
     image: getStrapiImageUrl(banner.desktopImage),
     imageWidth: banner.desktopImage?.width,

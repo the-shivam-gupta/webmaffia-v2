@@ -123,6 +123,7 @@ function buildServiceSchema({ name, path, description, dateModified }) {
     ...(dateModified ? { dateModified } : {}),
     url: `${SITE_URL}${path}`,
     provider: { "@type": "Organization", name: "Webmaffia", url: `${SITE_URL}/` },
+    author: { "@type": "Organization", name: "Webmaffia", url: `${SITE_URL}/` },
   };
 }
 

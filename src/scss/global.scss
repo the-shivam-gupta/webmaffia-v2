@@ -175,23 +175,6 @@ button{
     @include mobile(){
       font-size: 4rem;
     }
-    &::before{
-      content: '';
-      position: absolute;
-      width: 110%;
-      height: .1rem;
-      background: #000;
-      transition: transform 0.3s ease-in;
-      transform-origin: bottom left;
-      transform: scale(1);
-      left: -.5rem;
-      top: 51%;
-    }
-    &:hover{
-      &::before{
-        transform: scale(0);
-        transform-origin: bottom right;
-      }
-    }
+    // No strike-through line on the link text.
   }
 }

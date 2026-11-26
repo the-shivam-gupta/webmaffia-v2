@@ -4,7 +4,7 @@
 export const energyMetalsManufacturing = {
   "slug": "energy-metals-manufacturing",
   "name": "Energy, Metals & Manufacturing",
-  "updated": "2026-11-03",
+  "updated": "2026-11-26",
   "seo": {
     "title": "Energy, Metals & Manufacturing Marketing Agency | Webmaffia",
     "description": "Mumbai digital marketing agency for energy, metals and manufacturing. Websites, SEO, AI, social, content, ASO and influencers that win RFQs."
@@ -22,8 +22,8 @@ export const energyMetalsManufacturing = {
   "hero": {
     "label": "Energy, metals and manufacturing marketing",
     "title": "Energy, metals and manufacturing marketing built for B2B growth",
-    "leadStrong": "Webmaffia is a Mumbai digital marketing agency for power, renewables, oil and gas, steel, metals, mining and manufacturing companies.",
-    "lead": "One team covers all eight services, built to win RFQs, support distributors and earn trust across long procurement cycles.",
+    "leadStrong": "Webmaffia is a B2B digital marketing agency for energy, metals and manufacturing companies, working from four offices across India, the USA and the UAE.",
+    "lead": "We build product and grade catalogues, structured RFQ journeys, ESG and BRSR hubs and technical SEO for industrial brands: eight services delivered by one accountable team, built to win RFQs, support distributors and earn trust across long procurement cycles.",
     "primary": {
       "text": "Get a plan",
       "href": "/contact"
@@ -61,8 +61,9 @@ export const energyMetalsManufacturing = {
     "label": "Our approach",
     "title": "More than just a website. A spec sheet that sells.",
     "paragraphs": [
-      "Engineers, procurement teams and plant heads research for weeks before they contact a supplier. We create websites and content that make products, grades, capacity, certifications and sustainability work easy to find, compare and verify, with a clear route to an RFQ.",
-      "Because one team runs strategy, website, search, social and content, your plants, people and products are presented consistently to buyers, dealers, investors and talent."
+      "Engineers, procurement teams and plant heads research for weeks before they contact a supplier. Webmaffia creates websites and content that make products, grades, capacity, certifications and sustainability work easy to find, compare and verify, with a clear route to an RFQ.",
+      "An RFQ, or request for quotation, is the formal enquiry an engineer or procurement team sends once a supplier has made their shortlist, listing the grades, quantities, specifications and delivery terms they need priced. It is the enquiry an industrial website exists to win, and the point at which weeks of quiet research become a named opportunity.",
+      "Webmaffia runs strategy, website, search, social and content as one team, so your plants, people and products are presented consistently to buyers, dealers, investors and talent."
     ],
     "image": {
       "src": "/assets/images/industry/Energy%20Metals%202.jpg",
@@ -73,7 +74,8 @@ export const energyMetalsManufacturing = {
   },
   "problems": {
     "label": "The problems we solve",
-    "title": "Energy, Metals & Manufacturing businesses face unique digital challenges. We solve them.",
+    "title": "What digital challenges do energy, metals and manufacturing businesses face?",
+    "intro": "Energy, metals and manufacturing companies come to Webmaffia with five recurring digital problems: catalogues buyers cannot search, RFQs lost in generic contact forms, sustainability claims that are hard to trust, a weak employer brand for engineering talent, and invisibility in technical searches. Here is how we fix each one.",
     "items": [
       {
         "title": "Complex catalogues buyers cannot search",
@@ -99,7 +101,7 @@ export const energyMetalsManufacturing = {
   },
   "services": {
     "label": "Our services",
-    "title": "End-to-end energy, metals and manufacturing marketing solutions",
+    "title": "Which marketing services does Webmaffia deliver end to end?",
     "items": [
       {
         "icon": "compass",
@@ -135,25 +137,25 @@ export const energyMetalsManufacturing = {
         "icon": "doc",
         "title": "Content marketing",
         "href": "/services/content-marketing-strategy",
-        "text": "Application guides, case studies, technical explainers and ESG stories that prove capability."
+        "text": "Webmaffia writes application guides, case studies, technical explainers and ESG stories that prove an industrial manufacturer's capability to engineers and procurement teams."
       },
       {
         "icon": "app",
         "title": "App store optimization",
         "href": "/services/app-store-optimization",
-        "text": "For dealer, customer, service and field-team apps: listings, keywords and creatives for the right installs."
+        "text": "Webmaffia optimises your dealer, customer, service and field-team apps: store listings, keywords and creatives that bring in the right installs from your dealer network and site teams."
       },
       {
         "icon": "mega",
         "title": "Influencer marketing",
         "href": "/services/influencer-marketing",
-        "text": "Engineers, industry analysts, respected LinkedIn voices and employee advocates, matched to your approvals."
+        "text": "Webmaffia works with engineers, industry analysts, respected LinkedIn voices and employee advocates, with every post matched to the claims your compliance and plant teams have approved."
       }
     ]
   },
   "types": {
     "label": "Website types and features",
-    "title": "Tailored for every energy, metals and manufacturing need",
+    "title": "Which website type do you need: corporate and ESG, product catalogue or dealer portal?",
     "columns": [
       "Feature",
       "Corporate and ESG website",
@@ -221,7 +223,7 @@ export const energyMetalsManufacturing = {
   },
   "process": {
     "label": "Our process",
-    "title": "A simple 3-step process",
+    "title": "How does a Webmaffia project work? A simple 3-step process",
     "steps": [
       {
         "title": "Discover & Plan",
@@ -239,7 +241,8 @@ export const energyMetalsManufacturing = {
   },
   "receive": {
     "label": "What you receive",
-    "title": "Everything you need for a successful launch",
+    "title": "What is included in a Webmaffia engagement?",
+    "intro": "Every Webmaffia website engagement for an energy, metals or manufacturing client includes the following as standard, from first build through to post-launch support:",
     "items": [
       "Custom website design and development",
       "CMS with product and grade templates",
@@ -254,7 +257,7 @@ export const energyMetalsManufacturing = {
   },
   "band": {
     "label": "Security and compliance",
-    "title": "Built for trust. Secured for the long run.",
+    "title": "How does Webmaffia keep industrial and ESG claims accurate and your data secure?",
     "text": "Industrial and ESG information must be accurate and approved. We build review steps into publishing, and your teams sign off every claim.",
     "points": [
       "ESG and sustainability claims based on reported, verifiable data",
@@ -265,7 +268,7 @@ export const energyMetalsManufacturing = {
   },
   "why": {
     "label": "Why Webmaffia",
-    "title": "Why energy, metals and manufacturing brands choose Webmaffia",
+    "title": "Why do energy, metals and manufacturing brands choose Webmaffia?",
     "items": [
       {
         "icon": "users",
@@ -291,7 +294,7 @@ export const energyMetalsManufacturing = {
   },
   "results": {
     "label": "Real results",
-    "title": "Real numbers. Real proof.",
+    "title": "What proof of delivery can Webmaffia show?",
     "items": [
       {
         "value": "8",
@@ -337,7 +340,7 @@ export const energyMetalsManufacturing = {
       },
       {
         "question": "Can you integrate the website with our ERP or CRM?",
-        "answer": "Often, yes. RFQs and dealer enquiries can flow into your CRM or ERP, depending on the integration options it offers. We check this during discovery."
+        "answer": "Often, yes. Webmaffia builds RFQ and dealer enquiry forms that pass submissions straight into your existing CRM or ERP, provided that system offers an API or a supported connector. Heavily customised or older on-premise installations sometimes do not, and a middleware step is needed instead. We confirm exactly what your system supports during Discover & Plan, the first stage of our three-step process, before any build work begins."
       },
       {
         "question": "Will our website rank on Google and AI Overviews?",

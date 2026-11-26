@@ -296,3 +296,223 @@
         }
     }
 }
+
+// ---------------------------------------------------------------------------
+// Last-updated line, enquiry scope list, next steps, FAQ, offices table and
+// About block (type scale follows the clients / case-study pages).
+// ---------------------------------------------------------------------------
+.contact_us .contact_updated {
+    margin: 0 0 4rem 8rem;
+    font-size: 1.4rem;
+    font-weight: 300;
+    opacity: 0.6;
+    @include mobile(){
+        margin: 0 0 6rem;
+        padding: 0 6.5rem;
+        font-size: vw-mobile(12) !important;
+    }
+}
+
+.contact_us .contact_block,
+.contact_us .contact_faq {
+    margin: 0 10rem 12rem 8rem;
+    @include mobile(){
+        margin: 0 0 17.75rem;
+        padding: 0 6.5rem;
+    }
+}
+
+.contact_us .contact_section_title {
+    margin: 0 0 5rem;
+    font-size: 5.6rem;
+    font-weight: $exlight;
+    line-height: 1.1;
+    letter-spacing: 0;
+    text-transform: none;
+    @include mobile(){
+        margin-bottom: 7rem;
+        font-size: 8.4rem;
+    }
+}
+
+.contact_us .contact_text,
+.contact_us .contact_services li,
+.contact_us .contact_steps li {
+    max-width: 96rem;
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 300;
+    line-height: 1.6;
+    @include mobile(){
+        max-width: none;
+    }
+    a{
+        color: inherit;
+        text-decoration: underline;
+        text-underline-offset: 0.3rem;
+    }
+    strong{
+        font-weight: 500;
+    }
+}
+
+.contact_us .contact_services,
+.contact_us .contact_steps {
+    margin: 0 0 3rem;
+    padding-left: 3rem;
+    max-width: 96rem;
+    @include mobile(){
+        padding-left: 6rem;
+        max-width: none;
+    }
+    li{
+        margin-bottom: 1.4rem;
+        @include mobile(){
+            // li is not covered by the global mobile `p` size rule.
+            font-size: vw-mobile(14);
+            margin-bottom: 2.4rem;
+        }
+    }
+}
+.contact_us .contact_services{
+    list-style: disc;
+}
+.contact_us .contact_steps{
+    list-style: decimal;
+}
+
+.contact_us .contact_faq .home_faqs{
+    margin-left: 0;
+    margin-right: 0;
+    .sub_heading{
+        width: 100%;
+        font-size: 5.6rem;
+        font-weight: $exlight;
+        line-height: 1.1;
+        letter-spacing: 0;
+        @include mobile(){
+            font-size: 8.4rem;
+        }
+    }
+}
+
+.contact_us .contact_table_wrap{
+    width: 100%;
+}
+.contact_us .contact_table{
+    width: 100%;
+    border-collapse: collapse;
+    caption{
+        // Read by screen readers; the heading above already names the table.
+        position: absolute;
+        width: 0.1rem;
+        height: 0.1rem;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+    }
+    th, td{
+        padding: 2.4rem 2rem 2.4rem 0;
+        border-bottom: 0.1rem solid rgba($black, 0.15);
+        text-align: left;
+        vertical-align: top;
+        font-size: 2rem;
+        font-weight: 300;
+        line-height: 1.5;
+        color: $black;
+    }
+    thead th{
+        font-size: 1.6rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.1rem;
+        opacity: 0.6;
+    }
+    tbody th{
+        font-weight: 500;
+        white-space: nowrap;
+    }
+    address{
+        padding: 0;
+        a{
+            font-size: 2rem;
+        }
+    }
+    td a{
+        color: $black;
+    }
+    @include mobile(){
+        thead{
+            position: absolute;
+            width: 0.1rem;
+            height: 0.1rem;
+            overflow: hidden;
+            clip: rect(0 0 0 0);
+        }
+        tr, tbody, th, td{
+            display: block;
+            width: 100%;
+        }
+        tr{
+            padding: 5rem 0;
+            border-bottom: 0.1rem solid rgba($black, 0.15);
+        }
+        th, td{
+            padding: 0;
+            border-bottom: 0;
+            font-size: 3rem;
+            overflow-wrap: anywhere;
+        }
+        tbody th{
+            margin-bottom: 2.4rem;
+            font-size: 3.4rem;
+            white-space: normal;
+        }
+        td{
+            margin-bottom: 1.6rem;
+            &::before{
+                content: attr(data-label);
+                display: block;
+                margin-bottom: 0.4rem;
+                font-size: 2.4rem;
+                opacity: 0.6;
+            }
+        }
+        address a{
+            font-size: 3rem;
+        }
+    }
+}
+.contact_us .contact_verified{
+    margin-top: 3rem;
+    font-size: 1.6rem;
+    opacity: 0.7;
+}
+
+.contact_us .follow_us .contact_text{
+    margin-bottom: 3rem;
+}
+
+// Dark mode for the new blocks.
+html.active .contact_us {
+    .contact_updated,
+    .contact_section_title,
+    .contact_text,
+    .contact_services li,
+    .contact_steps li,
+    .contact_table th,
+    .contact_table td,
+    .contact_table td a,
+    .follow_us .h2{
+        color: $white;
+    }
+    .contact_table{
+        th, td{
+            border-bottom-color: rgba($white, 0.2);
+        }
+        @include mobile(){
+            tr{
+                border-bottom-color: rgba($white, 0.2);
+            }
+        }
+    }
+}

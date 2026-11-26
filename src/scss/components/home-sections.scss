@@ -633,37 +633,16 @@ p{
     color: $black;
     line-height: 1;
     font-weight: $exlight;
+    // No strike-through anywhere on the site: the last words read like the rest.
     span{
-        color: $gray_dark;
+        color: inherit;
         position: relative;
-        &::before{
-            display: block;
-            content: '';
-            position: absolute;
-            width: 105%;
-            height: vw(2);
-            background: $gray_dark;
-            left: 50%;
-            top: 55%;
-            transform: translateX(-50%) scaleX(1);
-            transition: all 0.2s ease-in;
-            transform-origin: bottom left;
-            transition: transform 0.3s ease-in;
-        }
-    }
-    .cta_span{
-        color: $black;
         &::before{
             display: none;
         }
     }
-    &:hover{
-        span{
-            &::before{
-                transform: translateX(-50%) scaleX(0);
-                transform-origin: bottom right;
-            }
-        }
+    .cta_span{
+        color: $black;
     }
     @include mobile(){
         font-size: vw-mobile(24.752);
@@ -2875,4 +2854,23 @@ html:not(.active) .home_contact_form{
 }
 .home_faqs_item.is_open .home_faqs_answer_inner{
     opacity: 1;
+}
+
+
+// "Published by" line under the contact block (home page).
+.home_wrapper .home_published{
+    max-width: 96rem;
+    margin: 0 auto 12rem 8rem;
+    font-size: 1.6rem;
+    font-weight: 300;
+    line-height: 1.6;
+    opacity: 0.7;
+    @include mobile(){
+        max-width: none;
+        margin: 0 6.5rem 17.75rem;
+        // The global mobile `p` size rule applies here.
+    }
+}
+html.active .home_wrapper .home_published{
+    color: $white;
 }

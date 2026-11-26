@@ -4,7 +4,7 @@
 export const infrastructureTelecom = {
   slug: "infrastructure-telecom",
   name: "Infrastructure & Telecom",
-  updated: "2026-11-03",
+  updated: "2026-11-26",
   seo: {
     title: "Infrastructure & Telecom Marketing Agency | Webmaffia",
     description:
@@ -44,10 +44,10 @@ export const infrastructureTelecom = {
 
   approach: {
     label: "Our approach",
-    title: "More than just a website. Proof of capability at scale.",
+    title: "What does proof of capability at scale look like online?",
     paragraphs: [
-      "Infrastructure and telecom companies sell large, complex, long-cycle work to many decision makers. We create websites and content that make capability easy to verify: completed projects, safety records, certifications, leadership and a clear route to a conversation.",
-      "Because one team plans the story, builds the website, makes it findable and runs the channels, investors, clients, vendors and talent all meet the same credible brand.",
+      "Webmaffia is a digital marketing agency for infrastructure and telecom companies, with eight services and four offices across India, the USA and the UAE. Infrastructure and telecom companies sell large, complex, long-cycle work to many decision makers, so Webmaffia builds websites and content that make capability easy to verify: completed projects, safety records, certifications, leadership and a clear route to a conversation.",
+      "Because one Webmaffia team plans the story, builds the website, makes it findable and runs the channels, investors, clients, vendors and talent all meet the same credible brand.",
     ],
     image: {
       src: "/assets/images/industry/Infrastructure%202.jpg",
@@ -59,34 +59,34 @@ export const infrastructureTelecom = {
 
   problems: {
     label: "The problems we solve",
-    title: "Infrastructure & Telecom businesses face unique digital challenges. We solve them.",
+    title: "What digital challenges do infrastructure and telecom businesses face?",
     items: [
-      { title: "Capability is hard to prove online", text: "Project pages with scope, scale, location and outcomes turn your portfolio into evidence." },
-      { title: "Too many audiences, one website", text: "Investors, clients, vendors, talent and media each get a clear path to what they need." },
-      { title: "Tender and vendor journeys are confusing", text: "Clear tender listings, empanelment and vendor registration paths reduce emails and calls." },
-      { title: "Outdated news and investor information", text: "A CMS and newsroom workflow keeps results, announcements and milestones current." },
-      { title: "Low visibility for B2B searches", text: "Capability and project pages rank for the specific searches that buyers and partners use." },
+      { title: "How do we prove our project capability online?", text: "Project pages with scope, scale, location and outcomes turn your portfolio into evidence." },
+      { title: "How do we serve investors, clients, vendors and talent on one website?", text: "Investors, clients, vendors, talent and media each get a clear path to what they need." },
+      { title: "How do we make tender and vendor registration journeys clearer?", text: "Clear tender listings, empanelment and vendor registration paths reduce emails and calls." },
+      { title: "How do we keep investor news and announcements current?", text: "A CMS and newsroom workflow keeps results, announcements and milestones current." },
+      { title: "Why doesn't our company show up for B2B searches on Google?", text: "Capability and project pages rank for the specific searches that buyers and partners use." },
     ],
   },
 
   services: {
     label: "Our services",
-    title: "End-to-end infrastructure and telecom marketing solutions",
+    title: "Which marketing services does Webmaffia offer infrastructure and telecom brands?",
     items: [
       { icon: "compass", title: "Digital strategy", href: "/services/digital-strategy", text: "Stakeholder mapping, positioning for long sales cycles, account-based thinking and a channel plan tied to business goals." },
       { icon: "code", title: "Design and development", href: "/services/website-design-development-services", text: "Corporate and investor websites, project showcases, tender and vendor sections, careers and newsroom, built secure and fast." },
-      { icon: "seo", title: "SEO", href: "/services/search-engine-optimization-services", text: "Capability and project pages that rank for B2B searches, with structured data and AEO/GEO for AI answers." },
+      { icon: "seo", title: "SEO", href: "/services/search-engine-optimization-services", text: "Capability and project pages that rank for B2B searches, with structured data plus AEO and GEO. AEO (answer engine optimization) and GEO (generative engine optimization) mean shaping pages so AI answer engines such as Google AI Overviews, ChatGPT and Perplexity can read and quote them accurately." },
       { icon: "chip", title: "AI-powered solutions", href: "/services/ai-powered-solutions-services", text: "Automation for enquiry routing, document and tender search, and content operations, reviewed by people." },
       { icon: "social", title: "Social media", href: "/services/social-media-marketing-strategy", text: "LinkedIn-led storytelling: project milestones, safety and sustainability stories, leadership voices and employer brand." },
-      { icon: "doc", title: "Content marketing", href: "/services/content-marketing-strategy", text: "Project case stories, thought leadership, explainers and newsroom content that prove capability." },
-      { icon: "app", title: "App store optimization", href: "/services/app-store-optimization", text: "For customer, partner and field-team apps: store listings, keywords and creatives that drive the right installs." },
-      { icon: "mega", title: "Influencer marketing", href: "/services/influencer-marketing", text: "Industry experts, engineers and respected LinkedIn voices, plus employee advocacy, matched to your approvals." },
+      { icon: "doc", title: "Content marketing", href: "/services/content-marketing-strategy", text: "Webmaffia produces project case stories, thought leadership, explainers and newsroom content that prove an infrastructure or telecom company's capability to clients, investors, vendors and candidates." },
+      { icon: "app", title: "App store optimization", href: "/services/app-store-optimization", text: "For customer, partner and field-team apps, Webmaffia handles store listings, keywords and creatives so the installs you get come from the people you want using the app: field crews, vendors and customers." },
+      { icon: "mega", title: "Influencer marketing", href: "/services/influencer-marketing", text: "Webmaffia runs programmes with industry experts, engineers and respected LinkedIn voices, plus employee advocacy by your own staff, with every post routed through your organisation's approval process before it goes live." },
     ],
   },
 
   types: {
     label: "Website types and features",
-    title: "Tailored for every infrastructure and telecom need",
+    title: "Which website type does your infrastructure or telecom business need?",
     columns: ["Feature", "Corporate and investor website", "Project showcase microsite", "Vendor and tender portal"],
     rows: [
       { name: "Project portfolio with map", has: [true, true, false] },
@@ -101,17 +101,18 @@ export const infrastructureTelecom = {
 
   process: {
     label: "Our process",
-    title: "A simple 3-step process",
+    title: "How does Webmaffia's 3-step process work?",
     steps: [
-      { title: "Discover & Plan", text: "We map stakeholders, goals and approvals, then agree a clear strategy and channel plan." },
-      { title: "Design & Develop", text: "We design and build a secure, high-performing website and prepare proof-led content." },
-      { title: "Launch & Grow", text: "We launch, track enquiries and engagement, and keep content, SEO and channels current." },
+      { title: "Discover & Plan", text: "Webmaffia maps your stakeholders, goals and approval chain, then agrees a clear strategy and channel plan with you." },
+      { title: "Design & Develop", text: "Webmaffia designs and builds a secure, high-performing website and prepares proof-led content: project pages, investor information, tender and vendor journeys." },
+      { title: "Launch & Grow", text: "Webmaffia launches the site, tracks enquiries and engagement, and keeps content, SEO and your channels current after go-live." },
     ],
   },
 
   receive: {
     label: "What you receive",
-    title: "Everything you need for a successful launch",
+    title: "What do you receive in a Webmaffia infrastructure and telecom engagement?",
+    intro: "Every Webmaffia infrastructure and telecom engagement includes these deliverables, from the first build through to ongoing growth:",
     items: [
       "Custom website design and development",
       "CMS with newsroom and project templates",
@@ -127,8 +128,8 @@ export const infrastructureTelecom = {
 
   band: {
     label: "Security and compliance",
-    title: "Built for trust. Secured for the long run.",
-    text: "Project, investor and partner information is sensitive. We build secure by default, and your teams approve every disclosure.",
+    title: "How does Webmaffia keep infrastructure and telecom projects secure?",
+    text: "Project, investor and partner information is sensitive. Webmaffia builds secure by default, and your teams approve every disclosure.",
     points: [
       "Investor and project disclosures approved by your own teams",
       "Role-based CMS access and audit-friendly workflows",
@@ -139,9 +140,9 @@ export const infrastructureTelecom = {
 
   why: {
     label: "Why Webmaffia",
-    title: "Why infrastructure and telecom brands choose Webmaffia",
+    title: "Why do infrastructure and telecom brands choose Webmaffia?",
     items: [
-      { icon: "users", title: "Sector experience", text: "We have built websites with SEO for AFCONS and Summit Digitel." },
+      { icon: "users", title: "Sector experience", text: "Webmaffia has built websites with SEO for AFCONS and Summit Digitel." },
       { icon: "spark", title: "Credibility by design", text: "Clear, proof-led design that respects how B2B buyers decide." },
       { icon: "chart", title: "Performance driven", text: "Fast, secure sites that are easy to find and keep current." },
       { icon: "shield", title: "One accountable team", text: "All eight services, one plan and a dedicated point of contact." },
@@ -150,7 +151,7 @@ export const infrastructureTelecom = {
 
   results: {
     label: "Real results",
-    title: "Real numbers. Real proof.",
+    title: "What are the facts about Webmaffia?",
     items: [
       { value: "8", label: "services delivered by one accountable team" },
       { value: "4", label: "offices across India, the USA and the UAE" },
@@ -163,14 +164,15 @@ export const infrastructureTelecom = {
     label: "Frequently asked questions",
     title: "Got questions? We’ve got answers.",
     items: [
-      { question: "What is infrastructure and telecom digital marketing?", answer: "It uses websites, search, content, social media, apps and automation to build credibility with investors, clients, operators, vendors, regulators, talent and the media, and to generate qualified enquiries for long B2B sales cycles." },
-      { question: "Which services does Webmaffia offer for infrastructure and telecom brands?", answer: "All eight under one roof: digital strategy, website design and development, SEO, AI-powered solutions, social media, content marketing, app store optimization and influencer marketing." },
+      { question: "What is infrastructure and telecom digital marketing?", answer: "Infrastructure and telecom digital marketing uses websites, search, content, social media, apps and automation to build credibility with investors, clients, operators, vendors, regulators, talent and the media, and to generate qualified enquiries for long B2B sales cycles." },
+      { question: "Which services does Webmaffia offer for infrastructure and telecom brands?", answer: "Webmaffia offers all eight under one roof: digital strategy, website design and development, SEO, AI-powered solutions, social media, content marketing, app store optimization and influencer marketing." },
       { question: "How does digital marketing work for long B2B sales cycles?", answer: "Buyers research for months and involve many people. Marketing builds trust through findable capability pages, project proof, thought leadership and consistent presence, then makes it easy to start a conversation such as a tender enquiry or partnership request." },
-      { question: "Is LinkedIn important for infrastructure and telecom companies?", answer: "It is often a key channel because decision makers, partners and talent are active there. We plan it around project milestones, safety and sustainability stories, leadership voices and employer brand." },
-      { question: "Which infrastructure and telecom brands has Webmaffia worked with?", answer: "We have built websites with SEO for AFCONS, an infrastructure and EPC company, and Summit Digitel, a telecom infrastructure company." },
+      { question: "Is LinkedIn important for infrastructure and telecom companies?", answer: "It is often a key channel because decision makers, partners and talent are active there. Webmaffia plans it around project milestones, safety and sustainability stories, leadership voices and employer brand." },
+      { question: "Which infrastructure and telecom brands has Webmaffia worked with?", answer: "Webmaffia has built websites with SEO for AFCONS, an infrastructure and EPC company, and Summit Digitel, a telecom infrastructure company." },
       { question: "How do you protect confidential information?", answer: "Our parent company, Pixtop Media Solutions Pvt Ltd, is ISO/IEC 27001:2022 certified. Builds follow secure development practices with managed hosting, monitoring and updates." },
-      { question: "Will our website rank on Google and AI Overviews?", answer: "We build with fast performance, crawl-friendly architecture, structured data and answer-first content so pages can rank and be cited in AI answers such as Google AI Overviews, ChatGPT and Perplexity. No agency can guarantee a specific ranking or citation." },
-      { question: "How much does infrastructure and telecom digital marketing cost?", answer: "Cost depends on services, business units, audiences, content volume, regions and integrations. We share a scoped plan after discovery." },
+      { question: "Who will we work with at Webmaffia, and how is the engagement run?", answer: "One Webmaffia team runs the whole engagement. All eight services (digital strategy, design and development, SEO, AI-powered solutions, social media, content marketing, app store optimization and influencer marketing) sit under a single plan with one dedicated point of contact for your marketing, investor relations, HR and procurement stakeholders. Work moves through three stages: Discover & Plan, Design & Develop, and Launch & Grow. Your own teams approve every investor and project disclosure before publication, and CMS access is role-based with audit-friendly workflows, so each department edits only its own sections." },
+      { question: "Will our website rank on Google and AI Overviews?", answer: "Webmaffia builds with fast performance, crawl-friendly architecture, structured data and answer-first content so pages can rank and be cited in AI answers such as Google AI Overviews, ChatGPT and Perplexity. No agency can guarantee a specific ranking or citation." },
+      { question: "How much does infrastructure and telecom digital marketing cost?", answer: "Webmaffia does not publish fixed prices for infrastructure and telecom work. Cost depends on how many of the eight services you take, the number of business units and audiences involved, content volume, the regions you operate in, and the ERP, CRM and DMS integrations required. After a discovery conversation, Webmaffia shares a scoped plan that sets out the deliverables, the stages of work and the commercial terms for both the build and any ongoing SEO, content and channel activity." },
     ],
   },
 };

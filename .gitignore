@@ -48,3 +48,4 @@ certificates
 # local Claude rules (private)
 CLAUDE.local.md
 AUDIT_PROGRESS.md
+AUDIT_STRAPI_HANDOFF.md

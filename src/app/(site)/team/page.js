@@ -6,7 +6,14 @@ import TeamLinkedIn from "@/components/TeamLinkedIn";
 import { LogoGridSection, SectionHead } from "@/components/HomePage";
 import { getHome, getMediaUrlsByIds } from "@/lib/strapiPage";
 import { buildSections } from "@/lib/homeSections";
-import { buildBreadcrumbSchema } from "@/lib/schema";
+import TeamFaq from "@/components/TeamFaq";
+import { formatUpdatedAt } from "@/lib/dates";
+import {
+  buildBreadcrumbSchema,
+  buildFaqSchema,
+  ORGANIZATION_SCHEMA,
+  SITE_URL,
+} from "@/lib/schema";
 import {
   TEAM_LEADERS,
   TEAM_MEMBERS,
@@ -19,10 +26,60 @@ const BREADCRUMB_SCHEMA = buildBreadcrumbSchema([
   { name: "Team", path: "/team" },
 ]);
 
+// Static page: bump TEAM_UPDATED whenever team members, offices or awards change.
+const TEAM_UPDATED = formatUpdatedAt("2026-11-26");
+
+const TEAM_FAQS = [
+  {
+    question: "How big is the Webmaffia team?",
+    answer:
+      "Webmaffia is a team of 30 strategists, designers, developers, SEO specialists and writers.",
+  },
+  {
+    question: "Where is Webmaffia located?",
+    answer: "Webmaffia works from Mumbai, Bengaluru and Dubai.",
+  },
+  {
+    question: "Who founded Webmaffia?",
+    answer:
+      "Webmaffia was co-founded by Veera Ghuara Roy and Prasad Devadiga. Ankit Tomer is CTO and Prasanna Devadiga is CCO.",
+  },
+  {
+    question: "How long has Webmaffia been in business?",
+    answer: "Webmaffia has been operating for 14+ years and has served 175+ brands in that time.",
+  },
+  {
+    question: "Who will work on my project?",
+    answer:
+      "Every Webmaffia client gets a dedicated pod of six specialists: an account lead, a strategist, a designer and developer working as one team, and an SEO lead and writer. The account lead is your single point of contact for scope, timelines and reporting.",
+  },
+  {
+    question: "Does Webmaffia review work before it reaches the client?",
+    answer: "Yes. Webmaffia department heads review key deliverables before they reach you.",
+  },
+  {
+    question: "Is Webmaffia ISO certified?",
+    answer: "Webmaffia is certified to ISO/IEC 27001:2022.",
+  },
+  {
+    question: "Is Webmaffia an award-winning agency?",
+    answer: "Webmaffia has won 30+ industry awards. The recognition section on this page lists them.",
+  },
+].map((faq, index) => ({ id: `team-faq-${index}`, ...faq }));
+
+const TEAM_PAGE_SCHEMA = {
+  "@context": "https://schema.org",
+  "@type": "AboutPage",
+  name: "The Webmaffia team",
+  url: `${SITE_URL}/team`,
+  ...(TEAM_UPDATED ? { dateModified: TEAM_UPDATED.iso } : {}),
+  publisher: { "@type": "Organization", name: "Webmaffia", url: `${SITE_URL}/` },
+};
+
 export const metadata = {
-  title: "Meet the Webmaffia Team - Strategists, Designers & Developers",
+  title: "Webmaffia Team: 30 Strategists, Designers & Developers",
   description:
-    "Meet the 30 strategists, designers, developers and SEO specialists behind Webmaffia, co-founded by Veera Ghuara Roy and working from Mumbai, Bengaluru and Dubai.",
+    "Meet the 30 strategists, designers, developers and SEO specialists at Webmaffia. Offices in Mumbai, Bengaluru and Dubai. 14+ years, 175+ brands served.",
   alternates: {
     canonical: "https://www.webmaffia.com/team",
   },
@@ -44,9 +101,11 @@ function buildTeamBannerData() {
     imagePosition: "right",
     priority: true,
     subheading: { enabled: true, text: "TEAM" },
-    title: { line1: "Meet", line2: "the maffians" },
-    description:
-      "Webmaffia is a team of 30 strategists, designers, developers, SEO specialists and writers who build websites and run digital marketing for enterprise brands. Co-founded by Veera Ghuara Roy, we work from Mumbai, Bengaluru and Dubai.",
+    title: { line1: "Meet the", line2: "Maffians" },
+    descriptions: [
+      "Maffians is what we call the Webmaffia team: the 30 strategists, designers, developers, SEO specialists and writers on staff across Mumbai, Bengaluru and Dubai.",
+      "Webmaffia is a team of 30 strategists, designers, developers, SEO specialists and writers who build websites and run digital marketing for enterprise brands. Co-founded by Veera Ghuara Roy and Prasad Devadiga, we work from Mumbai, Bengaluru and Dubai. In 14+ years we have served 175+ brands and won 30+ industry awards, and our information security management is certified to ISO/IEC 27001:2022.",
+    ],
     images: {
       banner: {
         url: "/assets/images/testimonial_img.webp",
@@ -104,6 +163,9 @@ export default async function TeamPage() {
   return (
     <main className="wrapper home_wrapper team_page">
       <JsonLd data={BREADCRUMB_SCHEMA} />
+      <JsonLd data={ORGANIZATION_SCHEMA} />
+      <JsonLd data={TEAM_PAGE_SCHEMA} />
+      <JsonLd data={buildFaqSchema(TEAM_FAQS)} />
       <div className="ml-setter">
         <Banner data={buildTeamBannerData()} />
 
@@ -114,7 +176,15 @@ export default async function TeamPage() {
         ) : null}
 
         <section data-section="team" className="team_section">
-          <SectionHead tagline="Team" title={"The people who\nrun the family"} />
+          <SectionHead tagline="Team" title="Who leads Webmaffia?" />
+          <p className="section_description team_intro">
+            Webmaffia is run by co-founders Veera Roy and Prasad Devadiga, with Ankit
+            Tomer as Chief Technology Officer and Prasanna Devadiga as Chief Creative
+            Officer. The wider team of 30 includes Art Director Jitesh, Tech Lead Javed,
+            Account Lead Aswin, SEO specialists Cincy and Aniket, Shivam in tech,
+            Account Manager Smit and Manasi in design. These are the people you will be
+            dealing with day to day.
+          </p>
           <div className="team_grid">
             {people.map((member) => (
               <TeamMember key={member.name} {...member} />
@@ -153,8 +223,14 @@ export default async function TeamPage() {
         <section data-section="life" className="team_life">
           <SectionHead
             tagline="Life at Webmaffia"
-            title={"Serious about the work.\nNot about ourselves."}
+            title="What is it like to work at Webmaffia?"
           />
+          <p className="section_description team_intro">
+            Serious about the work. Not about ourselves: that is how the 30 people at
+            Webmaffia describe the studio. The team works from Mumbai, Bengaluru and
+            Dubai, organised in pods of six specialists: an account lead, a strategist,
+            a designer, a developer, an SEO lead and a writer.
+          </p>
           <div className="team_life_grid">
             {lifePhotos.map((src, index) => (
               <div
@@ -171,6 +247,29 @@ export default async function TeamPage() {
               </div>
             ))}
           </div>
+        </section>
+
+        <section data-section="faq" className="team_faq">
+          <div className="team_faq_head">
+            <h2 className="sub_title">FAQ</h2>
+            <div className="sub_heading">Questions people ask about the Webmaffia team</div>
+          </div>
+          <TeamFaq items={TEAM_FAQS} />
+        </section>
+
+        <section className="team_about_page" aria-labelledby="team-about-h">
+          <h2 id="team-about-h" className="team_about_title">About this page</h2>
+          <p>
+            Maintained by the Webmaffia team. Webmaffia is a digital agency of 30
+            strategists, designers, developers, SEO specialists and writers,
+            co-founded by Veera Ghuara Roy and Prasad Devadiga, with offices in
+            Mumbai, Bengaluru and Dubai. Certified to ISO/IEC 27001:2022.
+          </p>
+          {TEAM_UPDATED && (
+            <p className="team_updated">
+              Last updated: <time dateTime={TEAM_UPDATED.iso}>{TEAM_UPDATED.label}</time>
+            </p>
+          )}
         </section>
       </div>
     </main>

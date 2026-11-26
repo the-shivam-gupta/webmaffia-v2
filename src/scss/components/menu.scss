@@ -368,25 +368,10 @@ header{
                 font-family: inherit;
                 letter-spacing: inherit;
                 text-decoration: none;
-                &::after{
-                    content: '';
-                    position: absolute;
-                    width: 105%;
-                    height: 0.2rem;
-                    left: -0.5rem;
-                    top: 50%;
-                    margin-top: -0.1rem;
-                    background: $white;
-                    transform: scaleX(0);
-                    transform-origin: right center;
-                    transition: transform 0.45s ease-in-out;
-                    pointer-events: none;
-                }
+                // No strike-through line on hover: the item just fades.
+                transition: opacity 0.3s ease;
                 &:hover{
-                    &::after{
-                        transform: scaleX(1);
-                        transform-origin: left center;
-                    }
+                    opacity: 0.6;
                 }
             }
             .menu_btn_toggle{

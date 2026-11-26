@@ -2,9 +2,9 @@ import LegalPage from "@/components/LegalPage";
 import { PRIVACY_POLICY } from "@/lib/legal";
 
 export const metadata = {
-  title: "Privacy Policy | Webmaffia",
+  title: "Privacy Policy | How Webmaffia Collects and Uses Your Data",
   description:
-    "How Webmaffia collects, uses and protects your personal information, and the choices you have over your data.",
+    "How Webmaffia collects, uses, shares and protects personal information from webmaffia.com: cookies, retention periods, your rights and how to contact us.",
   alternates: {
     canonical: "https://www.webmaffia.com/privacy-policy",
   },

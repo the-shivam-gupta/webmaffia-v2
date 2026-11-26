@@ -92,6 +92,25 @@
         a{
             font-weight: 600;
             text-decoration: underline;
+            text-underline-offset: 0.3rem;
+            // One plain underline only: switch off the site's animated link
+            // lines (they were drawing a second border on hover).
+            &::before,
+            &::after{
+                content: none;
+                display: none;
+            }
         }
+    }
+}
+
+// Privacy / terms: every link is a single plain underline (no animated line).
+.legal_page a{
+    text-decoration: underline;
+    text-underline-offset: 0.3rem;
+    &::before,
+    &::after{
+        content: none;
+        display: none;
     }
 }

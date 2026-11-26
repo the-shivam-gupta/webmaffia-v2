@@ -18,14 +18,16 @@
             align-items: flex-end;
             margin-bottom: 17.5rem;
             
-            // "Take a Look": no strike-through on the last word. Same behaviour
-            // as the homepage `.banner_cta_secondary`: a thin underline under
-            // the whole label that retracts to the right on hover.
+            // "Take a Look": same arrow button as the home page's "View all"
+            // links (see `.home_wrapper .cta_text`): no strike-through, no
+            // underline; the arrow nudges right while the text fades on hover.
             .cta_text{
-                position: relative;
-                display: inline-block;
+                display: inline-flex;
+                align-items: center;
+                gap: vw(12);
                 margin-bottom: 4rem;
-                padding-bottom: 0.8rem;
+                padding-bottom: vw(8);
+                transition: -webkit-text-fill-color 0.3s ease;
                 span{
                     color: inherit;
                     &::before{
@@ -33,22 +35,20 @@
                     }
                 }
                 &::after{
-                    content: '';
-                    position: absolute;
-                    left: 0;
-                    bottom: 0;
-                    width: 100%;
-                    height: 1px;
-                    background: currentColor;
-                    opacity: 0.6;
-                    transform: scaleX(1);
-                    transform-origin: bottom left;
-                    transition: transform 0.3s ease-in;
+                    @include pointed_arrow;
+                    transition: transform 0.3s ease;
                 }
-                &:hover::after,
-                &:focus-visible::after{
-                    transform: scaleX(0);
-                    transform-origin: bottom right;
+                &:hover,
+                &:focus-visible{
+                    -webkit-text-fill-color: color-mix(in srgb, currentColor 55%, transparent);
+                    &::after{
+                        transform: translateX(vw(8));
+                    }
+                }
+                @include mobile(){
+                    padding-bottom: vw-mobile(5.6);
+                    gap: vw-mobile(8);
+                    font-size: vw-mobile(14.4);
                 }
             }
             &>img{
@@ -222,5 +222,243 @@
     }
     100%{
         width: 100%;
+    }
+}
+
+// Question under each service heading, services-at-a-glance table, FAQ,
+// "where are you based" block and "About this page" block.
+.services{
+    .service_question{
+        display: block;
+        margin-top: 2rem;
+        font-size: 2.2rem;
+        font-weight: 300;
+        line-height: 1.4;
+        letter-spacing: 0;
+        text-transform: none;
+        @include mobile(){
+            margin-top: 3rem;
+            font-size: 4rem;
+        }
+    }
+    .services_glance,
+    .services_start,
+    .services_about_page{
+        margin: 0 6.5rem 17.5rem;
+        @include mobile(){
+            margin: 0 6.5rem 17.75rem;
+        }
+        p, li{
+            max-width: 96rem;
+            font-size: 2rem;
+            font-weight: 300;
+            line-height: 1.6;
+            @include mobile(){
+                max-width: none;
+            }
+        }
+        a:not(.cta_text){
+            color: inherit;
+            text-decoration: underline;
+            text-underline-offset: 0.3rem;
+        }
+    }
+    // Hero copy: one readable column, same size for both paragraphs.
+    .hero_section p{
+        max-width: 95rem;
+        @include mobile(){
+            max-width: none;
+        }
+    }
+    .services_block_title{
+        margin: 0 0 5rem;
+        font-size: 5.6rem;
+        font-weight: $exlight;
+        line-height: 1.1;
+        letter-spacing: 0;
+        text-transform: none;
+        @include mobile(){
+            margin-bottom: 7rem;
+            font-size: 8.4rem;
+        }
+    }
+    .services_glance_table{
+        width: 100%;
+        border-collapse: collapse;
+        caption{
+            position: absolute;
+            width: 0.1rem;
+            height: 0.1rem;
+            overflow: hidden;
+            clip: rect(0 0 0 0);
+        }
+        th, td{
+            padding: 2.4rem 2rem 2.4rem 0;
+            border-bottom: 0.1rem solid rgba($black, 0.15);
+            text-align: left;
+            vertical-align: top;
+            font-size: 2rem;
+            font-weight: 300;
+            line-height: 1.5;
+            color: $black;
+        }
+        thead th{
+            font-size: 1.6rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.1rem;
+            opacity: 0.6;
+        }
+        tbody th{
+            width: 30%;
+            font-weight: 500;
+        }
+        @include mobile(){
+            thead{
+                position: absolute;
+                width: 0.1rem;
+                height: 0.1rem;
+                overflow: hidden;
+                clip: rect(0 0 0 0);
+            }
+            tr, tbody, th, td{
+                display: block;
+                width: 100% !important;
+            }
+            tr{
+                padding: 4rem 0;
+                border-bottom: 0.1rem solid rgba($black, 0.15);
+            }
+            th, td{
+                padding: 0;
+                border-bottom: 0;
+                font-size: 3rem;
+            }
+            tbody th{
+                margin-bottom: 1.6rem;
+                font-size: 3.4rem;
+            }
+        }
+    }
+    .services_faq{
+        margin-bottom: 17.5rem;
+        @include mobile(){
+            margin-bottom: 17.75rem;
+            padding: 0 6.5rem;
+        }
+    }
+    .services_start_list{
+        margin: 2rem 0 3rem;
+        padding-left: 3rem;
+        list-style: disc;
+        @include mobile(){
+            padding-left: 6rem;
+            // li is not covered by the global mobile `p` size rule.
+            li{
+                font-size: vw-mobile(14);
+            }
+        }
+    }
+    // "Start a project": same CTA as the home page's .services_grid .services_more.
+    .services_start .services_more{
+        display: flex;
+        justify-content: flex-start;
+        margin-top: vw(100);
+        @include mobile(){
+            margin-top: vw-mobile(48);
+        }
+        // Same arrow button as the home page's "View all" links (see
+        // `.home_wrapper .cta_text`): no strike-through, no underline, arrow
+        // that nudges right while the text fades on hover.
+        .cta_text{
+            display: inline-flex;
+            align-items: center;
+            gap: vw(12);
+            padding-bottom: vw(8);
+            transition: -webkit-text-fill-color 0.3s ease;
+            span{
+                color: inherit;
+                &::before{
+                    display: none;
+                }
+            }
+            &::after{
+                @include pointed_arrow;
+                transition: transform 0.3s ease;
+            }
+            &:hover,
+            &:focus-visible{
+                -webkit-text-fill-color: color-mix(in srgb, currentColor 55%, transparent);
+                &::after{
+                    transform: translateX(vw(8));
+                }
+            }
+            @include mobile(){
+                padding-bottom: vw-mobile(5.6);
+                gap: vw-mobile(8);
+                font-size: vw-mobile(14.4);
+            }
+        }
+    }
+    .services_updated{
+        font-size: 1.4rem;
+        opacity: 0.6;
+        @include mobile(){
+            font-size: vw-mobile(12) !important;
+        }
+    }
+}
+
+// Dark mode for the new blocks.
+html.active .services{
+    .service_question,
+    .services_block_title,
+    .services_glance p,
+    .services_start p,
+    .services_start li,
+    .services_about_page p,
+    .services_glance_table th,
+    .services_glance_table td{
+        color: $white;
+    }
+    .services_glance_table{
+        th, td{
+            border-bottom-color: rgba($white, 0.2);
+        }
+        @include mobile(){
+            tr{
+                border-bottom-color: rgba($white, 0.2);
+            }
+        }
+    }
+}
+
+// Service blurbs: the old copy was hard-wrapped to a narrow column with <br />;
+// the rewritten text flows, so cap the width to keep the original look.
+.services > div section > div > p{
+    max-width: 62rem;
+    @include mobile(){
+        max-width: none;
+    }
+}
+
+// Spacing between the hero, the at-a-glance table and the service blocks.
+.services{
+    .hero_section{
+        margin-bottom: 14rem;
+        @include mobile(){
+            margin-bottom: 17.5rem;
+        }
+    }
+    .services_glance{
+        margin-bottom: 21rem;
+        @include mobile(){
+            margin-bottom: 17.75rem;
+        }
+    }
+    .services_faq,
+    .services_start,
+    .services_about_page{
+        margin-top: 0;
     }
 }

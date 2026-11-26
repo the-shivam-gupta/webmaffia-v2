@@ -3,13 +3,85 @@ import Link from "next/link";
 import Banner from "@/components/Banner";
 import JsonLd from "@/components/JsonLd";
 import ServiceTagSwiper from "@/components/ServiceTagSwiper";
-import { buildBreadcrumbSchema } from "@/lib/schema";
+import TeamFaq from "@/components/TeamFaq";
+import { formatUpdatedAt } from "@/lib/dates";
+import {
+  buildBreadcrumbSchema,
+  buildFaqSchema,
+  ORGANIZATION_SCHEMA,
+  SITE_URL,
+} from "@/lib/schema";
+import { CONTACT_OFFICES } from "@/lib/contactPage";
 import { buildBannerCta, getServicesPage, getStrapiImageUrl } from "@/lib/strapiPage";
 
 const BREADCRUMB_SCHEMA = buildBreadcrumbSchema([
   { name: "Home", path: "/" },
   { name: "Services", path: "/services" },
 ]);
+
+// Static page copy: bump SERVICES_UPDATED whenever the content below changes.
+const SERVICES_UPDATED = formatUpdatedAt("2026-11-26");
+
+const SERVICES_INTRO =
+  "Webmaffia is a digital marketing agency in Mumbai. We work across six service areas: digital strategy and brand positioning, web design and development (including hosting), SEO, AI-powered solutions, social media, and content marketing.";
+
+const SERVICES_GLANCE = [
+  ["Digital Strategy", "Brand positioning, competitive analysis, campaign strategy and consulting"],
+  ["Design & Development", "Web design, web development, hosting"],
+  ["SEO", "On-page SEO, backlinks, traffic and lead generation"],
+  ["AI-Powered Solutions", "AI consulting, chatbots, generative AI solutions, automation, AI agents"],
+  ["Social Media", "Audience targeting, engagement, hashtag strategy"],
+  ["Content Marketing", "Blogs, ad copy, editorial pieces and other original content"],
+];
+
+const SERVICES_FAQS = [
+  {
+    question: "What services does Webmaffia offer?",
+    answer:
+      "Webmaffia is a digital marketing agency in Mumbai working across six areas: digital strategy, web design and development, SEO, AI-powered solutions, social media, and content marketing.",
+  },
+  {
+    question: "Does Webmaffia handle brand positioning and competitive analysis?",
+    answer:
+      "Yes. Brand positioning and competitive analysis sit inside Webmaffia's digital strategy practice. Webmaffia draws its strategy talent from agencies specializing in digital strategy and from consulting firms, because a digital marketing strategy goes beyond the traditional approach to campaign planning.",
+  },
+  {
+    question: "Does Webmaffia build websites, and does it host them?",
+    answer:
+      "Yes. Webmaffia's design and development team covers both, and hosting is offered alongside build. Webmaffia blurs the lines between design and development to create work that inspires delight.",
+  },
+  {
+    question: "What does Webmaffia's SEO work cover?",
+    answer:
+      "On-page SEO and backlinks. Search is the point of discovery for almost all consumers, so whether the objective is brand awareness, website traffic, lead generation or conversion, SEO has a part to play in reaching it.",
+  },
+  {
+    question: "Does Webmaffia build AI chatbots and automation?",
+    answer:
+      "Yes. Webmaffia's AI-Powered Solutions covers AI consulting, chatbots, generative AI solutions, automation and AI agents. Webmaffia uses AI to automate repetitive work, sharpen how customers experience your brand, and upgrade marketing and operations.",
+  },
+  {
+    question: "What does Webmaffia's social media work include?",
+    answer:
+      "Audience targeting, engagement and hashtag strategy. Social media lets a brand zero in on the right audience and customize the message to appeal to them.",
+  },
+  {
+    question: "Who writes the blogs and ad copy?",
+    answer:
+      "Webmaffia's in-house writers. They produce ad copy, editorial pieces and other original content that prioritizes impact, clarity and empathy over loudness, with customer intent behind every line.",
+  },
+].map((faq, index) => ({ id: `services-faq-${index}`, ...faq }));
+
+const SERVICES_PAGE_SCHEMA = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  name: "Webmaffia digital marketing services",
+  url: `${SITE_URL}/services`,
+  ...(SERVICES_UPDATED ? { dateModified: SERVICES_UPDATED.iso } : {}),
+  publisher: { "@type": "Organization", name: "Webmaffia", url: `${SITE_URL}/` },
+};
+
+const MUMBAI_OFFICE = CONTACT_OFFICES.find((office) => office.key === "mumbai");
 
 const FALLBACK_BANNER_DATA = {
   imagePosition: "right",
@@ -22,8 +94,10 @@ const FALLBACK_BANNER_DATA = {
     line2: "platform for your",
     line3: "purpose",
   },
-  description:
-    "Transforming visions into captivating digital landscapes,\nwe crafts tailored solutions that elevate brands and engage\naudiences. With a focus on innovation and precision, we\nbring your online presence to life, delivering seamless user\nexperiences that resonate and inspire.",
+  descriptions: [
+    SERVICES_INTRO,
+    "Transforming visions into captivating digital landscapes, Webmaffia crafts tailored solutions that elevate brands and engage audiences. With a focus on innovation and precision, we bring your online presence to life, delivering seamless user experiences that resonate and inspire.",
+  ],
 };
 
 function splitTitleLines(text, maxLines = 3) {
@@ -89,7 +163,11 @@ function buildServicesBannerData(rawBanner) {
       ? { enabled: true, text: rawBanner.heading }
       : undefined,
     title: splitTitleLines(rawBanner.subHeading),
-    description: rawBanner.description || undefined,
+    descriptions: [
+      SERVICES_INTRO,
+      // The CMS text carries hard line breaks from the old layout: flow it as one paragraph.
+      rawBanner.description?.replace(/\s*\n\s*/g, " ").trim(),
+    ].filter(Boolean),
     cta: buildBannerCta(rawBanner),
     ...(images ? { images } : {}),
   };
@@ -104,14 +182,15 @@ const SERVICE_SECTIONS = [
         Strategy
       </>
     ),
+    question: "What does a digital strategy include?",
     img: { src: "/assets/images/number/1.webp", alt: "Digital Strategy" },
     slides: ["Brand Positioning", "Competitive", "Brand Positioning", "Competitive"],
     body: (
       <>
-        We understand that a digital marketing strategy <br />
-        goes beyond the traditional approach towards strategizing <br />
-        a campaign. This is why we draw our talent from agencies <br />
-        specializing in digital strategy and consulting firms.
+        At Webmaffia, we understand that a digital marketing strategy goes beyond the
+        traditional approach towards strategizing a campaign. This is why Webmaffia
+        draws its strategy talent from agencies specializing in digital strategy and
+        from consulting firms.
       </>
     ),
     href: "/services/digital-strategy",
@@ -124,6 +203,7 @@ const SERVICE_SECTIONS = [
         Development
       </>
     ),
+    question: "What does Webmaffia build and host?",
     img: { src: "/assets/images/number/2.webp", alt: "Design and Development" },
     slides: ["Development", "Hosting"],
     body: (
@@ -140,6 +220,7 @@ const SERVICE_SECTIONS = [
   {
     imageFirst: true,
     title: <>SEO</>,
+    question: "Why does your brand need an SEO strategy?",
     img: { src: "/assets/images/number/3.webp", alt: "SEO" },
     slides: ["Backlinks", "On-Page"],
     body: (
@@ -161,11 +242,20 @@ const SERVICE_SECTIONS = [
         Solutions
       </>
     ),
+    question: "What can AI automate for your business?",
     img: { src: "/assets/images/number/4.webp", alt: "AI-Powered Solutions" },
     slides: ["Consulting", "Chatbots", "Generative AI Solutions", "Automation", "Agents"],
     body: (
       <>
-        This is where things get interesting. We take AI<br /> out of the "nice to have" pile and put it to work<br /> automating the boring stuff, sharpening how customers<br /> experience your brand, and giving marketing and<br /> operations a real upgrade. No jargon, no gimmicks,<br /> just solutions that actually move the needle for your business.
+        Generative AI solutions are tools built on AI models that produce something
+        usable on demand (copy drafts, images, replies to a customer, a summary of a
+        report) rather than only analysing data. AI agents go a step further: they
+        carry out a sequence of tasks on your behalf, such as qualifying an enquiry
+        and routing it to the right team. This is where things get interesting.
+        Webmaffia takes AI out of the &quot;nice to have&quot; pile and puts it to work
+        automating the boring stuff, sharpening how customers experience your brand,
+        and giving marketing and operations a real upgrade. No jargon, no gimmicks,
+        just solutions that move the needle for your business.
       </>
     ),
     href: "/services/ai-powered-solutions-services",
@@ -178,16 +268,16 @@ const SERVICE_SECTIONS = [
         media
       </>
     ),
+    question: "How do we reach the right audience?",
     img: { src: "/assets/images/number/5.webp", alt: "Social Media" },
     slides: ["Engagement", "Hashtag"],
     body: (
       <>
-        Social media is the backbone of digital marketing; <br />
-        for a good reason. Where else will we be able to zero <br />
-        in on the perfect audience for our brand, and then customize <br />
-        our message to best appeal to them? We understand it is a crucial <br />
-        component of a social media agency, and we go to great lengths <br />
-        to do justice to it.
+        Social media is the backbone of digital marketing, for good reason. Where else
+        can a brand zero in on exactly the right audience and then customize the
+        message to appeal to them? Social media is a crucial component of what
+        Webmaffia does as a Mumbai digital marketing agency, and we go to great
+        lengths to do justice to it.
       </>
     ),
     href: "/services/social-media-marketing-strategy",
@@ -200,8 +290,9 @@ const SERVICE_SECTIONS = [
         Marketing
       </>
     ),
+    question: "Who writes your blogs and ad copy?",
     img: { src: "/assets/images/number/6.webp", alt: "Content Marketing" },
-    slides: ["Backlinks", "On-Page"],
+    slides: ["Blogs", "Copywriting", "Editorial"],
     body: (
       <>
         Original Content - Blog and Copywriting <br />
@@ -217,7 +308,7 @@ const SERVICE_SECTIONS = [
   },
 ];
 
-function ServiceSection({ imageFirst, title, img, slides, body, href }) {
+function ServiceSection({ imageFirst, title, question, img, slides, body, href }) {
   const image = (
     <Image
       src={img.src}
@@ -230,7 +321,10 @@ function ServiceSection({ imageFirst, title, img, slides, body, href }) {
 
   const content = (
     <div>
-      <h2>{title}</h2>
+      <h2>
+        {title}
+        {question ? <span className="service_question">{question}</span> : null}
+      </h2>
       <ServiceTagSwiper items={slides} />
       <p>{body}</p>
       <Link href={href} className="cta_text">
@@ -263,14 +357,90 @@ export default async function ServicesPage() {
   return (
     <main className="wrapper">
       <JsonLd data={BREADCRUMB_SCHEMA} />
+      <JsonLd data={ORGANIZATION_SCHEMA} />
+      <JsonLd data={SERVICES_PAGE_SCHEMA} />
+      <JsonLd data={buildFaqSchema(SERVICES_FAQS)} />
       <div className="services ml-setter">
         <Banner data={bannerData} />
+
+        <section className="services_glance" aria-labelledby="services-glance-h">
+          <h2 id="services-glance-h" className="services_block_title">
+            Which digital marketing services does Webmaffia offer?
+          </h2>
+          <table className="services_glance_table">
+            <caption>Webmaffia digital marketing services, Mumbai</caption>
+            <thead>
+              <tr>
+                <th scope="col">Service</th>
+                <th scope="col">What it covers</th>
+              </tr>
+            </thead>
+            <tbody>
+              {SERVICES_GLANCE.map(([name, covers]) => (
+                <tr key={name}>
+                  <th scope="row">{name}</th>
+                  <td>{covers}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
 
         <div>
           {SERVICE_SECTIONS.map((service) => (
             <ServiceSection key={service.href} {...service} />
           ))}
         </div>
+
+        <section data-section="faq" className="team_faq services_faq">
+          <div className="team_faq_head">
+            <h2 className="sub_title">FAQ</h2>
+            <div className="sub_heading">Frequently asked questions</div>
+          </div>
+          <TeamFaq items={SERVICES_FAQS} />
+        </section>
+
+        <section className="services_start" aria-labelledby="services-start-h">
+          <h2 id="services-start-h" className="services_block_title">
+            Where is Webmaffia based, and how do you start a project?
+          </h2>
+          <p>Webmaffia is a digital marketing agency based in Mumbai, India.</p>
+          <ul className="services_start_list">
+            <li><strong>Office:</strong> {MUMBAI_OFFICE.address}</li>
+            <li>
+              <strong>Email:</strong>{" "}
+              <a href="mailto:hello@webmaffia.com">hello@webmaffia.com</a>
+            </li>
+            <li>
+              <strong>Phone:</strong>{" "}
+              <a href="tel:+919867625909">{MUMBAI_OFFICE.phone}</a>
+            </li>
+          </ul>
+          <p>
+            To start a project, send us the brief you have, even a paragraph, along with
+            the service you think you need and the outcome you are after. We will come
+            back with a scope and a proposal.
+          </p>
+          <div className="services_more">
+            <Link href="/contact" className="cta_text">
+              Start a <span>project</span>
+            </Link>
+          </div>
+        </section>
+
+        <section className="services_about_page" aria-labelledby="services-about-h">
+          <h2 id="services-about-h" className="services_block_title">About this page</h2>
+          <p>
+            Published by Webmaffia, a digital marketing agency in Mumbai, India. Services
+            described here are delivered by Webmaffia&apos;s in-house strategy, design and
+            development, SEO, AI, social media and content teams.
+          </p>
+          {SERVICES_UPDATED && (
+            <p className="services_updated">
+              Last updated: <time dateTime={SERVICES_UPDATED.iso}>{SERVICES_UPDATED.label}</time>
+            </p>
+          )}
+        </section>
       </div>
     </main>
   );
