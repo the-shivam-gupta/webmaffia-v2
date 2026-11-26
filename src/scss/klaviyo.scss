@@ -49,6 +49,24 @@ a[href*="utm_campaign=poweredby"] {
 .kl-private-reset-css-Xuajs1[style*="z-index: 90000"] {
   z-index: 2147483647 !important;
 
+  // Hidden until src/lib/klaviyo.js has scaled + centred it (data-fitted), so
+  // it doesn't appear big and then shrink. Same in light and dark theme.
+  &:not([data-fitted]) {
+    opacity: 0 !important;
+  }
+  &[data-fitted] {
+    animation: kl-pop-in 0.18s ease-out;
+  }
+
+  // Klaviyo's own "fade in up" slide (it moves the card ~80px while it grows)
+  // fights our scale + centring and reads as a glitch, so swap it for a plain
+  // fade. Don't remove animations outright: Klaviyo deletes the popup from the
+  // page on `animationend` of its fade-out, so killing it leaves an invisible
+  // popup that blocks every click.
+  [style*="klaviyo-fadeinup"] {
+    animation-name: kl-pop-in !important;
+  }
+
   // Keep the heading clear of the close (X) button, which sits in the card's
   // top-right corner: tuck the button into the corner and give the heading
   // side room so a long, centred title never runs underneath it.
@@ -65,12 +83,212 @@ a[href*="utm_campaign=poweredby"] {
     padding-right: 4.5rem !important;
     box-sizing: border-box !important;
   }
-
-  @media (min-width: 1025px) {
-    .klaviyo-form {
-      width: 90vw !important;
-      max-width: 90rem !important;
-      border-radius: 0.4rem !important;
+  // Popup title: light, tight (like the home "services" item headings) but
+  // smaller. The card itself is scaled to fit the window, so the size is a
+  // clamp in rem rather than vw: it follows the screen on desktop yet never
+  // gets too small on tablets (card is a fixed 600px there) or too wide for
+  // the card. Klaviyo sets size + weight inline on the nested span/strong,
+  // hence the *.
+  .klaviyo-form h1,
+  .klaviyo-form h1 * {
+    font-size: clamp(2.6rem, 2.1vw, 3.6rem) !important;
+    font-weight: $exlight !important;
+    line-height: 1.1 !important;
+    @include mobile() {
+      // On phones the card is not scaled (see fitPopup), so this is real px.
+      // (rem is ~4px here, so rem values would come out tiny.)
+      font-size: 24px !important;
+      line-height: 1.15 !important;
     }
   }
+
+  // Tablet / desktop: more air so it reads as a clean modal. Klaviyo's card has
+  // only 20px of padding, which put the fields almost against the edges.
+  @media (min-width: 768px) {
+    .klaviyo-form {
+      padding: 48px 72px 52px !important;
+    }
+    .klaviyo-form h1 {
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+      margin-bottom: 20px !important;
+    }
+    // Two fields per row (Name | Organization, Email | Phone). The column and
+    // its field rows are tagged by fitPopup in src/lib/klaviyo.js; everything
+    // else in the column (title, services, button) spans the full width.
+    // (Only when fitPopup sets data-kl-cols="2", i.e. the card is wide enough
+    // that the placeholders aren't clipped; otherwise one field per row.)
+    [data-kl-grid][data-kl-cols="2"] {
+      display: grid !important;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: 20px;
+      > * {
+        grid-column: 1 / -1;
+        min-width: 0;
+      }
+      > [data-kl-field] {
+        grid-column: auto;
+      }
+    }
+    // Roomier fields: taller boxes with a generous left inset for the text
+    // (Klaviyo's are 56px tall with 16px inset, so the text hugged the edge).
+    // The wrappers have fixed heights from Klaviyo, so let them follow.
+    .klaviyo-form div:has(> input[type="text"]),
+    .klaviyo-form div:has(> input[type="email"]),
+    .klaviyo-form div:has(> input[type="tel"]) {
+      height: auto !important;
+      min-height: 0 !important;
+    }
+    .klaviyo-form input[type="text"],
+    .klaviyo-form input[type="email"] {
+      box-sizing: border-box !important;
+      height: 72px !important;
+      padding: 0 24px !important;
+      text-overflow: ellipsis;
+      margin-bottom: 8px !important;
+    }
+    // Phone: bordered wrapper (country picker + number); same height, and the
+    // number gets the same inset from the picker.
+    .klaviyo-form div:has(> input[type="tel"]) {
+      box-sizing: border-box !important;
+      min-height: 72px !important;
+      margin-bottom: 8px !important;
+      // Klaviyo's phone row sits ~2px higher than a text row; nudge it level
+      // with the Email box beside it (a pure visual shift, no layout change).
+      position: relative;
+      top: 2px;
+    }
+    // The flag / arrow button kept its old 49px height inside the taller box and
+    // sat at the top; stretch it so the flag is centred vertically.
+    .klaviyo-form div:has(> input[type="tel"]) > button {
+      align-self: stretch !important;
+      height: auto !important;
+    }
+    .klaviyo-form input[type="tel"] {
+      box-sizing: border-box !important;
+      height: 70px !important;
+      padding: 0 24px 0 16px !important;
+      text-overflow: ellipsis;
+    }
+    // Close button: tucked into the corner, no stray Klaviyo margin.
+    button[aria-label*="lose" i] {
+      top: 14px !important;
+      right: 14px !important;
+      margin: 0 !important;
+    }
+  }
+
+  // "Let's Talk": the pill's border only extends as far as its label (plus
+  // padding), centred in the card, instead of stretching across it.
+  div:has(> button.klaviyo-form-button) {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    justify-content: center !important;
+  }
+  button.klaviyo-form-button {
+    flex: 0 0 auto !important;
+    width: auto !important;
+    min-width: 0 !important;
+    height: auto !important;
+    padding: 14px 32px !important;
+    white-space: nowrap !important;
+    // Same pill as the header "Contact Us" (.cta in menu.scss): black fill,
+    // white light-weight text, 1px border, fully rounded, and the same hover
+    // (inverts to white fill / black text / black border). Sizes are bumped
+    // ~10% because this card is scaled to ~0.9 to fit the window.
+    border: 1px solid #fff !important;
+    border-radius: 50px !important;
+    background: #000 !important;
+    color: #fff !important;
+    font-size: 20px !important;
+    font-weight: 300 !important;
+    line-height: 1 !important;
+    letter-spacing: 0 !important;
+    padding: 15px 34px !important;
+    transition: all 0.3s ease-in !important;
+    &:hover {
+      border-color: #000 !important;
+      background: #fff !important;
+      color: #000 !important;
+    }
+  }
+
+  // Phones: the card sticks to the left and right edges at full width (no
+  // shrinking to fit), the title gets room for two lines and the close button
+  // sits in the corner with a proper tap target, clear of the title.
+  @include mobile() {
+    // Klaviyo also shrinks the whole card with an inline `transform: scale(x)`
+    // on phones (to fit its 600px design width); with the card now sized to the
+    // screen that only makes everything tiny.
+    [style*="transform: scale("] {
+      transform: none !important;
+    }
+    .klaviyo-form {
+      width: 100vw !important;
+      min-width: 0 !important;
+      max-width: 100vw !important;
+      border-radius: 0 !important;
+    }
+    .klaviyo-form h1 {
+      padding-left: 48px !important;
+      padding-right: 48px !important;
+    }
+    // Submit button: Klaviyo's row around it has ~180px side padding (made for
+    // its 600px design width), which left the pill ~30px wide with the label
+    // stacked one letter per line. Remove the padding and size the pill itself.
+    div:has(> button.klaviyo-form-button) {
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+      justify-content: center !important;
+    }
+    button.klaviyo-form-button {
+      flex: 0 0 auto !important;
+      box-sizing: border-box !important;
+      width: auto !important; // hugs the label (border only as wide as the content)
+      max-width: 100% !important;
+      min-width: 0 !important;
+      height: auto !important;
+      min-height: 0 !important;
+      // Not scaled on phones, so the header "Contact Us" sizes apply as-is.
+      padding: 14px 30px !important;
+      font-size: 18px !important;
+      line-height: 1 !important;
+      white-space: nowrap !important;
+    }
+    // Klaviyo gives the button a 20px top / 8px right margin; drop it so the
+    // 48px tap target sits in the corner, level with the title.
+    button[aria-label*="lose" i] {
+      top: 4px !important;
+      right: 4px !important;
+      margin: 0 !important;
+    }
+  }
+
+  // Landscape card from tablets up: 900px wide, or the window minus 24px on
+  // each side when it is narrower. (The old 90rem scaled down with the window,
+  // so laptops got a narrow portrait card; and Klaviyo's own 600px card below
+  // 1025px was portrait too.) The card is also scaled down to fit the height.
+  @media (min-width: 768px) {
+    .klaviyo-form {
+      width: min(900px, calc(100vw - 48px)) !important;
+      min-width: 0 !important;
+      max-width: none !important;
+      border-radius: 0.4rem !important;
+    }
+    // Narrower cards get slimmer side padding so two fields still fit per row.
+    .klaviyo-form[data-kl-narrow] {
+      padding-left: 40px !important;
+      padding-right: 40px !important;
+      input[type="text"],
+      input[type="email"] {
+        padding-left: 18px !important;
+        padding-right: 18px !important;
+      }
+    }
+  }
+}
+
+@keyframes kl-pop-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
