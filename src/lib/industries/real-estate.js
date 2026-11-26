@@ -154,8 +154,8 @@ export const realEstate = {
     title: "Real numbers. Real proof.",
     items: [
       { value: "8", label: "services delivered by one accountable team" },
-      { value: "3", label: "offices across India and the UAE" },
-      { value: "4.3★", label: "Google rating from 120+ reviews" },
+      { value: "4", label: "offices across India, the USA and the UAE" },
+      { value: "4.3★", label: "Google rating from 46+ reviews" },
       { value: "2028", label: "ISO/IEC 27001:2022 certification valid until" },
     ],
   },

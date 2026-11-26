@@ -298,12 +298,12 @@ export const energyMetalsManufacturing = {
         "label": "services delivered by one accountable team"
       },
       {
-        "value": "3",
-        "label": "offices across India and the UAE"
+        "value": "4",
+        "label": "offices across India, the USA and the UAE"
       },
       {
         "value": "4.3★",
-        "label": "Google rating from 120+ reviews"
+        "label": "Google rating from 46+ reviews"
       },
       {
         "value": "2028",
