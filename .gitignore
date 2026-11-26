@@ -47,3 +47,4 @@ next-env.d.ts
 certificates
 # local Claude rules (private)
 CLAUDE.local.md
+AUDIT_PROGRESS.md

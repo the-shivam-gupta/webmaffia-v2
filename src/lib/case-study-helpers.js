@@ -14,8 +14,13 @@ export function toCaseStudyItem(entry) {
   const workTitle = thumb?.workTitle?.map((t) => t.title).join(" - ") ?? "";
   const imageUrl = thumb?.image ? getStrapiImageUrl(thumb.image) : "";
   const url = thumb?.externalLink ? (thumb.link || "#") : `/case-study/${entry.slug}`;
+  const name = thumb?.heading ?? entry.pageName;
   return {
-    name: thumb?.heading ?? entry.pageName,
+    name,
+    // "Lupin project by Webmaffia - website design, development, SEO"
+    alt: workTitle
+      ? `${name} project by Webmaffia - ${workTitle.replace(/ - /g, ", ").toLowerCase()}`
+      : `${name} project by Webmaffia`,
     title: workTitle,
     type: workTitle,
     url,

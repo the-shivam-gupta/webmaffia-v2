@@ -23,7 +23,7 @@ export default function WorkListSection({ items }) {
             >
               <Image
                 src={item.image}
-                alt={item.name}
+                alt={item.alt ?? item.name}
                 width={540}
                 height={395}
               />

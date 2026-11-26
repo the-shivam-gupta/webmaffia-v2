@@ -674,7 +674,8 @@ p{
 // underline. On hover only the text fades (text-fill-color leaves the
 // currentColor arrow untouched) and the arrow (always shown) nudges right.
 .home_wrapper .cta_text,
-.home_wrapper .features_all{
+.home_wrapper .features_all,
+.cta_work .cta_text{
     display: inline-flex;
     align-items: center;
     gap: vw(12);
@@ -2808,7 +2809,7 @@ html:not(.active) .home_contact_form{
     color: inherit;
     font: inherit;
     font-size: vw(30);
-    font-weight: 400;
+    font-weight: 300;
     line-height: 1.3;
     text-align: left;
     cursor: pointer;

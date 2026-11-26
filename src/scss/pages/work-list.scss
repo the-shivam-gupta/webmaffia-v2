@@ -15,12 +15,37 @@
     }
   }
   .work_section {
-    // margin-right: 0 !important;
-
     .cta_work {
       display: block !important;
       text-align: center;
       margin-top: 8rem;
+
+      // This button does not open a page: it expands / collapses the grid in
+      // place. So no right-pointing arrow; a chevron points down ("show more")
+      // and flips up once expanded ("View Less").
+      .cta_text {
+        cursor: pointer;
+        &::after {
+          width: 0.55em;
+          height: 0.55em;
+          margin-left: 0.2em;
+          -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M1 3.5L6 8.5L11 3.5' fill='none' stroke='black' stroke-width='1.2'/%3E%3C/svg%3E") no-repeat center / contain;
+          mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M1 3.5L6 8.5L11 3.5' fill='none' stroke='black' stroke-width='1.2'/%3E%3C/svg%3E") no-repeat center / contain;
+          transform: none;
+          transition: transform 0.3s ease;
+        }
+        &:hover::after,
+        &:focus-visible::after {
+          transform: translateY(0.4rem);
+        }
+        &.active::after {
+          transform: rotate(180deg);
+        }
+        &.active:hover::after,
+        &.active:focus-visible::after {
+          transform: rotate(180deg) translateY(0.4rem);
+        }
+      }
     }
   }
 }
@@ -114,6 +139,12 @@
         margin-bottom: 2rem;
         img {
           width: 100%;
+          // Every thumbnail gets the same box (the <Image> 540 x 395 ratio), so
+          // images of other proportions no longer resize the card after load
+          // (layout shift) and the rows line up.
+          aspect-ratio: 540 / 395;
+          height: auto;
+          object-fit: cover;
           transition: scale 0.5s ease-in;
         }
       }
@@ -135,4 +166,266 @@
       }
     }
   }
+}
+
+// ---------------------------------------------------------------------------
+// /case-study: legend + last-updated under the hero, grouped grids with
+// question headings, the "at a glance" table, FAQ and About / CTA block.
+// Type scale follows the blog listing (5.6rem section titles, 3.2rem sub
+// headings, 2rem / 300 paragraphs).
+// ---------------------------------------------------------------------------
+.work_list .portfolio_intro{
+    margin: 4rem 8rem 0;
+    max-width: 96rem;
+    @include mobile(){
+        margin: 6rem 6.5rem 0;
+        max-width: none;
+    }
+    // Paragraphs: the global mobile `p` rule sets the phone size.
+    .portfolio_legend{
+        margin: 0 0 2rem;
+        font-size: 1.8rem;
+        font-weight: 300;
+        line-height: 1.6;
+    }
+    .portfolio_updated{
+        margin: 0;
+        font-size: 1.4rem;
+        opacity: 0.6;
+        @include mobile(){
+            font-size: vw-mobile(12) !important;
+        }
+    }
+}
+
+.work_list .portfolio_section_title{
+    margin: 0 0 5rem;
+    font-size: 5.6rem;
+    font-weight: $exlight;
+    line-height: 1.1;
+    letter-spacing: 0;
+    text-transform: none;
+    @include mobile(){
+        margin-bottom: 7rem;
+        font-size: 8.4rem;
+    }
+}
+
+// "All projects at a glance": title on the left, a real <table> on the right
+// styled as a list (client name left, service tags right). The header row is
+// kept for screen readers / crawlers but hidden visually.
+.work_list .portfolio_table_section{
+    display: grid;
+    grid-template-columns: 34rem 1fr;
+    gap: 8rem;
+    margin: 14rem 8rem 12rem;
+    @include mobile(){
+        grid-template-columns: 1fr;
+        gap: 6rem;
+        margin: 0;
+        padding: 12rem 6.5rem 0;
+        margin-bottom: 17.75rem;
+    }
+    .portfolio_section_title{
+        margin: 0;
+    }
+    .portfolio_table{
+        width: 100%;
+        border-collapse: collapse;
+        caption, thead{
+            position: absolute;
+            width: .1rem;
+            height: .1rem;
+            overflow: hidden;
+            clip: rect(0 0 0 0);
+        }
+        tbody, tr{
+            display: block;
+        }
+        tr{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 4rem;
+            padding: 2.4rem 0;
+            border-bottom: .1rem solid rgba($black, 0.15);
+            &:first-child{
+                padding-top: 0;
+            }
+            @include mobile(){
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 2.4rem;
+                padding: 4.6rem 0;
+            }
+        }
+        td{
+            display: block;
+            padding: 0;
+        }
+        // Client name.
+        td:first-child{
+            font-size: 2.4rem;
+            font-weight: 300;
+            line-height: 1.2;
+            @include mobile(){
+                font-size: 4.2rem;
+            }
+        }
+        // Service tags (pills).
+        td:last-child{
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            gap: 1rem;
+            @include mobile(){
+                justify-content: flex-start;
+                gap: 1.6rem;
+            }
+        }
+        .portfolio_tag{
+            padding: .8rem 1.8rem;
+            font-size: 1.5rem;
+            font-weight: 300;
+            line-height: 1;
+            white-space: nowrap;
+            border: .1rem solid rgba($black, 0.35);
+            border-radius: 10rem;
+            @include mobile(){
+                padding: 1.6rem 3rem;
+                font-size: 2.8rem;
+            }
+        }
+    }
+}
+
+.work_list .portfolio_faq{
+    margin: 0 8rem 12rem;
+    @include mobile(){
+        margin: 0;
+        padding: 0 6.5rem;
+        margin-bottom: 17.75rem;
+    }
+    .home_faqs{
+        margin-left: 0;
+        margin-right: 0;
+        .sub_heading{
+            width: 100%;
+            font-size: 5.6rem;
+            font-weight: $exlight;
+            line-height: 1.1;
+            letter-spacing: 0;
+            @include mobile(){
+                font-size: 8.4rem;
+            }
+        }
+    }
+}
+
+.work_list .portfolio_about{
+    margin: 0 8rem 12rem;
+    padding-top: 8rem;
+    border-top: .1rem solid rgba($black, 0.15);
+    @include mobile(){
+        margin: 0;
+        padding: 12rem 6.5rem 0;
+        margin-bottom: 17.75rem;
+    }
+    .portfolio_cta_title{
+        margin: 5rem 0 2.2rem;
+        font-size: 3.2rem;
+        font-weight: 300;
+        line-height: 1.3;
+        letter-spacing: 0;
+        text-transform: none;
+        @include mobile(){
+            margin: 8rem 0 3.4rem;
+        }
+    }
+    .portfolio_about_text{
+        max-width: 96rem;
+        margin: 0;
+        font-size: 2rem;
+        font-weight: 300;
+        line-height: 1.6;
+        @include mobile(){
+            max-width: none;
+        }
+    }
+    // Pill buttons, no strike-through line (same as the blog's links).
+    .portfolio_about_links .cta_text span{
+        color: inherit;
+        &::before{
+            display: none;
+        }
+    }
+    .portfolio_about_links .cta_text{
+        display: inline-block;
+        padding: 1.5rem 3.2rem;
+        font-size: 2rem;
+        font-weight: 400;
+        line-height: 1;
+        color: $black;
+        border: .1rem solid $black;
+        border-radius: 10rem;
+        transition: background-color .25s ease, color .25s ease, border-color .25s ease;
+        @include mobile(){
+            padding: 2.4rem 4.6rem;
+            font-size: 3rem;
+        }
+        &:first-child{
+            color: $white;
+            background: $black;
+        }
+        @media (hover: hover){
+            &:hover{
+                color: $white;
+                background: $black;
+            }
+        }
+    }
+    .portfolio_about_links{
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem 3rem;
+        margin-top: 5rem;
+        @include mobile(){
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 3rem;
+            margin-top: 8rem;
+        }
+    }
+}
+
+// Dark mode for the new blocks.
+html.active .work_list{
+    .portfolio_legend, .portfolio_updated,
+    .portfolio_section_title, .portfolio_table td,
+    .portfolio_cta_title, .portfolio_about_text{
+        color: $white;
+    }
+    .portfolio_about{
+        border-top-color: rgba($white, 0.2);
+    }
+    .portfolio_table tr{
+        border-bottom-color: rgba($white, 0.2);
+    }
+    .portfolio_table .portfolio_tag{
+        border-color: rgba($white, 0.4);
+    }
+    .portfolio_about_links .cta_text{
+        color: $white;
+        border-color: $white;
+        &:first-child{
+            color: $black;
+            background: $white;
+        }
+        @media (hover: hover){
+            &:hover{
+                color: $black;
+                background: $white;
+            }
+        }
+    }
 }

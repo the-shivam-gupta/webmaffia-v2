@@ -325,6 +325,10 @@
 }
 
 .service_faqs{
+    // FAQ questions: weight 300 on every FAQ on the site.
+    .faq_title_reset.faq_title_reset{
+        font-weight: 300 !important;
+    }
     .faq_tagline{
         margin-bottom: 1.6rem;
         letter-spacing: .14em;
@@ -792,35 +796,6 @@
 // that retracts to the right on hover.
 .cta_work{
     text-align: left;
-    .cta_text{
-        position: relative;
-        display: inline-block;
-        padding-bottom: 0.8rem;
-        span{
-            color: inherit;
-            &::before{
-                display: none;
-            }
-        }
-        &::after{
-            content: '';
-            position: absolute;
-            left: 0;
-            bottom: 0;
-            width: 100%;
-            height: 1px;
-            background: currentColor;
-            opacity: 0.6;
-            transform: scaleX(1);
-            transform-origin: bottom left;
-            transition: transform 0.3s ease-in;
-        }
-        &:hover::after,
-        &:focus-visible::after{
-            transform: scaleX(0);
-            transform-origin: bottom right;
-        }
-    }
 }
 
 h4{
