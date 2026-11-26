@@ -834,3 +834,31 @@
         }
     }
 }
+
+// "Let's talk" at the bottom of industry pages. It sits outside .re_page, so it
+// gets the same side padding, space above it and space before the footer.
+// Headline runs at the service-page size (the default one is too large here).
+.re_contact{
+    padding: vw(120) 8rem vw(160);
+    background: $white;
+    @include tablet(){
+        padding-left: 6.5rem;
+        padding-right: 6.5rem;
+    }
+    @include mobile(){
+        padding: vw-mobile(56) 6.5rem vw-mobile(72);
+    }
+    .home_contact{
+        margin-left: 0;
+        margin-right: 0;
+        .sub_heading{
+            font-size: vw(84);
+            @include mobile(){
+                font-size: vw-mobile(34);
+            }
+        }
+    }
+    html.active &{
+        background: $black;
+    }
+}

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import JsonLd from "@/components/JsonLd";
+import ContactSection from "@/components/ContactSection";
 import ServiceFaqAccordion from "@/components/ServiceFaqAccordion";
 import { buildBreadcrumbSchema, buildFaqSchema, SITE_URL } from "@/lib/schema";
 import { getStrapiImageUrl } from "@/lib/strapiPage";
@@ -348,6 +349,13 @@ export default function IndustryDetailPage({ industry }) {
             </section>
           )}
         </div>
+      </div>
+
+      <div className="re_contact">
+        <ContactSection
+          showDetails={false}
+          description="Tell us about your goals and we’ll show you how Webmaffia can help you reach them."
+        />
       </div>
     </main>
   );

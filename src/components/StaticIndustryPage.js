@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import JsonLd from "@/components/JsonLd";
 import HomeFaq from "@/components/HomeFaq";
+import ContactSection from "@/components/ContactSection";
 import { formatUpdatedAt } from "@/lib/dates";
 import { INDUSTRY_LINKS } from "@/lib/industries";
 import { buildBreadcrumbSchema, buildFaqSchema, SITE_URL } from "@/lib/schema";
@@ -389,6 +390,14 @@ export default function StaticIndustryPage({ page }) {
             </section>
           ) : null}
         </div>
+      </div>
+
+      {/* Enquiry form — same "Let's talk" block as the service pages */}
+      <div className="re_contact">
+        <ContactSection
+          showDetails={false}
+          description="Tell us about your goals and we’ll show you how Webmaffia can help you reach them."
+        />
       </div>
     </main>
   );
