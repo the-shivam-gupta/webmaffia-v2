@@ -156,3 +156,208 @@ html.active {
     }
   }
 }
+
+// ---------------------------------------------------------------------------
+// Intro, A-Z client list, FAQ and About / CTA block (type scale follows the
+// blog and case-study pages: 5.6rem section titles, 3.2rem sub heading,
+// 2rem / 300 paragraphs).
+// ---------------------------------------------------------------------------
+.clients_page .clients_intro {
+  margin: 4rem 10rem 0;
+  max-width: 96rem;
+  @include mobile() {
+    margin: 6rem 6.5rem 0;
+    max-width: none;
+  }
+  // Paragraphs: the global mobile `p` rule sets the phone size.
+  .clients_intro_text {
+    margin: 0 0 2rem;
+    font-size: 1.8rem;
+    font-weight: 300;
+    line-height: 1.6;
+  }
+  .clients_updated {
+    margin: 0;
+    font-size: 1.4rem;
+    opacity: 0.6;
+    @include mobile() {
+      font-size: vw-mobile(12) !important;
+    }
+  }
+}
+
+.clients_page .clients_section_title {
+  margin: 0 0 5rem;
+  font-size: 5.6rem;
+  font-weight: $exlight;
+  line-height: 1.1;
+  letter-spacing: 0;
+  text-transform: none;
+  @include mobile() {
+    margin-bottom: 7rem;
+    font-size: 8.4rem;
+  }
+}
+
+// A-Z list of every client name (the logo grid above only reveals 24 at a time).
+.clients_page .clients_names {
+  margin: 0 10rem 12rem;
+  @include mobile() {
+    margin: 0;
+    padding: 0 6.5rem;
+    margin-bottom: 17.75rem;
+  }
+  .clients_names_list {
+    columns: 4;
+    column-gap: 4rem;
+    margin: 0;
+    // Bullet before each client; the marker takes the text colour (white in
+    // dark mode via the li rule below).
+    padding: 0 0 0 2.4rem;
+    list-style: circle;
+    @include mobile() {
+      columns: 2;
+      column-gap: 4rem;
+      padding-left: 4rem;
+    }
+    li {
+      break-inside: avoid;
+      padding: 1.1rem 0;
+      font-size: 1.8rem;
+      font-weight: 300;
+      line-height: 1.3;
+      @include mobile() {
+        padding: 2rem 0;
+        font-size: 3rem;
+      }
+    }
+  }
+}
+
+.clients_page .clients_faq {
+  margin: 0 10rem 12rem;
+  @include mobile() {
+    margin: 0;
+    padding: 0 6.5rem;
+    margin-bottom: 17.75rem;
+  }
+  .home_faqs {
+    margin-left: 0;
+    margin-right: 0;
+    .sub_heading {
+      width: 100%;
+      font-size: 5.6rem;
+      font-weight: $exlight;
+      line-height: 1.1;
+      letter-spacing: 0;
+      @include mobile() {
+        font-size: 8.4rem;
+      }
+    }
+  }
+}
+
+.clients_page .clients_about {
+  margin: 0 10rem 12rem;
+  padding-top: 8rem;
+  border-top: 0.1rem solid rgba($black, 0.15);
+  @include mobile() {
+    margin: 0;
+    padding: 12rem 6.5rem 0;
+    margin-bottom: 17.75rem;
+  }
+  .clients_cta_title {
+    margin: 5rem 0 2.2rem;
+    font-size: 3.2rem;
+    font-weight: 300;
+    line-height: 1.3;
+    letter-spacing: 0;
+    text-transform: none;
+    @include mobile() {
+      margin: 8rem 0 3.4rem;
+    }
+  }
+  .clients_about_text {
+    max-width: 96rem;
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 300;
+    line-height: 1.6;
+    @include mobile() {
+      max-width: none;
+    }
+  }
+  // Pill buttons, no strike-through line (same as the blog and case-study pages).
+  .clients_about_links .cta_text span {
+    color: inherit;
+    &::before {
+      display: none;
+    }
+  }
+  .clients_about_links .cta_text {
+    display: inline-block;
+    padding: 1.5rem 3.2rem;
+    font-size: 2rem;
+    font-weight: 400;
+    line-height: 1;
+    color: $black;
+    border: 0.1rem solid $black;
+    border-radius: 10rem;
+    transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+    @include mobile() {
+      padding: 2.4rem 4.6rem;
+      font-size: 3rem;
+    }
+    &:first-child {
+      color: $white;
+      background: $black;
+    }
+    @media (hover: hover) {
+      &:hover {
+        color: $white;
+        background: $black;
+      }
+    }
+  }
+  .clients_about_links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem 3rem;
+    margin-top: 5rem;
+    @include mobile() {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 3rem;
+      margin-top: 8rem;
+    }
+  }
+}
+
+// Dark mode for the new blocks.
+html.active .clients_page {
+  .clients_intro_text,
+  .clients_updated,
+  .clients_section_title,
+  .clients_names_list li,
+  .clients_cta_title,
+  .clients_about_text {
+    color: $white;
+  }
+  .clients_about {
+    border-top-color: rgba($white, 0.2);
+  }
+  .clients_about_links .cta_text {
+    color: $white;
+    border-color: $white;
+    &:first-child {
+      color: $black;
+      background: $white;
+    }
+    @media (hover: hover) {
+      &:hover {
+        color: $black;
+        background: $white;
+      }
+    }
+  }
+}

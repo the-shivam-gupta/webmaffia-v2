@@ -2,7 +2,7 @@
 // Strapi case studies themselves (names + service tags), so counts, group
 // lists, FAQ answers and schema stay correct as projects are added or removed.
 
-function joinNames(names) {
+export function joinNames(names) {
   if (names.length <= 1) return names.join("");
   return `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}`;
 }
