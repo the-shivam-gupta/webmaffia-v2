@@ -1,29 +1,34 @@
 import Image from "next/image";
 
-// "250+" -> { number: "250", plus: true }; the "+" is rendered as a superscript.
+// "250+" -> { number: "250", mark: "+" }; a trailing "+" or "★" is rendered as a
+// superscript.
 function splitValue(value) {
   const trimmed = String(value ?? "").trim();
-  const plus = trimmed.endsWith("+");
-  return { number: plus ? trimmed.slice(0, -1).trim() : trimmed, plus };
+  const mark = /[+★]$/.test(trimmed) ? trimmed.slice(-1) : "";
+  return { number: mark ? trimmed.slice(0, -1).trim() : trimmed, mark };
 }
 
 // Static for now (not pulled from the footer offices).
 const LOCATIONS = ["INDIA", "USA", "UAE"];
 
-export default function StatisticsBar({ stats = [] }) {
+// `showLocations={false}` hides the "INDIA · USA · UAE" line (the industry pages
+// already list their offices); `columns` sets the desktop column count.
+export default function StatisticsBar({ stats = [], showLocations = true, columns = 5 }) {
   if (!stats.length) return null;
 
   return (
     <section data-section="statistics" className="statistics_bar">
-      <div className="statistics_locations">
-        {LOCATIONS.map((location) => (
-          <span key={location}>{location}</span>
-        ))}
-      </div>
+      {showLocations ? (
+        <div className="statistics_locations">
+          {LOCATIONS.map((location) => (
+            <span key={location}>{location}</span>
+          ))}
+        </div>
+      ) : null}
 
-      <div className="statistics_grid">
+      <div className="statistics_grid" style={{ "--stat-cols": columns }}>
         {stats.map((stat) => {
-          const { number, plus } = splitValue(stat.value);
+          const { number, mark } = splitValue(stat.value);
 
           return (
             <div
@@ -42,7 +47,7 @@ export default function StatisticsBar({ stats = [] }) {
               {number ? (
                 <div className="statistics_value">
                   {number}
-                  {plus ? <sup>+</sup> : null}
+                  {mark ? <sup>{mark}</sup> : null}
                 </div>
               ) : null}
               <div className="statistics_label">{stat.label}</div>

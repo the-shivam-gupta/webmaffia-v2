@@ -21,7 +21,7 @@ export const pharmaHealthcare = {
 
   hero: {
     label: "Pharma and healthcare marketing",
-    title: "Pharma and healthcare digital marketing that builds trust first",
+    title: "Pharma and healthcare digital marketing",
     leadStrong:
       "Webmaffia is a pharma and healthcare digital marketing agency based in Mumbai. Webmaffia builds compliant websites, content and campaigns for pharmaceutical companies, hospitals, clinics, diagnostics labs and health-tech brands.",
     lead: "Eight services, delivered by one accountable Webmaffia team, covering digital strategy, design and development, SEO, AI-powered solutions, social media, content marketing, app store optimization and influencer marketing, with medical and legal review built into every step. Webmaffia is ISO/IEC 27001:2022 certified, works from four offices across India, the USA and the UAE, and holds a 4.3 Google rating from 46+ reviews.",
@@ -36,7 +36,7 @@ export const pharmaHealthcare = {
   },
 
   stats: [
-    { value: "8", label: "Services under one roof" },
+    { value: "6", label: "Services under one roof" },
     { value: "4", label: "Offices: Mumbai, Bengaluru, USA, Dubai" },
     { value: "ISO 27001", label: "Certified information security" },
     { value: "4.3★", label: "Google rating, 46+ reviews" },
@@ -152,7 +152,7 @@ export const pharmaHealthcare = {
     label: "Real results",
     title: "What are the facts about Webmaffia?",
     items: [
-      { value: "8", label: "services delivered by one accountable Webmaffia team" },
+      { value: "6", label: "services delivered by one accountable Webmaffia team" },
       { value: "4", label: "Webmaffia offices across India, the USA and the UAE" },
       { value: "4.3★", label: "Google rating from 46+ reviews" },
       { value: "2028", label: "ISO/IEC 27001:2022 certification valid until" },

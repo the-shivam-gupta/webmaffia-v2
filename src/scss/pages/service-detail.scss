@@ -883,8 +883,10 @@ html.active .service_detail .service_updated{
         font-size: 2.2rem;
         line-height: 1.2;
         border-bottom: 0.2rem solid transparent;
-        opacity: 0.55;
-        transition: opacity 0.3s ease, border-color 0.3s ease;
+        // Full-strength text colour (it was faded to 55%, which read as grey);
+        // the hover / current underline marks the active link instead.
+        color: $black;
+        transition: border-color 0.3s ease;
         @include mobile(){
             padding-bottom: 1.4rem;
             font-size: 3.6rem;
@@ -892,10 +894,9 @@ html.active .service_detail .service_updated{
         }
         &:hover,
         &:focus-visible{
-            opacity: 1;
+            border-bottom-color: currentColor;
         }
         &[aria-current]{
-            opacity: 1;
             border-bottom-color: currentColor;
         }
     }

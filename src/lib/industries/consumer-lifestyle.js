@@ -21,7 +21,7 @@ export const consumerLifestyle = {
   },
   "hero": {
     "label": "Consumer and lifestyle marketing",
-    "title": "Consumer and lifestyle digital marketing that turns attention into sales",
+    "title": "Consumer and lifestyle digital marketing",
     "leadStrong": "Webmaffia is a Mumbai digital marketing agency for D2C, FMCG, fashion, beauty, food, wellness and lifestyle brands.",
     "lead": "One team covers all eight services, from the scroll-stopping reel to the checkout.",
     "primary": {
@@ -41,7 +41,7 @@ export const consumerLifestyle = {
   },
   "stats": [
     {
-      "value": "8",
+      "value": "6",
       "label": "Services under one roof"
     },
     {
@@ -294,7 +294,7 @@ export const consumerLifestyle = {
     "title": "What are the facts about Webmaffia?",
     "items": [
       {
-        "value": "8",
+        "value": "6",
         "label": "services delivered by one accountable team"
       },
       {

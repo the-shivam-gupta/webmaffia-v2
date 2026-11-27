@@ -24,6 +24,8 @@ export function toCaseStudyItem(entry) {
     title: workTitle,
     type: workTitle,
     url,
+    // Client sites open in a new tab (see WorkListSection / ServiceWorkSlider).
+    external: !!thumb?.externalLink,
     image: imageUrl || FALLBACK_WORK_IMAGE,
   };
 }

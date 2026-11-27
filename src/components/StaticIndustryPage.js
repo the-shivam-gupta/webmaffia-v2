@@ -3,6 +3,8 @@ import Image from "next/image";
 import JsonLd from "@/components/JsonLd";
 import HomeFaq from "@/components/HomeFaq";
 import ContactSection from "@/components/ContactSection";
+import BannerCtaArrow from "@/components/BannerCtaArrow";
+import IndustryStats from "@/components/IndustryStats";
 import { formatUpdatedAt } from "@/lib/dates";
 import { INDUSTRY_LINKS } from "@/lib/industries";
 import { buildBreadcrumbSchema, buildFaqSchema, SITE_URL } from "@/lib/schema";
@@ -59,10 +61,6 @@ function Check() {
 }
 
 const pad = (n) => String(n + 1).padStart(2, "0");
-
-function Label({ children }) {
-  return <div className="re_label">{children}</div>;
-}
 
 export default function StaticIndustryPage({ page }) {
   const path = `/${page.slug}`;
@@ -155,20 +153,29 @@ export default function StaticIndustryPage({ page }) {
           {/* Hero */}
           <section className="re_hero" aria-labelledby="re-h1">
             <div className="re_hero_copy">
-              <nav className="re_crumbs" aria-label="Breadcrumb">
-                <Link href="/">Home</Link> / {page.name}
+              {/* Same eyebrow breadcrumb as the service pages (.service_detail .sub_title). */}
+              <nav className="sub_title" aria-label="Breadcrumb">
+                <Link href="/">Home</Link>
+                <span className="sub_title_sep" aria-hidden="true">
+                  {" / "}
+                </span>
+                <span className="sub_title_current">{page.name}</span>
               </nav>
-              <Label>{page.hero.label}</Label>
               <h1 id="re-h1">{page.hero.title}</h1>
               <p>
                 {page.hero.leadStrong} {page.hero.lead}
               </p>
-              <div className="re_btns">
-                <Link href={page.hero.primary.href} className="re_btn re_btn_dark">
-                  {page.hero.primary.text} <span aria-hidden="true">→</span>
+              {/* Same primary pill + underlined secondary link as the banner CTAs. */}
+              <div className="banner_cta_group">
+                <Link href={page.hero.primary.href} className="banner_cta">
+                  {page.hero.primary.text}
                 </Link>
-                <Link href={page.hero.secondary.href} className="re_btn re_btn_line">
+                <Link
+                  href={page.hero.secondary.href}
+                  className="banner_cta_secondary banner_cta_secondary--arrow"
+                >
                   {page.hero.secondary.text}
+                  <BannerCtaArrow />
                 </Link>
               </div>
             </div>
@@ -186,14 +193,7 @@ export default function StaticIndustryPage({ page }) {
           </section>
 
           {/* Stats */}
-          <div className="re_stats" role="list">
-            {page.stats.map((item) => (
-              <div className="re_stat" role="listitem" key={item.label}>
-                <b>{item.value}</b>{" "}
-                <span>{item.label}</span>
-              </div>
-            ))}
-          </div>
+          <IndustryStats items={page.stats} />
 
           {/* Approach */}
           <section className="re_approach" aria-labelledby="approach-h">
@@ -205,7 +205,6 @@ export default function StaticIndustryPage({ page }) {
               sizes="(max-width: 1024px) 100vw, 45vw"
             />
             <div>
-              <Label>{page.approach.label}</Label>
               <h2 id="approach-h">{page.approach.title}</h2>
               {page.approach.paragraphs.map((text) => (
                 <p key={text}>{text}</p>
@@ -215,7 +214,6 @@ export default function StaticIndustryPage({ page }) {
 
           {/* Problems */}
           <section className="re_block" aria-labelledby="problems-h">
-            <Label>{page.problems.label}</Label>
             <h2 id="problems-h">{page.problems.title}</h2>
             {page.problems.intro && <p className="re_intro">{page.problems.intro}</p>}
             <ul className="re_rows">
@@ -231,7 +229,6 @@ export default function StaticIndustryPage({ page }) {
 
           {/* Services */}
           <section className="re_block" aria-labelledby="services-h">
-            <Label>{page.services.label}</Label>
             <h2 id="services-h">{page.services.title}</h2>
             <div className="re_cols re_cols4">
               {page.services.items.map((item) => (
@@ -246,7 +243,6 @@ export default function StaticIndustryPage({ page }) {
 
           {/* Types & features */}
           <section className="re_block" aria-labelledby="types-h">
-            <Label>{page.types.label}</Label>
             <h2 id="types-h">{page.types.title}</h2>
             <div className="re_table_wrap">
               <table className="re_table">
@@ -287,7 +283,6 @@ export default function StaticIndustryPage({ page }) {
 
           {/* Process */}
           <section className="re_block" aria-labelledby="process-h">
-            <Label>{page.process.label}</Label>
             <h2 id="process-h">{page.process.title}</h2>
             <ol className="re_steps">
               {page.process.steps.map((item, i) => (
@@ -302,7 +297,6 @@ export default function StaticIndustryPage({ page }) {
 
           {/* What you receive */}
           <section className="re_block" aria-labelledby="receive-h">
-            <Label>{page.receive.label}</Label>
             <h2 id="receive-h">{page.receive.title}</h2>
             {page.receive.intro && <p className="re_intro">{page.receive.intro}</p>}
             <ul className="re_checks">
@@ -319,7 +313,6 @@ export default function StaticIndustryPage({ page }) {
           <section className="re_security" aria-labelledby="security-h">
             <Icon name="shield" />
             <div>
-              <Label>{page.band.label}</Label>
               <h2 id="security-h">{page.band.title}</h2>
               <p>{page.band.text}</p>
             </div>
@@ -335,7 +328,6 @@ export default function StaticIndustryPage({ page }) {
 
           {/* Why */}
           <section className="re_block" aria-labelledby="why-h">
-            <Label>{page.why.label}</Label>
             <h2 id="why-h">{page.why.title}</h2>
             <div className="re_cols re_cols4">
               {page.why.items.map((item) => (
@@ -357,32 +349,23 @@ export default function StaticIndustryPage({ page }) {
             />
           </div>
 
-          {updated && (
-            <p className="re_updated">
-              Published by Webmaffia · Last updated:{" "}
-              <time dateTime={updated.iso}>{updated.label}</time>
-            </p>
-          )}
-
-          {/* Explore other industries (same look as "Our Other Services") */}
+          {/* Explore other industries: the same pill links as the service pages'
+              "Our Other Services" (.svc_other). */}
           {otherIndustries.length > 0 ? (
             <section className="re_others" aria-labelledby="others-h">
-              <div className="other_services_row">
-                <div className="other_services_row_head">
-                  <h2 id="others-h" className="other_services_row_title">
-                    Explore other industries
-                  </h2>
-                </div>
-                <div className="other_services_row_list">
-                  {otherIndustries.map((item, index) => (
+              <div className="svc_other">
+                <h2 id="others-h" className="svc_other_title">
+                  Explore other industries
+                </h2>
+                <div className="svc_other_list">
+                  {otherIndustries.map((item) => (
                     <Link
                       href={`/${item.slug}`}
-                      className="other_services_row_item"
+                      className="svc_other_item"
                       key={item.slug}
                       aria-current={item.slug === page.slug ? "page" : undefined}
                     >
-                      <span className="other_services_row_num">{pad(index)}</span>
-                      <span className="other_services_row_name">{item.name}</span>
+                      <h3 className="svc_other_name h3_plain">{item.name}</h3>
                     </Link>
                   ))}
                 </div>
@@ -398,6 +381,13 @@ export default function StaticIndustryPage({ page }) {
           showDetails={false}
           description="Tell us about your goals and we’ll show you how Webmaffia can help you reach them."
         />
+        {/* Very bottom of the page, left-aligned. */}
+        {updated && (
+          <p className="re_updated_foot">
+            Published by Webmaffia · Last updated:{" "}
+            <time dateTime={updated.iso}>{updated.label}</time>
+          </p>
+        )}
       </div>
     </main>
   );

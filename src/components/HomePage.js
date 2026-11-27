@@ -519,11 +519,17 @@ export default function HomePage({
   beforeContact = null,
   footerNote = null,
 }) {
+  // The hero's "See the work" link gets the pointed arrow (as on webmaffia-us).
+  const withSecondaryArrow = (data) =>
+    data?.secondaryCta && /see\s+the\s+work/i.test(data.secondaryCta.text ?? "")
+      ? { ...data, secondaryCta: { ...data.secondaryCta, arrow: true } }
+      : data;
+
   return (
     <main className="wrapper home_wrapper opacity_0">
       <div className="ml-setter">
         {bannerData ? (
-          <Banner data={bannerData} />
+          <Banner data={withSecondaryArrow(bannerData)} />
         ) : null}
 
         {sections.map((section) => {

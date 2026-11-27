@@ -21,7 +21,7 @@ export const infrastructureTelecom = {
 
   hero: {
     label: "Infrastructure and telecom marketing",
-    title: "Infrastructure and telecom digital marketing that connects every stakeholder",
+    title: "Infrastructure and telecom digital marketing",
     leadStrong:
       "Webmaffia is a Mumbai digital marketing agency for infrastructure, EPC and telecom companies.",
     lead: "One team covers all eight services, built for tenders, investors and long B2B sales cycles.",
@@ -36,7 +36,7 @@ export const infrastructureTelecom = {
   },
 
   stats: [
-    { value: "8", label: "Services under one roof" },
+    { value: "6", label: "Services under one roof" },
     { value: "4", label: "Offices: Mumbai, Bengaluru, USA, Dubai" },
     { value: "ISO 27001", label: "Certified information security" },
     { value: "4.3★", label: "Google rating, 46+ reviews" },
@@ -153,7 +153,7 @@ export const infrastructureTelecom = {
     label: "Real results",
     title: "What are the facts about Webmaffia?",
     items: [
-      { value: "8", label: "services delivered by one accountable team" },
+      { value: "6", label: "services delivered by one accountable team" },
       { value: "4", label: "offices across India, the USA and the UAE" },
       { value: "4.3★", label: "Google rating from 46+ reviews" },
       { value: "2028", label: "ISO/IEC 27001:2022 certification valid until" },

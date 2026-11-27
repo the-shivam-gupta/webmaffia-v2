@@ -22,7 +22,7 @@ export const realEstate = {
 
   hero: {
     label: "Real estate marketing",
-    title: "Real estate digital marketing that turns launches into site visits",
+    title: "Real estate digital marketing",
     leadStrong:
       "Webmaffia is a Mumbai real estate digital marketing agency for developers, builders and brokers.",
     lead: "One team covers all eight services a property brand needs, from the first launch teaser to the final booking.",
@@ -37,7 +37,7 @@ export const realEstate = {
   },
 
   stats: [
-    { value: "8", label: "Services under one roof" },
+    { value: "6", label: "Services under one roof" },
     { value: "4", label: "Offices: Mumbai, Bengaluru, USA, Dubai" },
     { value: "ISO 27001", label: "Certified information security" },
     { value: "4.3★", label: "Google rating, 46+ reviews" },
@@ -154,7 +154,7 @@ export const realEstate = {
     label: "Real results",
     title: "How big is Webmaffia, and what certifications does it hold?",
     items: [
-      { value: "8", label: "Webmaffia delivers all eight real estate services through one accountable team" },
+      { value: "6", label: "Webmaffia delivers all eight real estate services through one accountable team" },
       { value: "4", label: "Webmaffia has four offices across India, the USA and the UAE" },
       { value: "4.3★", label: "Webmaffia holds a 4.3-star Google rating from 46+ reviews" },
       { value: "2028", label: "Webmaffia’s ISO/IEC 27001:2022 certification is valid until 2028" },

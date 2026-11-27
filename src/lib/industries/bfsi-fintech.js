@@ -21,7 +21,7 @@ export const bfsiFintech = {
   },
   "hero": {
     "label": "BFSI and fintech marketing",
-    "title": "BFSI and fintech digital marketing that turns trust into sign-ups",
+    "title": "BFSI and fintech digital marketing",
     "leadStrong": "Webmaffia is a Mumbai digital marketing agency for banks, NBFCs, insurers, asset managers, brokers and fintech companies.",
     "lead": "BFSI stands for banking, financial services and insurance (banks, lenders, insurers, brokers, wealth platforms and payment companies), and fintech covers the digital-first businesses building products across those categories. One team covers all eight services, with regulatory disclosures and data security built in from day one.",
     "primary": {
@@ -41,7 +41,7 @@ export const bfsiFintech = {
   },
   "stats": [
     {
-      "value": "8",
+      "value": "6",
       "label": "Services under one roof"
     },
     {
@@ -296,7 +296,7 @@ export const bfsiFintech = {
     "title": "Real numbers. Real proof.",
     "items": [
       {
-        "value": "8",
+        "value": "6",
         "label": "services delivered by one accountable team"
       },
       {

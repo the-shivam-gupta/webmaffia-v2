@@ -1,6 +1,7 @@
 import { Fragment } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import DomainLinkText from "@/components/DomainLinkText";
 
 function renderMultilineText(text) {
   const lines = String(text ?? "")
@@ -143,7 +144,7 @@ export default function Banner({
               ) : null}
             </>
           ) : (
-            subheading.text
+            <DomainLinkText text={subheading.text} />
           )}
         </div>
       ) : null}
@@ -171,8 +172,26 @@ export default function Banner({
             </Link>
           ) : null}
           {hasSecondaryCta ? (
-            <Link href={secondaryCta.href} className="banner_cta_secondary">
+            <Link
+              href={secondaryCta.href}
+              className={`banner_cta_secondary${secondaryCta.arrow ? " banner_cta_secondary--arrow" : ""}`}
+            >
               {secondaryCta.text}
+              {secondaryCta.arrow ? (
+                <svg
+                  className="banner_cta_arrow"
+                  viewBox="0 0 24 12"
+                  aria-hidden="true"
+                  focusable="false"
+                >
+                  <path
+                    d="M0 6H22.5M17 0.8L22.7 6L17 11.2"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.2"
+                  />
+                </svg>
+              ) : null}
             </Link>
           ) : null}
         </div>

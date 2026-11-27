@@ -566,6 +566,33 @@
     }
 }
 
+// Clickable domain inside a tagline: looks identical to the text, no hover effect.
+.sub_title a.domain_link,
+.sub_title a.domain_link:hover,
+.sub_title a.domain_link:focus-visible{
+    color: inherit;
+    text-decoration: none;
+    letter-spacing: inherit;
+    font: inherit;
+    opacity: 1;
+    transition: none;
+    animation: none;
+    background: none;
+    cursor: pointer;
+    &::before,
+    &::after{
+        content: none;
+        display: none;
+    }
+}
+
+// Dark theme: the global `html.active a` rule turns links white; keep the
+// tagline colour so the domain matches the rest of the text.
+html.active .sub_title a.domain_link,
+html.active .sub_title a.domain_link:hover{
+    color: inherit;
+}
+
 h1, .h1{
     width: 100%;
     line-height: 0.95;
@@ -700,17 +727,9 @@ p{
     }
 }
 
-// Banner CTAs — rendered in Banner.js from a CMS banner's `button`/`href`
-// (primary, filled pill) and `secondaryButton` (secondary, underlined text
-// link). Global so it works on every page that renders <Banner>.
-.banner_content{
-    h1{
-        letter-spacing: 0;
-        width: 100%;
-        margin-bottom: vw(20);
-        font-size: vw(140);
-        line-height: .95;
-    }
+// The banner CTA group / primary pill / secondary underlined link. Used by every
+// <Banner> (.banner_content) and by the industry pages' hero (.re_hero_copy).
+@mixin banner_cta_styles{
     .banner_cta_group{
         display: flex;
         align-items: center;
@@ -776,6 +795,45 @@ p{
             }
         }
     }
+    // Text keeps the normal secondary-link look (size, underline); only the
+    // pointed arrow from `.services_item_link` is added, nudging right on hover.
+    .banner_cta_secondary--arrow{
+        &::after{
+            display: none;
+        }
+        .banner_cta_arrow{
+            display: inline-block;
+            width: 1em;
+            height: 0.5em;
+            margin-left: 0.5em;
+            vertical-align: middle;
+            color: $black;
+            transition: transform 0.3s ease;
+        }
+        &:hover .banner_cta_arrow,
+        &:focus-visible .banner_cta_arrow{
+            transform: translateX(vw(10));
+        }
+    }
+}
+
+// Banner CTAs — rendered in Banner.js from a CMS banner's `button`/`href`
+// (primary, filled pill) and `secondaryButton` (secondary, underlined text
+// link). Global so it works on every page that renders <Banner>.
+.banner_content{
+    h1{
+        letter-spacing: 0;
+        width: 100%;
+        margin-bottom: vw(20);
+        font-size: vw(140);
+        line-height: .95;
+    }
+    @include banner_cta_styles;
+}
+
+// Industry pages: hero buttons look like the banner's primary / secondary CTAs.
+.re_hero_copy{
+    @include banner_cta_styles;
 }
 
 // Services grid — static 3-column replacement for the old pinned
@@ -2069,7 +2127,7 @@ h3, .h2{
     }
     .statistics_grid{
         display: grid;
-        grid-template-columns: repeat(5, 1fr);
+        grid-template-columns: repeat(var(--stat-cols, 5), 1fr);
         border-top: vw(1) solid rgba($black, 0.1);
         border-bottom: vw(1) solid rgba($black, 0.1);
         @include mobile(){
@@ -2157,7 +2215,13 @@ h3, .h2{
             max-width: vw(220);
             @include mobile(){
                 font-size: vw-mobile(12);
+                width: vw-mobile(144);
                 max-width: vw-mobile(144);
+                // Centre the caption under the (left-placed) icon, the way the
+                // other labels sit centred under their numbers. Icon width =
+                // height x its 1181:1087 aspect ratio.
+                text-align: center;
+                margin-left: calc(#{vw-mobile(68)} * 1.0865 / 2 - #{vw-mobile(144)} / 2);
             }
         }
     }

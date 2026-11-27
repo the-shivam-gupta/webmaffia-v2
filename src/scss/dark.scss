@@ -673,6 +673,11 @@ html{
                 border-bottom-color: rgba(0, 0, 0, 0.15);
             }
 
+            // Desktop row layout uses a top rule on each office.
+            .footer_connect_details > .footer_connect_office {
+                border-top-color: rgba(0, 0, 0, 0.15);
+            }
+
             .footer_legal_links a {
                 color: $black_60;
 
@@ -788,7 +793,8 @@ html{
                 color: $white !important;
             }
         }
-        .banner_content .banner_cta{
+        .banner_content .banner_cta,
+        .re_hero_copy .banner_cta{
             border-color: $white;
             background: $white;
             color: $black;
@@ -808,10 +814,17 @@ html{
                 border-color: rgba($white, 0.15);
             }
         }
-        .banner_content .banner_cta_secondary{
+        .banner_content .banner_cta_secondary,
+        .re_hero_copy .banner_cta_secondary{
             color: $white;
             &::after{
                 background: rgba($white, 0.6);
+            }
+        }
+        .banner_content .banner_cta_secondary--arrow,
+        .re_hero_copy .banner_cta_secondary--arrow{
+            .banner_cta_arrow{
+                color: $white;
             }
         }
         .other_services{

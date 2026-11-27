@@ -21,7 +21,7 @@ export const energyMetalsManufacturing = {
   },
   "hero": {
     "label": "Energy, metals and manufacturing marketing",
-    "title": "Energy, metals and manufacturing marketing built for B2B growth",
+    "title": "Energy, metals and manufacturing marketing",
     "leadStrong": "Webmaffia is a B2B digital marketing agency for energy, metals and manufacturing companies, working from four offices across India, the USA and the UAE.",
     "lead": "We build product and grade catalogues, structured RFQ journeys, ESG and BRSR hubs and technical SEO for industrial brands: eight services delivered by one accountable team, built to win RFQs, support distributors and earn trust across long procurement cycles.",
     "primary": {
@@ -41,7 +41,7 @@ export const energyMetalsManufacturing = {
   },
   "stats": [
     {
-      "value": "8",
+      "value": "6",
       "label": "Services under one roof"
     },
     {
@@ -297,7 +297,7 @@ export const energyMetalsManufacturing = {
     "title": "What proof of delivery can Webmaffia show?",
     "items": [
       {
-        "value": "8",
+        "value": "6",
         "label": "services delivered by one accountable team"
       },
       {

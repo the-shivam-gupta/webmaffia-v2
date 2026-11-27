@@ -2,6 +2,8 @@ import Link from "next/link";
 import Image from "next/image";
 import JsonLd from "@/components/JsonLd";
 import ContactSection from "@/components/ContactSection";
+import BannerCtaArrow from "@/components/BannerCtaArrow";
+import IndustryStats from "@/components/IndustryStats";
 import ServiceFaqAccordion from "@/components/ServiceFaqAccordion";
 import { buildBreadcrumbSchema, buildFaqSchema, SITE_URL } from "@/lib/schema";
 import { getStrapiImageUrl } from "@/lib/strapiPage";
@@ -57,10 +59,6 @@ function Check() {
 
 const pad = (n) => String(n + 1).padStart(2, "0");
 const clean = (value) => String(value ?? "").trim();
-
-function Label({ children }) {
-  return <div className="re_label">{children}</div>;
-}
 
 function cmsImage(asset, fallbackWidth, fallbackHeight) {
   if (!asset?.url) return null;
@@ -126,21 +124,30 @@ export default function IndustryDetailPage({ industry }) {
           {banner && (
             <section className="re_hero" aria-labelledby="re-h1">
               <div className="re_hero_copy">
-                <nav className="re_crumbs" aria-label="Breadcrumb">
-                  <Link href="/">Home</Link> / {industry.title}
+                {/* Same eyebrow breadcrumb as the service pages (.service_detail .sub_title). */}
+                <nav className="sub_title" aria-label="Breadcrumb">
+                  <Link href="/">Home</Link>
+                  <span className="sub_title_sep" aria-hidden="true">
+                    {" / "}
+                  </span>
+                  <span className="sub_title_current">{industry.title}</span>
                 </nav>
-                {banner.tagLine && <Label>{banner.tagLine}</Label>}
                 <h1 id="re-h1">{banner.heading}</h1>
                 {banner.description && <p>{banner.description}</p>}
-                <div className="re_btns">
+                {/* Same primary pill + underlined secondary link as the banner CTAs. */}
+                <div className="banner_cta_group">
                   {banner.button && (
-                    <Link href={banner.href || "#"} className="re_btn re_btn_dark">
-                      {banner.button} <span aria-hidden="true">→</span>
+                    <Link href={banner.href || "#"} className="banner_cta">
+                      {banner.button}
                     </Link>
                   )}
                   {secondaryCta?.title && (
-                    <Link href={secondaryCta.href || "#"} className="re_btn re_btn_line">
+                    <Link
+                      href={secondaryCta.href || "#"}
+                      className="banner_cta_secondary banner_cta_secondary--arrow"
+                    >
                       {secondaryCta.title}
+                      <BannerCtaArrow />
                     </Link>
                   )}
                 </div>
@@ -159,16 +166,7 @@ export default function IndustryDetailPage({ industry }) {
             </section>
           )}
 
-          {stats.length > 0 && (
-            <div className="re_stats" role="list">
-              {stats.map((item) => (
-                <div className="re_stat" role="listitem" key={item.id}>
-                  <b>{item.value}</b>
-                  <span>{item.label}</span>
-                </div>
-              ))}
-            </div>
-          )}
+          {stats.length > 0 && <IndustryStats items={stats} />}
 
           {approach && (
             <section className="re_approach" aria-labelledby="approach-h">
@@ -180,7 +178,6 @@ export default function IndustryDetailPage({ industry }) {
                 />
               )}
               <div>
-                <Label>{approach.tagline}</Label>
                 <h2 id="approach-h">{approach.title}</h2>
                 <p>{clean(approach.description)}</p>
               </div>
@@ -189,7 +186,6 @@ export default function IndustryDetailPage({ industry }) {
 
           {problems && (
             <section className="re_block" aria-labelledby="problems-h">
-              <Label>{problems.tagline}</Label>
               <h2 id="problems-h">{problems.title}</h2>
               <ul className="re_rows">
                 {(problems.cards ?? []).map((item, i) => (
@@ -205,7 +201,6 @@ export default function IndustryDetailPage({ industry }) {
 
           {servicesSection && (
             <section className="re_block" aria-labelledby="services-h">
-              <Label>{servicesSection.tagline}</Label>
               <h2 id="services-h">{servicesSection.title}</h2>
               <div className="re_cols re_cols3">
                 {(servicesSection.card ?? []).map((item, i) => (
@@ -221,7 +216,6 @@ export default function IndustryDetailPage({ industry }) {
 
           {types && (
             <section className="re_block" aria-labelledby="types-h">
-              <Label>{types.tagline}</Label>
               <h2 id="types-h">{types.title}</h2>
               <div className="re_table_wrap">
                 <table className="re_table">
@@ -263,7 +257,6 @@ export default function IndustryDetailPage({ industry }) {
 
           {process && (
             <section className="re_block" aria-labelledby="process-h">
-              <Label>{process.tagline}</Label>
               <h2 id="process-h">{process.title}</h2>
               <ol className="re_steps">
                 {(process.card ?? []).map((item, i) => (
@@ -279,7 +272,6 @@ export default function IndustryDetailPage({ industry }) {
 
           {receive && (
             <section className="re_block" aria-labelledby="receive-h">
-              <Label>{receive.tagline}</Label>
               <h2 id="receive-h">{receive.title}</h2>
               <ul className="re_checks">
                 {(receive.lists ?? []).map((item) => (
@@ -296,7 +288,6 @@ export default function IndustryDetailPage({ industry }) {
             <section className="re_security" aria-labelledby="security-h">
               <Icon name="shield" />
               <div>
-                <Label>{band.tagline}</Label>
                 <h2 id="security-h">{band.title}</h2>
                 <p>{clean(band.subtitle)}</p>
               </div>
@@ -313,7 +304,6 @@ export default function IndustryDetailPage({ industry }) {
 
           {whySection && (
             <section className="re_block" aria-labelledby="why-h">
-              <Label>{whySection.tagline}</Label>
               <h2 id="why-h">{whySection.title}</h2>
               <div className="re_cols re_cols4">
                 {(whySection.card ?? []).map((item, i) => (
@@ -329,7 +319,6 @@ export default function IndustryDetailPage({ industry }) {
 
           {results && (
             <section className="re_block" aria-labelledby="results-h">
-              <Label>{results.tagline}</Label>
               <h2 id="results-h">{results.title}</h2>
               <div className="re_cols re_cols4 re_results">
                 {(results.results ?? []).map((item) => (
@@ -344,7 +333,6 @@ export default function IndustryDetailPage({ industry }) {
 
           {faq && faqItems.length > 0 && (
             <section id="faq" className="re_block">
-              <Label>{faq.tagline}</Label>
               <ServiceFaqAccordion heading={faq.title} items={faqItems} />
             </section>
           )}
